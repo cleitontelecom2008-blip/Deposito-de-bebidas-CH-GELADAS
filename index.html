@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CH Geladas | Empresa v2</title>
+    <title>CH Geladas | Enterprise v2</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -11,67 +11,67 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
-        :raiz {
-            --primário: #3b82f6;
+        :root {
+            --primary: #3b82f6;
             --bg-dark: #07090e;
             --input-bg: #111827;
         }
 
-        corpo {
-            família de fontes: 'Plus Jakarta Sans', sem serifa;
-            cor de fundo: var(--bg-dark);
-            cor: #f8fafc;
-            seleção do usuário: nenhuma;
-            ação tátil: manipulação;
-            -webkit-tap-highlight-color: transparente;
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: #f8fafc;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .vidro {
-            fundo: rgba(15, 23, 42, 0.8);
-            filtro de fundo: desfoque(20px);
-            borda: 1px sólida rgba(255, 255, 255, 0.05);
+        .glass { 
+            background: rgba(15, 23, 42, 0.8); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
         }
 
         .modal-overlay {
-            fundo: rgba(0, 0, 0, 0.8);
-            filtro de fundo: desfoque(5px);
-            posição: fixa;
-            inserção: 0;
-            Índice z: 50;
-            exibir: nenhum;
-            alinhamento-itens: centro;
-            justificar-conteúdo: centralizado;
-            opacidade: 0;
-            transição: opacidade 0,3s;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         .modal-overlay.open {
-            Exibir: flexível;
-            opacidade: 1;
+            display: flex;
+            opacity: 1;
         }
 
-        .campo-de-entrada {
-            cor de fundo: var(--input-bg);
-            borda: 1px sólida #1f2937;
-            raio-da-borda: 1rem;
-            preenchimento: 1rem;
-            largura: 100%;
-            Esboço: nenhum;
-            transição: todos os 0,2s;
-            cor: branca;
-            tamanho da fonte: 0,9rem;
+        .input-field {
+            background-color: var(--input-bg);
+            border: 1px solid #1f2937;
+            border-radius: 1rem;
+            padding: 1rem;
+            width: 100%;
+            outline: none;
+            transition: all 0.2s;
+            color: white;
+            font-size: 0.9rem;
         }
 
         .input-field:focus { border-color: var(--primary); }
 
-        .rótulo-azul {
-            cor: #3b82f6;
-            tamanho da fonte: 0,7rem;
-            peso da fonte: 800;
-            text-transform: maiúsculas;
-            espaçamento entre letras: 0,05em;
-            margem-inferior: 0,4rem;
-            exibir: bloco;
-            margem-esquerda: 0,5rem;
+        .label-blue {
+            color: #3b82f6;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+            display: block;
+            margin-left: 0.5rem;
         }
 
         .tab-content { display: none !important; }
@@ -79,16 +79,16 @@
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .btn-ativo {
-            fundo: rgba(59, 130, 246, 0.1);
-            cor: #3b82f6;
-            borda inferior: 2px sólida #3b82f6;
+        .btn-active { 
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border-bottom: 2px solid #3b82f6;
         }
 
-        #tela-de-bloqueio {
-            posição: fixa; recuo: 0; índice z: 9999;
-            fundo: gradiente radial (círculo em 50% 50%, #1e293b 0%, #07090e 100%);
-            exibir: flexível; alinhar itens: ao centro; justificar conteúdo: ao centro;
+        #lock-screen { 
+            position: fixed; inset: 0; z-index: 9999; 
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #07090e 100%);
+            display: flex; align-items: center; justify-content: center; 
         }
 
         .custom-scroll::-webkit-scrollbar { width: 4px; }
@@ -114,8 +114,8 @@
             </div>
             <h1 class="text-2xl font-black mb-8 uppercase italic tracking-tighter">CH <span class="text-blue-500">GELADAS</span></h1>
             <input type="password" id="masterPass" maxlength="6" inputmode="numeric" class="w-full bg-slate-900 border border-slate-700 p-5 rounded-2xl text-center text-3xl mb-6 outline-none text-white tracking-[0.5em]" placeholder="•••" onkeyup="checkPin(this.value)">
-            <button onclick="login()" class="w-full bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs transition-all hover:bg-blue-500">Acessar ao Sistema</button>
-            <p class="text-[9px] text-slate-500 mt-6 uppercase tracking-widest font-bold">Segurança Empresarial Local</p>
+            <button onclick="login()" class="w-full bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs transition-all hover:bg-blue-500">Aceder ao Sistema</button>
+            <p class="text-[9px] text-slate-500 mt-6 uppercase tracking-widest font-bold">Segurança Local Enterprise</p>
         </div>
     </div>
 
@@ -140,7 +140,7 @@
     <!-- Modal Config WhatsApp -->
     <div id="modalConfigZap" class="modal-overlay">
         <div class="glass p-8 rounded-[2.5rem] w-full max-w-sm mx-4 border border-white/10 shadow-2xl">
-            <h3 class="label-blue mb-6 !text-sm">Configuração do WhatsApp</h3>
+            <h3 class="label-blue mb-6 !text-sm">Configuração WhatsApp</h3>
             <p class="text-xs text-slate-400 mb-4">Insira o número com o código do país e DDD (apenas números). Ex: 5511999999999</p>
             <input type="tel" id="zapNumberInput" class="input-field mb-6" placeholder="55..." inputmode="numeric">
             <div class="flex gap-3">
@@ -150,7 +150,7 @@
         </div>
     </div>
 
-    <!-- Modal util Venda -->
+    <!-- Modal Editar Venda -->
     <div id="modalEditVenda" class="modal-overlay">
         <div class="glass p-8 rounded-[2.5rem] w-full max-w-sm mx-4 border border-white/10 shadow-2xl">
             <h3 class="label-blue mb-6 !text-sm text-amber-500">Editar Venda</h3>
@@ -199,7 +199,7 @@
         <nav class="bg-slate-950 border-b border-white/5 flex overflow-x-auto no-scrollbar">
             <button onclick="switchTab('vendas')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase btn-active" data-tab="vendas">Vendas</button>
             <button onclick="switchTab('estoque')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="estoque">Estoque</button>
-            <button onclick="switchTab('financeiro')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="financeiro">Financialiro</button>
+            <button onclick="switchTab('financeiro')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="financeiro">Financeiro</button>
             <button onclick="switchTab('ponto')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase" data-tab="ponto">Ponto</button>
             <button onclick="switchTab('dados')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="dados">Dados</button>
         </nav>
@@ -211,7 +211,7 @@
                 <div class="grid lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-8 flex flex-col gap-4">
                         <div class="flex gap-2">
-                            <input type="text" id="searchProd" oninput="renderCatalogo()" class="input-field" placeholder="Pesquisar sem estoque...">
+                            <input type="text" id="searchProd" oninput="renderCatalogo()" class="input-field" placeholder="Pesquisar no stock...">
                             <button onclick="toggleModal('modalConfigZap')" class="w-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#25D366] hover:bg-slate-700 transition-colors border border-white/5" title="Configurar WhatsApp">
                                 <i class="fab fa-whatsapp text-xl"></i>
                             </button>
@@ -226,7 +226,7 @@
                             <div class="pt-6 border-t border-white/10 text-center">
                                 <h2 id="displayCartTotal" class="text-4xl font-black text-blue-500 mb-4">R$ 0,00</h2>
                                 <button onclick="finalizarVenda()" id="btnFinalizar" disabled class="w-full py-5 rounded-2xl bg-slate-800 text-slate-500 font-black uppercase text-[11px] transition-all">Finalizar Venda</button>
-                                <p class="text-[8px] text-slate-500 mt-3 uppercase font-bold tracking-widest">Gerador Automático de TXT ativado</p>
+                                <p class="text-[8px] text-slate-500 mt-3 uppercase font-bold tracking-widest">Geração Automática de TXT ativada</p>
                             </div>
                         </div>
                     </div>
@@ -242,7 +242,7 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div>
-                                <label class="label-blue">Designaçã</label>
+                                <label class="label-blue">Designação</label>
                                 <input type="text" id="pNome" class="input-field" placeholder="Ex: Cerveja Especial">
                             </div>
                             <div>
@@ -250,27 +250,27 @@
                                 <input type="number" id="pCustoUn" class="input-field" placeholder="0.00">
                             </div>
                             <div>
-                                <label class="label-blue">Estoque Inicial</label>
+                                <label class="label-blue">Stock Inicial</label>
                                 <input type="number" id="pQtdUn" class="input-field" placeholder="0">
                             </div>
                             <div>
-                                <label class="label-blue">Preço de Venda (Un.)</label>
+                                <label class="label-blue">Preço Venda (Un.)</label>
                                 <input type="number" id="pPrecoUn" class="input-field" placeholder="0.00">
                             </div>
                         </div>
 
                         <div class="bg-black/20 p-6 rounded-3xl border border-white/5">
-                            <h4 class="label-blue mb-4 text-blue-400">Pacotes de Venda</h4>
+                            <h4 class="label-blue mb-4 text-blue-400">Packs de Venda</h4>
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <input type="number" id="tempPackUn" class="input-field" placeholder="Qtd (ex: 6)">
-                                <input type="number" id="tempPackPreco" class="input-field" placeholder="Preço do Pacote">
+                                <input type="number" id="tempPackPreco" class="input-field" placeholder="Preço Pack">
                             </div>
-                            <button onclick="addPackToList()" class="w-full bg-slate-800 text-slate-300 py-3 rounded-xl font-bold text-[10px] uppercase">Adicionar Pacote</button>
+                            <button onclick="addPackToList()" class="w-full bg-slate-800 text-slate-300 py-3 rounded-xl font-bold text-[10px] uppercase">Adicionar Pack</button>
                             <div id="tempPackList" class="mt-4 space-y-2"></div>
                         </div>
 
                         <div class="flex gap-4 mt-8">
-                            <button id="btnSaveProd" onclick="saveProduto()" class="flex-1 bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs">Cadastrar Produto</button>
+                            <button id="btnSaveProd" onclick="saveProduto()" class="flex-1 bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs">Registar Produto</button>
                             <button id="btnCancelEdit" onclick="resetFormEstoque()" class="hidden bg-slate-800 px-8 rounded-2xl font-black uppercase text-xs text-slate-400">Cancelar</button>
                         </div>
                     </div>
@@ -305,14 +305,14 @@
                         <div class="space-y-3 overflow-y-auto custom-scroll max-h-[500px]" id="vendaLogs"></div>
                     </div>
                     <div class="glass p-8 rounded-[2.5rem] h-fit sticky top-24">
-                        <h3 class="label-blue !ml-0 mb-6">Métricas e Açães</h3>
+                        <h3 class="label-blue !ml-0 mb-6">Métricas & Ações</h3>
                         <div class="space-y-4">
                             <div class="p-4 bg-black/20 rounded-2xl flex justify-between border border-white/5">
-                                <span class="text-[10px] uppercase font-bold text-slate-400">Faturaço Bruta</span>
+                                <span class="text-[10px] uppercase font-bold text-slate-400">Faturação Bruta</span>
                                 <span id="faturacaoBruta" class="font-black">R$ 0,00</span>
                             </div>
                             <div class="p-4 bg-black/20 rounded-2xl flex justify-between border border-white/5">
-                                <span class="text-[10px] uppercase font-bold text-slate-400">Ponto de Equilíbrio</span>
+                                <span class="text-[10px] uppercase font-bold text-slate-400">Status Break-Even</span>
                                 <span id="breakEvenStatus" class="font-black text-amber-500">R$ 0,00</span>
                             </div>
                              <button onclick="exportarRelatorioTxt()" class="w-full bg-emerald-600/10 text-emerald-500 py-3 rounded-xl font-bold text-[10px] uppercase border border-emerald-500/20 hover:bg-emerald-600/20 mt-4">
@@ -331,7 +331,7 @@
                         <input type="text" id="workerName" class="input-field text-center mb-6" placeholder="Nome do Funcionário">
                         <div class="grid grid-cols-2 gap-4">
                             <button onclick="registarPonto('ENTRADA')" class="bg-emerald-600 p-5 rounded-2xl font-black uppercase text-[11px]">Entrada</button>
-                            <button onclick="registarPonto('SAÃ DA')" class="bg-red-600 p-5 rounded-2xl font-black uppercase text-[11px]">SaÃda</button>
+                            <button onclick="registarPonto('SAÍDA')" class="bg-red-600 p-5 rounded-2xl font-black uppercase text-[11px]">Saída</button>
                         </div>
                     </div>
                     <div id="pontoLogs" class="mt-8 space-y-2"></div>
@@ -362,11 +362,11 @@
                         <h3 class="text-xl font-black uppercase mb-2">Importar Dados</h3>
                         <p class="text-xs text-slate-400 mb-8 max-w-[200px]">Carregue um arquivo .json para restaurar seus dados neste aparelho.</p>
                         
-                        <!-- Correção de entrada -->
+                        <!-- Input corrigido -->
                         <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importarDados(this)">
                         
                         <button onclick="document.getElementById('fileInput').click()" class="w-full bg-emerald-600 py-4 rounded-xl font-black uppercase text-xs hover:bg-emerald-500 transition-all mb-3">
-                            Arquivo
+                            Selecionar Arquivo
                         </button>
                         <p class="text-[8px] text-red-400/60 font-bold uppercase tracking-widest"><i class="fas fa-exclamation-triangle mr-1"></i> Substitui dados atuais</p>
                     </div>
@@ -375,11 +375,11 @@
                          <h3 class="label-blue mb-4">Estatísticas do Sistema</h3>
                          <div class="grid grid-cols-3 gap-4">
                              <div class="bg-black/20 p-4 rounded-xl">
-                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Total de Produtos</span>
+                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Total Produtos</span>
                                  <span class="text-xl font-black" id="statProds">0</span>
                              </div>
                              <div class="bg-black/20 p-4 rounded-xl">
-                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Total de Vendas</span>
+                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Total Vendas</span>
                                  <span class="text-xl font-black" id="statVendas">0</span>
                              </div>
                              <div class="bg-black/20 p-4 rounded-xl">
@@ -395,14 +395,14 @@
                         <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
                             <div>
                                 <h3 class="text-lg font-black uppercase text-red-500 mb-1 flex items-center justify-center md:justify-start">
-                                    <i class="fas fa-radiation mr-2"></i> Reiniciar Geral
+                                    <i class="fas fa-radiation mr-2"></i> Reset Geral
                                 </h3>
                                 <p class="text-[10px] text-slate-400 font-bold max-w-md">
-                                    Esta ação é irreversível. Apaga permanentemente todo o estoque, histórico de vendas, pontos e configurações. Use com cautela.
+                                    Esta ação é irreversível. Apaga permanentemente todo o estoque, histórico de vendas, ponto e configurações. Use com cautela.
                                 </p>
                             </div>
                             <button onclick="resetSistema()" class="bg-red-500/10 text-red-500 border border-red-500/50 py-4 px-8 rounded-xl font-black uppercase text-xs hover:bg-red-600 hover:text-white hover:border-red-600 transition-all whitespace-nowrap shadow-lg shadow-red-500/10">
-                                <i class="fas fa-trash-alt mr-2"></i> Limpar todos os dados
+                                <i class="fas fa-trash-alt mr-2"></i> Limpar Todos os Dados
                             </button>
                         </div>
                     </div>
@@ -423,15 +423,15 @@
         let db = { estoque: [], vendas: [], ponto: [], investimento: 0, config: { whatsapp: '' } };
         let carrinho = [];
         let tempPacks = [];
-        seja isAdmin = falso;
-        seja lastVenda = nulo;
+        let isAdmin = false;
+        let lastSale = null;
 
-        função init() {
+        function init() {
             const saved = localStorage.getItem(STORAGE_KEY);
-            se(salvo) {
+            if(saved) {
                 const parsed = JSON.parse(saved);
-                db = { ...db, ...analisado };
-                // Garantir estrutura de configuração
+                db = { ...db, ...parsed };
+                // Garantir estrutura da config
                 if(!db.config) db.config = { whatsapp: '' };
             }
             
@@ -443,23 +443,23 @@
             document.getElementById('invTotalInput').value = db.investimento || 0;
             document.getElementById('zapNumberInput').value = db.config.whatsapp || '';
 
-            atualizarRelógio(); definirIntervalo(atualizarRelógio, 1000);
-            atualizarEstatísticas();
-            atualizarUI();
+            updateClock(); setInterval(updateClock, 1000);
+            updateStats();
+            refreshUI();
         }
 
-        função verificarPino(val) {
+        function checkPin(val) {
             if(val === "001" || val === "12345") login();
         }
 
-        função login() {
+        function login() {
             const pin = document.getElementById('masterPass').value;
-            se(pino === "001") {
-                isAdmin = verdadeiro;
+            if(pin === "001") {
+                isAdmin = true;
                 document.body.classList.add('is-admin');
                 document.getElementById('userRoleTitle').textContent = "ADMINISTRADOR";
-            } senão se(pino === "12345") {
-                isAdmin = falso;
+            } else if(pin === "12345") {
+                isAdmin = false;
                 document.body.classList.remove('is-admin');
                 document.getElementById('userRoleTitle').textContent = "COLABORADOR";
             } else { return; }
@@ -469,11 +469,11 @@
             showToast("Acesso OK", "Sessão iniciada");
         }
 
-        função switchTab(id) {
+        function switchTab(id) {
             const btn = document.querySelector(`[data-tab="${id}"]`);
             if(btn.classList.contains('admin-only-ui') && !isAdmin) {
-                showToast("Negado", "Apenas Administrador", "erro");
-                retornar;
+                showToast("Negado", "Apenas Administrador", "error");
+                return;
             }
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('btn-active'));
@@ -485,42 +485,42 @@
             if(id === 'financeiro') renderFinanceiro();
         }
 
-        // --- CONFIGURAÇÃO DO WHATSAPP ---
-        função toggleModal(id, forceClose = false) {
+        // --- WHATSAPP CONFIG ---
+        function toggleModal(id, forceClose = false) {
             const el = document.getElementById(id);
-            se(forceClose) {
+            if(forceClose) {
                 el.classList.remove('open');
-            } outro {
-                el.classList.toggle('aberto');
+            } else {
+                el.classList.toggle('open');
             }
         }
 
-        função salvarConfigZap() {
+        function salvarConfigZap() {
             const num = document.getElementById('zapNumberInput').value.replace(/\D/g,'');
             db.config.whatsapp = num;
-            salvar();
-            alternarModal('modalConfigZap');
+            save();
+            toggleModal('modalConfigZap');
             showToast("Configuração", "Número WhatsApp Salvo");
         }
 
         function enviarWhatsappUltimaVenda() {
             if(!lastSale || !db.config.whatsapp) {
-                if(!db.config.whatsapp) showToast("Erro", "Configurar o WhatsApp na aba Vendas", "erro");
-                retornar;
+                if(!db.config.whatsapp) showToast("Erro", "Configure o WhatsApp na aba Vendas", "error");
+                return;
             }
             
-            deixe msg = `*CH GELADAS | COMPROVANTE*\n`;
-            mensagem += `ðŸ“… ${lastSale.data}\n`;
-            mensagem += `--------------------------\n`;
+            let msg = `*CH GELADAS | COMPROVANTE*\n`;
+            msg += `📅 ${lastSale.data}\n`;
+            msg += `--------------------------\n`;
             lastSale.itens.forEach(item => {
                 msg += `${item.label === 'UNID' ? '1x' : item.label} ${item.nome} ... R$ ${item.preco.toFixed(2)}\n`;
             });
-            mensagem += `--------------------------\n`;
+            msg += `--------------------------\n`;
             msg += `*TOTAL: R$ ${lastSale.total.toFixed(2)}*\n`;
             msg += `Obrigado pela preferência!`;
 
             const url = `https://wa.me/${db.config.whatsapp}?text=${encodeURIComponent(msg)}`;
-            janela.abrir(url, '_blank');
+            window.open(url, '_blank');
             fecharModalPosVenda();
         }
 
@@ -529,7 +529,7 @@
         }
 
         // --- ESTOQUE ---
-        função adicionarPacoteÀLista() {
+        function addPackToList() {
             const un = parseInt(document.getElementById('tempPackUn').value);
             const preco = parseFloat(document.getElementById('tempPackPreco').value);
             if(!un || !preco) return;
@@ -539,45 +539,45 @@
             renderTempPacks();
         }
 
-        função renderTempPacks() {
+        function renderTempPacks() {
             const cont = document.getElementById('tempPackList');
             cont.innerHTML = tempPacks.map((p, i) => `
                 <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span class="text-[10px] font-bold">Pacote ${p.un} UN -> R$ ${p.preco.toFixed(2)}</span>
+                    <span class="text-[10px] font-bold">Pack ${p.un} UN -> R$ ${p.preco.toFixed(2)}</span>
                     <button onclick="tempPacks.splice(${i},1); renderTempPacks();" class="text-red-500 text-xs px-2"><i class="fas fa-times"></i></button>
                 </div>
             `).join('');
         }
 
-        função salvarProduto() {
+        function saveProduto() {
             const nome = document.getElementById('pNome').value;
             const custoUn = parseFloat(document.getElementById('pCustoUn').value) || 0;
             const qtdUn = parseInt(document.getElementById('pQtdUn').value) || 0;
             const precoUn = parseFloat(document.getElementById('pPrecoUn').value) || 0;
             const editId = document.getElementById('editingProdId').value;
 
-            if(!nome) return showToast("Erro", "Nome obrigatório", "erro");
+            if(!nome) return showToast("Erro", "Nome obrigatório", "error");
 
-            se(editId) {
+            if(editId) {
                 // Modo Edição
                 const idx = db.estoque.findIndex(p => p.id == editId);
-                se(idx !== -1) {
+                if(idx !== -1) {
                     db.estoque[idx] = { ...db.estoque[idx], nome, custoUn, qtdUn, precoUn, packs: [...tempPacks] };
                     showToast("Sucesso", "Produto Atualizado");
                 }
-            } outro {
+            } else {
                 // Novo Produto
                 db.estoque.unshift({ id: Date.now(), nome, custoUn, qtdUn, precoUn, packs: [...tempPacks] });
-                showToast("Estoque", "Produto Registrado");
+                showToast("Estoque", "Produto Registado");
             }
 
             resetFormEstoque();
-            salvar();
+            save();
         }
 
-        função editarProduto(id) {
+        function editProduto(id) {
             const p = db.estoque.find(x => x.id == id);
-            se(!p) retornar;
+            if(!p) return;
 
             document.getElementById('formEstoqueTitle').textContent = "Editar Produto";
             document.getElementById('editingProdId').value = p.id;
@@ -594,7 +594,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        função resetFormEstoque() {
+        function resetFormEstoque() {
             document.getElementById('formEstoqueTitle').textContent = "Novo Produto";
             document.getElementById('editingProdId').value = "";
             ['pNome', 'pCustoUn', 'pQtdUn', 'pPrecoUn'].forEach(id => document.getElementById(id).value = "");
@@ -605,7 +605,7 @@
         }
 
         // --- VENDAS ---
-        função renderizarCatálogo() {
+        function renderCatalogo() {
             const search = document.getElementById('searchProd').value.toLowerCase();
             const cont = document.getElementById('catalogoVenda');
             const filtered = db.estoque.filter(p => p.nome.toLowerCase().includes(search));
@@ -619,7 +619,7 @@
                         </button>
                         ${p.packs.map((pack, idx) => `
                             <button onclick="addAoCarrinho(${p.id}, ${idx + 1})" class="bg-amber-600/10 p-3 rounded-xl flex-1 border border-amber-500/10 hover:bg-amber-600/20 active:scale-95 transition-all">
-                                <span class="block text-[8px] font-black text-amber-500">PACOTE ${pack.un}</span>
+                                <span class="block text-[8px] font-black text-amber-500">PACK ${pack.un}</span>
                                 <span class="text-xs font-black">R$ ${pack.preco.toFixed(2)}</span>
                             </button>
                         `).join('')}
@@ -628,22 +628,22 @@
             `).join('');
         }
 
-        função adicionarAoCarrinho(prodId, packIdx) {
+        function addAoCarrinho(prodId, packIdx) {
             const p = db.estoque.find(x => x.id === prodId);
-            deixe item = { prodId: p.id, nome: p.nome };
-            se(packIdx === 0) {
-                if(p.qtdUn < 1) return showToast("Sem Estoque", p.nome, "erro");
+            let item = { prodId: p.id, nome: p.nome };
+            if(packIdx === 0) {
+                if(p.qtdUn < 1) return showToast("Sem Stock", p.nome, "error");
                 item.label = "UNID"; item.preco = p.precoUn; item.custo = p.custoUn; item.desconto = 1;
-            } outro {
+            } else {
                 const pack = p.packs[packIdx - 1];
-                if(p.qtdUn < pack.un) return showToast("Estoque Insuficiente", "Pacote cancelado", "erro");
-                item.label = `PACOTE ${pack.un}`; item.preco = pack.preco; item.custo = p.custoUn * pack.un; item.desconto = pack.un;
+                if(p.qtdUn < pack.un) return showToast("Stock Insuficiente", "Pack cancelado", "error");
+                item.label = `PACK ${pack.un}`; item.preco = pack.preco; item.custo = p.custoUn * pack.un; item.desconto = pack.un;
             }
             carrinho.push(item);
             renderCarrinho();
         }
 
-        função renderCarrinho() {
+        function renderCarrinho() {
             const cont = document.getElementById('carrinhoLista');
             cont.innerHTML = carrinho.map((c, idx) => `
                 <div class="flex justify-between items-center bg-slate-950/80 p-4 rounded-2xl border border-white/5">
@@ -657,8 +657,8 @@
             btn.className = `w-full py-5 rounded-2xl font-black uppercase text-[11px] ${carrinho.length > 0 ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20 hover:bg-blue-500' : 'bg-slate-800 text-slate-500'}`;
         }
 
-        função finalizarVenda() {
-            tente { document.getElementById('audioVenda').play(); } catch(e){}
+        function finalizarVenda() {
+            try { document.getElementById('audioVenda').play(); } catch(e){}
             const total = carrinho.reduce((a, b) => a + b.preco, 0);
             const lucro = carrinho.reduce((a, b) => a + (b.preco - b.custo), 0);
             
@@ -667,33 +667,33 @@
                 if(p) p.qtdUn -= item.desconto;
             });
 
-            constObj = {
+            const vendaObj = { 
                 id: Date.now(),
-                total,
-                lucro,
-                dados: novo Date().toLocaleString('pt-PT'),
-                itens: [...carrinho]
+                total, 
+                lucro, 
+                data: new Date().toLocaleString('pt-PT'), 
+                itens: [...carrinho] 
             };
 
             db.vendas.unshift(vendaObj);
-            últimaVenda = vendaObj; // Guarda para usar no modal
+            lastSale = vendaObj; // Guarda para usar no modal
             
             carrinho = [];
-            salvar();
+            save();
             renderCarrinho(); // Limpa UI do carrinho
             
             // Abre Modal Pós Venda
-            alternarModal('modalPosVenda');
+            toggleModal('modalPosVenda');
         }
 
-        function u.relayTxt() {
+        function exportarRelatorioTxt() {
             if (!db.vendas || db.vendas.length === 0) return showToast("Aviso", "Sem vendas para exportar");
             let conteudo = "--- RELATÓRIO DE VENDAS CH GELADAS ---\n";
             conteudo += `Gerado em: ${new Date().toLocaleString('pt-PT')}\n\n`;
             db.vendas.forEach((v, i) => {
-                conteudo += `VENDA #${v.id} | DADOS: ${v.dados}\n`;
+                conteudo += `VENDA #${v.id} | DATA: ${v.data}\n`;
                 v.itens.forEach(item => { conteudo += `- ${item.nome} (${item.label}): R$ ${item.preco.toFixed(2)}\n`; });
-                conteudo += `TOTAL: R$ ${v.total.toFixed(2)}\n---------------------------------------\n`;
+                conteudo += `TOTAL: R$ ${v.total.toFixed(2)}\n--------------------------------------\n`;
             });
             const blob = new Blob([conteudo], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -704,8 +704,8 @@
             URL.revokeObjectURL(url);
         }
 
-        // --- FINANCEIRO AVANÃ‡ADO ---
-        função renderizarFinanciário() {
+        // --- FINANCEIRO AVANÇADO ---
+        function renderFinanceiro() {
             const container = document.getElementById('vendaLogs');
             document.getElementById('totalVendasCount').textContent = `${db.vendas.length} reg`;
             
@@ -729,26 +729,26 @@
                 </div>
             `).join('');
 
-            // Atualizar métricas
+            // Atualiza métricas
             const bruto = db.vendas.reduce((a, b) => a + b.total, 0);
             const lucro = db.vendas.reduce((a, b) => a + b.lucro, 0);
             const inv = db.investimento || 0;
             document.getElementById('dashLucro').textContent = `R$ ${lucro.toFixed(2)}`;
             document.getElementById('faturacaoBruta').textContent = `R$ ${bruto.toFixed(2)}`;
-            document.getElementById('roiDisplay').textContent = inv > 0? `${((lucro / inv) * 100).toFixed(1)}%` : '0%';
+            document.getElementById('roiDisplay').textContent = inv > 0 ? `${((lucro / inv) * 100).toFixed(1)}%` : '0%';
             document.getElementById('breakEvenStatus').textContent = lucro >= inv ? "Pago" : `Falta R$ ${(inv - lucro).toFixed(2)}`;
         }
 
         function abrirEditorVenda(id) {
             const venda = db.vendas.find(v => v.id === id);
-            se(!venda) retornar;
+            if(!venda) return;
             
             document.getElementById('editVendaId').value = venda.id;
             document.getElementById('editVendaData').value = venda.data;
             document.getElementById('editVendaTotal').value = venda.total;
             document.getElementById('editVendaLucro').value = venda.lucro;
             
-            alternarModal('modalEditVenda');
+            toggleModal('modalEditVenda');
         }
 
         function salvarEdicaoVenda() {
@@ -758,50 +758,50 @@
             const novoLucro = parseFloat(document.getElementById('editVendaLucro').value);
 
             const idx = db.vendas.findIndex(v => v.id === id);
-            se(idx !== -1) {
+            if(idx !== -1) {
                 db.vendas[idx].data = novaData;
                 db.vendas[idx].total = novoTotal;
                 db.vendas[idx].lucro = novoLucro;
-                salvar();
-                alternarModal('modalEditVenda');
+                save();
+                toggleModal('modalEditVenda');
                 renderFinanceiro();
                 showToast("Sucesso", "Venda atualizada");
             }
         }
 
-        função gVenda(id) {
+        function excluirVenda(id) {
             const venda = db.vendas.find(v => v.id === id);
-            se(!venda) retornar;
+            if(!venda) return;
 
-            if(confirm('Tem certeza que deseja EXCLUIR esta venda?\n\nO valor será removido da caixa.')) {
-                //cartão sobre o estoque
-                if(confirm('Deseja DEVOLVER os itens ao estoque?\n\nClique em OK para relatar os produtos.\nClique em Cancelar para apenas apagar o registro financeiro.')) {
+            if(confirm('Tem certeza que deseja EXCLUIR esta venda?\n\nO valor será removido do caixa.')) {
+                // Pergunta sobre o estoque
+                if(confirm('Deseja DEVOLVER os itens ao estoque?\n\nClique em OK para repor os produtos.\nClique em Cancelar para apenas apagar o registro financeiro.')) {
                     venda.itens.forEach(item => {
                         const prod = db.estoque.find(p => p.id === item.prodId);
-                        se(prod) {
-                            prod.qtdUn += item.desconto; // item.desconto contém quantidade real retirada (1 ou embalagem)
+                        if(prod) {
+                            prod.qtdUn += item.desconto; // item.desconto contém a quantidade real retirada (1 ou pack size)
                         }
                     });
                     showToast("Estoque", "Itens devolvidos");
                 }
                 
                 db.vendas = db.vendas.filter(v => v.id !== id);
-                salvar();
+                save();
                 renderFinanceiro();
                 showToast("Venda Excluída", "Registro removido");
             }
         }
 
         // --- PONTO ---
-        function registrarPonto(tipo) {
+        function registarPonto(tipo) {
             const nome = document.getElementById('workerName').value;
-            if(!nome) return showToast("Erro", "Insira o nome", "erro");
-            db.ponto.unshift({ nome, tipo, dados: new Date().toLocaleString('pt-PT') });
-            salvar();
+            if(!nome) return showToast("Erro", "Insira o nome", "error");
+            db.ponto.unshift({ nome, tipo, data: new Date().toLocaleString('pt-PT') });
+            save();
             showToast("Ponto", `${nome} -> ${tipo}`);
         }
 
-        função renderizarLogsPonto() {
+        function renderPontoLogs() {
             document.getElementById('pontoLogs').innerHTML = db.ponto.map(p => `
                 <div class="bg-slate-900/50 p-4 rounded-2xl flex justify-between items-center border border-white/5">
                     <span class="text-[11px] font-bold">${p.nome}</span>
@@ -812,16 +812,16 @@
                 </div>`).join('');
         }
 
-        // --- ESSENCIAL ---
-        função salvar() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+        // --- CORE ---
+        function save() { 
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); 
             if(document.querySelector('.tab-content.active').id === 'financeiro') renderFinanceiro();
-            atualizarUI();
-            atualizarEstatísticas();
+            refreshUI(); 
+            updateStats();
         }
 
-        função refreshUI() {
-            renderizarCatálogo();
+        function refreshUI() {
+            renderCatalogo();
             // renderCarrinho(); // Não re-renderiza carrinho para não perder estado visual se não mudou
             renderPontoLogs();
             document.getElementById('gridEstoque').innerHTML = db.estoque.map(p => `
@@ -832,23 +832,23 @@
                     </div>
                     <p class="label-blue !mb-2 !ml-0">${p.nome}</p>
                     <div class="flex justify-between items-end">
-                        <div><span class="block text-[8px] text-slate-500 font-black">ESTOQUE</span><span class="text-2xl font-black">${p.qtdUn}</span></div>
+                        <div><span class="block text-[8px] text-slate-500 font-black">STOCK</span><span class="text-2xl font-black">${p.qtdUn}</span></div>
                         <div class="text-right">
-                            <span class="block text-[8px] text-slate-500 font-black">VENDA UM</span>
+                            <span class="block text-[8px] text-slate-500 font-black">VENDA UN</span>
                             <span class="text-sm font-bold text-slate-400">R$ ${p.precoUn.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>`).join('');
         }
 
-        função atualizarInvestimento() {
+        function updateInvestimento() {
             db.investimento = parseFloat(document.getElementById('invTotalInput').value) || 0;
-            salvar();
+            save();
         }
 
         function updateClock() { document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('pt-PT'); }
         
-        função showToast(msg, sub, type = 'success') {
+        function showToast(msg, sub, type = 'success') {
             const t = document.getElementById('toast');
             document.getElementById('toastMsg').textContent = msg;
             document.getElementById('toastSubMsg').textContent = sub;
@@ -859,70 +859,70 @@
             setTimeout(() => t.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none'), 3000);
         }
 
-        função atualizarEstatísticas() {
+        function updateStats() {
             document.getElementById('statProds').textContent = db.estoque ? db.estoque.length : 0;
             document.getElementById('statVendas').textContent = db.vendas ? db.vendas.length : 0;
             document.getElementById('statPonto').textContent = db.ponto ? db.ponto.length : 0;
         }
 
-        função resetSistema() {
-            if(confirm('ATENÃO: Você está prestes a apagar TODOS os dados do sistema (Estoque, Vendas, Ponto, Financeiro).\n\nEssa ação não pode ser desfeita.')) {
+        function resetSistema() {
+            if(confirm('ATENÇÃO: Você está prestes a apagar TODOS os dados do sistema (Estoque, Vendas, Ponto, Financeiro).\n\nEssa ação não pode ser desfeita.')) {
                 const check = prompt('Para confirmar a exclusão completa, digite a palavra "DELETAR" abaixo:');
-                se(check === 'DELETAR') {
+                if(check === 'DELETAR') {
                     db = { estoque: [], vendas: [], ponto: [], investimento: 0, config: { whatsapp: '' } };
-                    salvar();
-                    showToast("Sistema Redefinido", "Todos os dados foram apagados", "erro");
+                    save();
+                    showToast("Sistema Resetado", "Todos os dados foram apagados", "error");
                     setTimeout(() => location.reload(), 1500);
-                } outro {
-                    showToast("Cancelado", "Código de confirmação incorreto", "erro");
+                } else {
+                    showToast("Cancelado", "Código de confirmação incorreto", "error");
                 }
             }
         }
 
-        functionBackup() {
+        function exportarBackup() {
             const blob = new Blob([JSON.stringify(db)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `CH_Geladas_BKP_${new Date().toISOString().split('T')[0]}.json`;
-            a.clique();
+            a.click();
             URL.revokeObjectURL(url);
             document.getElementById('lastBackupInfo').textContent = new Date().toLocaleString();
             showToast("Backup Criado", "Arquivo baixado");
         }
 
-        funçãoDados(entrada) {
+        function importarDados(input) {
             const file = input.files[0];
-            se (!arquivo) retornar;
+            if (!file) return;
 
-            const leitor = novo FileReader();
-            leitor.onload = função(e) {
-                tentar {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
                     const data = JSON.parse(e.target.result);
-                    // Redefinimos a entrada para permitir selecionar o mesmo arquivo novamente caso haja erro
+                    // Resetamos o input para permitir selecionar o mesmo arquivo novamente caso haja erro
                     input.value = '';
 
                     if (data.estoque && Array.isArray(data.estoque)) {
-                        if(confirm('ATENÃ‡ÃƒO: Isso substituirÃ¡ TODOS os dados atuais pelos do arquivo.\n\nTem certeza que deseja continuar?')) {
-                             // Mesclamos com o DB atual para garantir que chaves novas (como configuração do zap) não quebrem com backups antigos
-                             db = { ...db, ...dados };
-                             salvar();
+                        if(confirm('ATENÇÃO: Isso substituirá TODOS os dados atuais pelos do arquivo.\n\nTem certeza que deseja continuar?')) {
+                             // Mesclamos com o DB atual para garantir que chaves novas (como config do zap) não quebrem com backups antigos
+                             db = { ...db, ...data };
+                             save();
                              showToast("Sucesso", "Dados restaurados!");
                              setTimeout(() => location.reload(), 1500);
                         }
-                    } outro {
-                        showToast("Erro", "Arquivo inválido ou danificado", "erro");
+                    } else {
+                        showToast("Erro", "Arquivo inválido ou corrompido", "error");
                     }
-                } catch (erro) {
+                } catch (err) {
                     input.value = '';
-                    showToast("Erro", "Falha ao ler arquivo", "erro");
+                    showToast("Erro", "Falha ao ler arquivo", "error");
                     console.error(err);
                 }
             };
-            leitor.lerComoTexto(arquivo);
+            reader.readAsText(file);
         }
 
-        janela.onload = init;
+        window.onload = init;
     </script>
 </body>
 </html>
