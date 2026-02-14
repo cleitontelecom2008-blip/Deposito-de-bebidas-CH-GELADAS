@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CH Geladas | Enterprise v2</title>
+    <title>CH Geladas | Enterprise v2.1</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -126,6 +126,7 @@
                 <i class="fas fa-check text-2xl"></i>
             </div>
             <h2 class="text-2xl font-black text-white mb-2">Venda Realizada!</h2>
+            <p class="text-emerald-400 text-[10px] font-bold uppercase mb-1 tracking-wider"><i class="fas fa-save mr-1"></i> Arquivo Salvo no PC</p>
             <p class="text-slate-400 text-sm mb-8">O que deseja fazer agora?</p>
             
             <button onclick="enviarWhatsappUltimaVenda()" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-xl font-black uppercase text-xs mb-3 flex items-center justify-center gap-2 transition-all">
@@ -604,6 +605,31 @@
             document.getElementById('btnCancelEdit').classList.add('hidden');
         }
 
+        // Função rápida de ajuste de estoque (Adicionar/Remover Mercearia)
+        function quickStockAction(id, type) {
+            const prod = db.estoque.find(x => x.id === id);
+            if(!prod) return;
+
+            const actionText = type === 'add' ? 'ADICIONAR' : 'REMOVER';
+            const input = prompt(`${actionText} quantidade para: ${prod.nome}\n(Estoque Atual: ${prod.qtdUn})`);
+            
+            if(input !== null) {
+                const qtd = parseInt(input);
+                if(!isNaN(qtd) && qtd > 0) {
+                    if(type === 'add') {
+                        prod.qtdUn += qtd;
+                        showToast("Entrada", `+${qtd} em ${prod.nome}`);
+                    } else {
+                        prod.qtdUn -= qtd;
+                        showToast("Saída", `-${qtd} em ${prod.nome}`, "warning");
+                    }
+                    save();
+                } else {
+                    showToast("Cancelado", "Valor inválido", "error");
+                }
+            }
+        }
+
         // --- VENDAS ---
         function renderCatalogo() {
             const search = document.getElementById('searchProd').value.toLowerCase();
@@ -676,14 +702,38 @@
             };
 
             db.vendas.unshift(vendaObj);
-            lastSale = vendaObj; // Guarda para usar no modal
+            lastSale = vendaObj;
             
             carrinho = [];
             save();
-            renderCarrinho(); // Limpa UI do carrinho
+            renderCarrinho(); 
             
-            // Abre Modal Pós Venda
+            // 1. Salvar Automático TXT
+            salvarVendaTxt(vendaObj);
+
+            // 2. Abrir Modal com opção de WhatsApp
             toggleModal('modalPosVenda');
+        }
+
+        function salvarVendaTxt(v) {
+            let txt = `CH GELADAS - CUPOM NÃO FISCAL\n`;
+            txt += `ID: ${v.id} | Data: ${v.data}\n`;
+            txt += `--------------------------------\n`;
+            v.itens.forEach(i => {
+                txt += `${i.label === 'UNID' ? '1x' : i.label} ${i.nome} ... R$ ${i.preco.toFixed(2)}\n`;
+            });
+            txt += `--------------------------------\n`;
+            txt += `TOTAL: R$ ${v.total.toFixed(2)}\n`;
+            
+            const blob = new Blob([txt], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Venda_${v.id}.txt`; 
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function exportarRelatorioTxt() {
@@ -832,7 +882,14 @@
                     </div>
                     <p class="label-blue !mb-2 !ml-0">${p.nome}</p>
                     <div class="flex justify-between items-end">
-                        <div><span class="block text-[8px] text-slate-500 font-black">STOCK</span><span class="text-2xl font-black">${p.qtdUn}</span></div>
+                        <div>
+                            <span class="block text-[8px] text-slate-500 font-black mb-1">STOCK</span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="quickStockAction(${p.id}, 'remove')" class="w-6 h-6 rounded bg-slate-800 text-red-500 hover:bg-red-500/20 font-bold border border-white/5">-</button>
+                                <span class="text-xl font-black min-w-[30px] text-center">${p.qtdUn}</span>
+                                <button onclick="quickStockAction(${p.id}, 'add')" class="w-6 h-6 rounded bg-slate-800 text-emerald-500 hover:bg-emerald-500/20 font-bold border border-white/5">+</button>
+                            </div>
+                        </div>
                         <div class="text-right">
                             <span class="block text-[8px] text-slate-500 font-black">VENDA UN</span>
                             <span class="text-sm font-bold text-slate-400">R$ ${p.precoUn.toFixed(2)}</span>
@@ -853,8 +910,8 @@
             document.getElementById('toastMsg').textContent = msg;
             document.getElementById('toastSubMsg').textContent = sub;
             const icon = document.getElementById('toastIcon');
-            icon.className = `w-8 h-8 rounded-full flex items-center justify-center ${type === 'success' ? 'bg-blue-500/20 text-blue-500' : 'bg-red-500/20 text-red-500'}`;
-            icon.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'times'} text-[10px]"></i>`;
+            icon.className = `w-8 h-8 rounded-full flex items-center justify-center ${type === 'success' ? 'bg-blue-500/20 text-blue-500' : type === 'warning' ? 'bg-amber-500/20 text-amber-500' : 'bg-red-500/20 text-red-500'}`;
+            icon.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'warning' ? 'exclamation' : 'times'} text-[10px]"></i>`;
             t.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
             setTimeout(() => t.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none'), 3000);
         }
