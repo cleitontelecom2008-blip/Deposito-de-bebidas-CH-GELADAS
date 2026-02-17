@@ -3,103 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CH Geladas | Enterprise v2.1</title>
+    <title>CH Geladas | PDV Enterprise v3.0</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
             --primary: #3b82f6;
-            --bg-dark: #07090e;
-            --input-bg: #111827;
+            --primary-dark: #1d4ed8;
+            --bg-dark: #060810;
+            --bg-surface: #0d1117;
+            --bg-card: #111827;
+            --input-bg: #0d1117;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(59,130,246,0.4);
+            --text-muted: #4b5563;
+            --emerald: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
         }
+
+        * { box-sizing: border-box; }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: #f8fafc;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.04) 0%, transparent 60%),
+                              radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.03) 0%, transparent 50%);
+            color: #f1f5f9;
             user-select: none;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
         }
 
+        /* ── GLASSMORPHISM ── */
         .glass { 
-            background: rgba(15, 23, 42, 0.8); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
+            background: rgba(13,17,23,0.85); 
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--border); 
+        }
+        .glass-elevated {
+            background: rgba(17,24,39,0.9);
+            backdrop-filter: blur(32px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
         }
 
+        /* ── MODALS ── */
         .modal-overlay {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .modal-overlay.open {
-            display: flex;
-            opacity: 1;
-        }
-
-        .input-field {
-            background-color: var(--input-bg);
-            border: 1px solid #1f2937;
-            border-radius: 1rem;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            position: fixed; inset: 0; z-index: 50;
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.25s ease;
             padding: 1rem;
-            width: 100%;
-            outline: none;
-            transition: all 0.2s;
-            color: white;
-            font-size: 0.9rem;
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-overlay > div { animation: modalIn 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.92) translateY(10px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .input-field:focus { border-color: var(--primary); }
+        /* ── INPUTS ── */
+        .input-field {
+            background: var(--input-bg);
+            border: 1.5px solid rgba(255,255,255,0.07);
+            border-radius: 0.875rem;
+            padding: 0.875rem 1rem;
+            width: 100%; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            color: #f1f5f9; font-size: 0.875rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .input-field:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        .input-field::placeholder { color: #374151; }
 
+        /* ── LABELS ── */
         .label-blue {
-            color: #3b82f6;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.4rem;
-            display: block;
-            margin-left: 0.5rem;
+            color: #60a5fa; font-size: 0.65rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            margin-bottom: 0.4rem; display: block; margin-left: 0.25rem;
         }
 
+        /* ── TABS ── */
         .tab-content { display: none !important; }
-        .tab-content.active { display: block !important; animation: fadeIn 0.3s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
+        .tab-content.active { display: block !important; animation: fadeIn 0.25s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         .btn-active { 
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
+            background: rgba(59,130,246,0.12);
+            color: #60a5fa;
             border-bottom: 2px solid #3b82f6;
         }
+        .tab-btn { color: #4b5563; transition: all 0.2s; }
+        .tab-btn:hover:not(.btn-active) { color: #94a3b8; background: rgba(255,255,255,0.03); }
 
+        /* ── LOCK SCREEN ── */
         #lock-screen { 
             position: fixed; inset: 0; z-index: 9999; 
-            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #07090e 100%);
+            background: radial-gradient(ellipse at 50% 40%, #0f1a2e 0%, #060810 70%);
             display: flex; align-items: center; justify-content: center; 
         }
+        .lock-card {
+            background: rgba(13,17,23,0.9);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 2.5rem;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(59,130,246,0.1) inset;
+        }
 
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        
+        /* ── SCROLLBAR ── */
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.3); }
+
+        /* ── ADMIN VISIBILITY ── */
         .admin-only-ui { display: none !important; }
         body.is-admin .admin-only-ui { display: block !important; }
         body.is-admin .admin-only-flex { display: flex !important; }
 
-        .drop-zone { border: 2px dashed #3b82f6; transition: all 0.3s; }
-        .drop-zone:hover { background: rgba(59, 130, 246, 0.1); }
+        /* ── DROPZONE ── */
+        .drop-zone { border: 2px dashed rgba(59,130,246,0.3); transition: all 0.3s; }
+        .drop-zone:hover { border-color: rgba(59,130,246,0.6); background: rgba(59,130,246,0.05); }
+
+        /* ── CART ANIMATIONS ── */
+        @keyframes cartFlash {
+            0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0.8); }
+            30%  { transform: scale(0.93); box-shadow: 0 0 0 10px rgba(59,130,246,0.25); }
+            60%  { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(59,130,246,0); }
+            100% { transform: scale(1); }
+        }
+        @keyframes cartFlashPack {
+            0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,0.8); }
+            30%  { transform: scale(0.93); box-shadow: 0 0 0 10px rgba(245,158,11,0.25); }
+            60%  { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(245,158,11,0); }
+            100% { transform: scale(1); }
+        }
+        .btn-flash-un   { animation: cartFlash 0.4s ease-out forwards; }
+        .btn-flash-pack { animation: cartFlashPack 0.4s ease-out forwards; }
+
+        /* ── PRODUCT CARDS ── */
+        .produto-card {
+            background: linear-gradient(145deg, rgba(13,17,23,0.98) 0%, rgba(9,12,18,1) 100%);
+            border: 1.5px solid rgba(255,255,255,0.06);
+            border-left: 3px solid var(--primary);
+            border-radius: 1.25rem;
+            transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+            position: relative; overflow: hidden;
+        }
+        .produto-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(59,130,246,0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .produto-card:hover { 
+            border-color: rgba(59,130,246,0.35); 
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .produto-card.esgotado { border-left-color: #374151; opacity: 0.5; }
+        .produto-card .prod-nome { font-size: 0.82rem; font-weight: 800; color: #e2e8f0; letter-spacing: 0.01em; line-height: 1.3; }
+        .produto-card .prod-stock { font-size: 0.65rem; color: #4b5563; font-weight: 700; margin-top: 2px; }
+        .produto-card .prod-stock.low { color: #f59e0b; }
+        .produto-card .prod-stock.out { color: #ef4444; }
+
+        .btn-unid, .btn-pack {
+            border-radius: 0.75rem; padding: 0.65rem 0.5rem;
+            flex: 1; transition: all 0.15s; cursor: pointer; min-width: 0;
+            position: relative; overflow: hidden;
+        }
+        .btn-unid { background: rgba(59,130,246,0.1); border: 1.5px solid rgba(59,130,246,0.18); }
+        .btn-unid:hover { background: rgba(59,130,246,0.22); border-color: rgba(59,130,246,0.45); }
+        .btn-pack { background: rgba(245,158,11,0.1); border: 1.5px solid rgba(245,158,11,0.18); }
+        .btn-pack:hover { background: rgba(245,158,11,0.22); border-color: rgba(245,158,11,0.45); }
+        .btn-unid:active, .btn-pack:active { transform: scale(0.94); }
+        .btn-unid:disabled, .btn-pack:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
+
+        /* ── CART ITEMS ── */
+        .carrinho-item-new { animation: newItemSlide 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        @keyframes newItemSlide {
+            from { opacity:0; transform: translateX(16px) scale(0.96); }
+            to   { opacity:1; transform: translateX(0) scale(1); }
+        }
+
+        /* ── MODAL BODY SCROLL ── */
+        .modal-body { max-height: 72vh; overflow-y: auto; }
+
+        /* ── STAT CARDS ── */
+        .stat-card {
+            background: rgba(13,17,23,0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+        .stat-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-1px); }
+
+        /* ── HEADER ── */
+        .app-header {
+            background: rgba(6,8,16,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* ── NAV ── */
+        .app-nav {
+            background: rgba(6,8,16,0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* ── FINANCEIRO ── */
+        .venda-row { transition: background 0.15s; }
+        .venda-row:hover { background: rgba(255,255,255,0.03); }
+
+        /* ── ESTOQUE GRID CARDS ── */
+        .estoque-card {
+            background: rgba(13,17,23,0.8);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            transition: all 0.2s;
+        }
+        .estoque-card:hover { border-color: rgba(255,255,255,0.1); background: rgba(13,17,23,0.95); }
+
+        /* ── BADGE PILL ── */
+        .badge { display: inline-flex; align-items: center; border-radius: 9999px; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.55rem; }
+        .badge-ok     { background: rgba(16,185,129,0.15); color: #34d399; }
+        .badge-low    { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .badge-out    { background: rgba(239,68,68,0.15);  color: #f87171; }
+        .badge-blue   { background: rgba(59,130,246,0.15); color: #60a5fa; }
+        .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+
+        /* ── BUTTON BASE ── */
+        .btn-primary { background: #2563eb; color: white; border-radius: 0.875rem; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.875rem 1.5rem; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-primary:hover { background: #3b82f6; box-shadow: 0 0 24px rgba(59,130,246,0.3); }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.875rem; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.875rem 1.5rem; transition: all 0.2s; cursor: pointer; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.08); color: #f1f5f9; }
+        .btn-danger { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); border-radius: 0.875rem; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.875rem 1.5rem; transition: all 0.2s; cursor: pointer; }
+        .btn-danger:hover { background: #dc2626; color: white; border-color: #dc2626; }
+
+        /* ── SECTION HEADER ── */
+        .section-title { font-size: 0.62rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #60a5fa; margin-bottom: 0.3rem; }
+
+        /* ── TOAST ── */
+        #toast { min-width: 220px; }
+
+        /* ── LOADER dot ── */
+        .dot-pulse::after {
+            content: ''; display: inline-block;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #3b82f6; margin-left: 6px;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity:0.3; transform: scale(0.8); } 50% { opacity:1; transform: scale(1.2); } }
+
+        /* ── FLOATING CART ── */
+        #floatingCartBtn { transition: opacity 0.3s, transform 0.3s, box-shadow 0.2s; }
+        #floatingCartBtn:hover { box-shadow: 0 0 32px rgba(59,130,246,0.5); }
+
+        /* ── PONTO CARD ── */
+        .ponto-card { transition: all 0.15s; }
+        .ponto-card:hover { background: rgba(255,255,255,0.03) !important; }
+
+        /* ── DIVIDER ── */
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); margin: 1rem 0; }
+
+        /* ── QUICK STOCK BTN ── */
+        .stock-btn { width: 1.75rem; height: 1.75rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; border: 1px solid rgba(255,255,255,0.06); transition: all 0.15s; cursor: pointer; }
+        .stock-btn-minus { background: rgba(239,68,68,0.08); color: #f87171; }
+        .stock-btn-minus:hover { background: rgba(239,68,68,0.25); }
+        .stock-btn-plus  { background: rgba(16,185,129,0.08); color: #34d399; }
+        .stock-btn-plus:hover  { background: rgba(16,185,129,0.25); }
+
+        /* ── NO-SCROLLBAR ── */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -108,14 +295,26 @@
 
     <!-- Tela de Bloqueio -->
     <div id="lock-screen">
-        <div class="text-center p-10 glass rounded-[3rem] w-full max-w-sm mx-4 shadow-2xl border border-white/10">
-            <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                <i class="fas fa-key text-white text-3xl"></i>
+        <div class="lock-card text-center p-10 w-full max-w-sm mx-4 shadow-2xl">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-blue-500/30">
+                <span class="text-3xl">🍺</span>
             </div>
-            <h1 class="text-2xl font-black mb-8 uppercase italic tracking-tighter">CH <span class="text-blue-500">GELADAS</span></h1>
-            <input type="password" id="masterPass" maxlength="6" inputmode="numeric" class="w-full bg-slate-900 border border-slate-700 p-5 rounded-2xl text-center text-3xl mb-6 outline-none text-white tracking-[0.5em]" placeholder="•••" onkeyup="checkPin(this.value)">
-            <button onclick="login()" class="w-full bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs transition-all hover:bg-blue-500">Aceder ao Sistema</button>
-            <p class="text-[9px] text-slate-500 mt-6 uppercase tracking-widest font-bold">Segurança Local Enterprise</p>
+            <h1 class="text-2xl font-black mb-1 uppercase tracking-tight">CH <span class="text-blue-400">GELADAS</span></h1>
+            <p class="text-[9px] text-slate-600 font-bold uppercase tracking-widest mb-8">PDV Enterprise v3.0</p>
+            <div class="relative mb-4">
+                <input type="password" id="masterPass" maxlength="6" inputmode="numeric"
+                    class="w-full bg-slate-950 border-2 border-slate-800 focus:border-blue-500 p-5 rounded-2xl text-center text-3xl outline-none text-white tracking-[0.6em] transition-all font-mono"
+                    placeholder="· · ·" onkeyup="checkPin(this.value)" autocomplete="off">
+            </div>
+            <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-xs tracking-widest transition-all shadow-lg shadow-blue-500/20 mb-3">
+                <i class="fas fa-unlock-alt mr-2"></i>Aceder ao Sistema
+            </button>
+            
+                <div class="bg-slate-950/50 rounded-xl p-2 text-center border border-white/5">
+                    <p class="text-[8px] text-slate-600 uppercase font-bold">Colaborador</p>
+                    <p class="text-[8px] text-slate-500 font-mono">12345</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -179,55 +378,223 @@
         </div>
     </div>
 
-    <!-- Conteúdo Principal -->
-    <div id="app-content" class="hidden flex flex-col min-h-screen">
-        <header class="bg-slate-900/50 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex justify-between items-center sticky top-0 z-40">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-sm shadow-lg shadow-blue-500/20">CH</div>
-                <div>
-                    <h2 class="text-[10px] font-black uppercase text-blue-500 tracking-widest leading-none mb-1" id="userRoleTitle">Acesso Verificado</h2>
-                    <p id="liveClock" class="text-[10px] font-mono text-slate-500">00:00:00</p>
+    <!-- Modal Editar Produto (Estoque) -->
+    <div id="modalEditProduto" class="modal-overlay">
+        <div class="glass rounded-[2.5rem] w-full max-w-md mx-4 border border-white/10 shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                <h3 class="text-sm font-black uppercase tracking-wider text-blue-400"><i class="fas fa-edit mr-2"></i>Editar Produto</h3>
+                <button onclick="toggleModal('modalEditProduto')" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fas fa-times text-xs"></i></button>
+            </div>
+            <div class="modal-body p-6 space-y-4">
+                <input type="hidden" id="modalEditProdId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="label-blue">Nome do Produto</label>
+                        <input type="text" id="modalEditNome" class="input-field" placeholder="Nome">
+                    </div>
+                    <div>
+                        <label class="label-blue">Custo Compra (Un.)</label>
+                        <input type="number" id="modalEditCusto" class="input-field" placeholder="0.00" step="0.01">
+                    </div>
+                    <div>
+                        <label class="label-blue">Preço Venda (Un.)</label>
+                        <input type="number" id="modalEditPreco" class="input-field" placeholder="0.00" step="0.01">
+                    </div>
+                    <div>
+                        <label class="label-blue">Stock Atual (Un.)</label>
+                        <div class="flex items-center gap-2">
+                            <button onclick="ajustarModalStock(-1)" class="w-10 h-10 rounded-xl bg-slate-800 text-red-400 font-black text-lg border border-white/5 hover:bg-red-500/20 flex-shrink-0">−</button>
+                            <input type="number" id="modalEditQtd" class="input-field text-center font-black text-lg" placeholder="0">
+                            <button onclick="ajustarModalStock(1)" class="w-10 h-10 rounded-xl bg-slate-800 text-emerald-400 font-black text-lg border border-white/5 hover:bg-emerald-500/20 flex-shrink-0">+</button>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <div class="w-full">
+                            <label class="label-blue">Entrada Rápida</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="modalEntradaQtd" class="input-field text-center" placeholder="Qtd">
+                                <button onclick="entradaRapidaModal()" class="bg-emerald-600/20 text-emerald-400 px-3 rounded-xl text-xs font-black border border-emerald-500/20 hover:bg-emerald-600/40 whitespace-nowrap">+ Stock</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Packs -->
+                <div class="bg-black/20 p-5 rounded-2xl border border-white/5">
+                    <h4 class="label-blue text-amber-400 mb-3"><i class="fas fa-box mr-1"></i>Packs de Venda</h4>
+                    <div id="modalPacksList" class="space-y-2 mb-4"></div>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="label-blue">Qtd Pack</label>
+                            <input type="number" id="modalNewPackUn" class="input-field" placeholder="Ex: 6">
+                        </div>
+                        <div>
+                            <label class="label-blue">Preço Pack</label>
+                            <input type="number" id="modalNewPackPreco" class="input-field" placeholder="Ex: 15.00" step="0.01">
+                        </div>
+                    </div>
+                    <button onclick="adicionarPackModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-xl font-bold text-[10px] uppercase border border-white/5 transition-all">
+                        <i class="fas fa-plus mr-2 text-amber-400"></i>Adicionar Pack
+                    </button>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="location.reload()" title="Sair" class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white">
+            <div class="p-6 border-t border-white/5 flex gap-3">
+                <button onclick="salvarEdicaoProduto()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-xs transition-all">
+                    <i class="fas fa-check mr-2"></i>Guardar Alterações
+                </button>
+                <button onclick="toggleModal('modalEditProduto')" class="bg-slate-800 hover:bg-slate-700 px-6 rounded-xl font-black uppercase text-xs text-slate-400 transition-all">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Registo de Ponto (só ADM) -->
+    <div id="modalEditPonto" class="modal-overlay">
+        <div class="glass rounded-[2.5rem] w-full max-w-sm mx-4 border border-white/10 shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                <h3 class="text-sm font-black uppercase tracking-wider text-amber-400"><i class="fas fa-clock mr-2"></i>Editar Registo</h3>
+                <button onclick="toggleModal('modalEditPonto')" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fas fa-times text-xs"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <input type="hidden" id="editPontoIdx">
+                <div>
+                    <label class="label-blue">Nome do Funcionário</label>
+                    <input type="text" id="editPontoNome" class="input-field" placeholder="Nome">
+                </div>
+                <div>
+                    <label class="label-blue">Tipo</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="btnPontoEntrada" onclick="setPontoTipo('ENTRADA')" class="py-3 rounded-xl font-black uppercase text-xs border transition-all bg-emerald-600/20 text-emerald-400 border-emerald-500/30">
+                            <i class="fas fa-sign-in-alt mr-1"></i> Entrada
+                        </button>
+                        <button id="btnPontoSaida" onclick="setPontoTipo('SAÍDA')" class="py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Saída
+                        </button>
+                    </div>
+                    <input type="hidden" id="editPontoTipo" value="ENTRADA">
+                </div>
+                <div>
+                    <label class="label-blue">Data / Hora</label>
+                    <input type="text" id="editPontoData" class="input-field" placeholder="Ex: 17/02/2026, 09:00:00">
+                </div>
+            </div>
+            <div class="p-6 border-t border-white/5 flex gap-3">
+                <button onclick="salvarEdicaoPonto()" class="flex-1 bg-amber-600 hover:bg-amber-500 py-4 rounded-xl font-black uppercase text-xs transition-all">
+                    <i class="fas fa-check mr-2"></i>Guardar
+                </button>
+                <button onclick="toggleModal('modalEditPonto')" class="bg-slate-800 hover:bg-slate-700 px-6 rounded-xl font-black uppercase text-xs text-slate-400 transition-all">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div id="app-content" class="hidden flex flex-col min-h-screen">
+        <header class="app-header px-5 py-3 flex justify-between items-center sticky top-0 z-40">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center font-black text-xs shadow-lg shadow-blue-500/20 flex-shrink-0">🍺</div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-[10px] font-black uppercase tracking-widest leading-none" id="userRoleTitle" style="color:#60a5fa">Sistema</h2>
+                        <span id="roleTag" class="badge badge-blue hidden">ADM</span>
+                    </div>
+                    <p id="liveClock" class="text-[9px] font-mono text-slate-600 mt-0.5">00:00:00</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Indicador de stock baixo -->
+                <button id="alertaStock" onclick="switchTab('estoque')" class="hidden items-center gap-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wide transition-all hover:bg-amber-500/20 admin-only-flex">
+                    <i class="fas fa-exclamation-triangle text-[8px]"></i>
+                    <span id="alertaStockCount">0</span> Stock Baixo
+                </button>
+                <button onclick="location.reload()" title="Terminar Sessão" class="w-8 h-8 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-center text-slate-500 hover:text-red-400 hover:border-red-500/20 transition-all">
                     <i class="fas fa-power-off text-xs"></i>
                 </button>
             </div>
         </header>
 
         <!-- Navegação -->
-        <nav class="bg-slate-950 border-b border-white/5 flex overflow-x-auto no-scrollbar">
-            <button onclick="switchTab('vendas')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase btn-active" data-tab="vendas">Vendas</button>
-            <button onclick="switchTab('estoque')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="estoque">Estoque</button>
-            <button onclick="switchTab('financeiro')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="financeiro">Financeiro</button>
-            <button onclick="switchTab('ponto')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase" data-tab="ponto">Ponto</button>
-            <button onclick="switchTab('dados')" class="tab-btn flex-1 px-4 py-5 text-[10px] font-black uppercase admin-only-ui" data-tab="dados">Dados</button>
+        <nav class="app-nav flex overflow-x-auto no-scrollbar">
+            <button onclick="switchTab('vendas')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider btn-active" data-tab="vendas">
+                <i class="fas fa-cash-register block text-base mb-1 mx-auto"></i>PDV
+            </button>
+            <button onclick="switchTab('estoque')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider admin-only-ui" data-tab="estoque">
+                <i class="fas fa-boxes block text-base mb-1 mx-auto"></i>Estoque
+            </button>
+            <button onclick="switchTab('financeiro')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider admin-only-ui" data-tab="financeiro">
+                <i class="fas fa-chart-line block text-base mb-1 mx-auto"></i>Caixa
+            </button>
+            <button onclick="switchTab('ponto')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider" data-tab="ponto">
+                <i class="fas fa-user-clock block text-base mb-1 mx-auto"></i>Ponto
+            </button>
+            <button onclick="switchTab('dados')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider admin-only-ui" data-tab="dados">
+                <i class="fas fa-database block text-base mb-1 mx-auto"></i>Dados
+            </button>
         </nav>
 
-        <main class="flex-1 p-4 lg:p-6 max-w-7xl mx-auto w-full">
+        <main class="flex-1 p-3 lg:p-5 max-w-7xl mx-auto w-full pb-24 lg:pb-6">
             
             <!-- PDV / Vendas -->
             <section id="vendas" class="tab-content active">
-                <div class="grid lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-8 flex flex-col gap-4">
+                <div class="grid lg:grid-cols-12 gap-4 lg:gap-6">
+                    <!-- Catálogo -->
+                    <div class="lg:col-span-8 flex flex-col gap-3">
                         <div class="flex gap-2">
-                            <input type="text" id="searchProd" oninput="renderCatalogo()" class="input-field" placeholder="Pesquisar no stock...">
-                            <button onclick="toggleModal('modalConfigZap')" class="w-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#25D366] hover:bg-slate-700 transition-colors border border-white/5" title="Configurar WhatsApp">
-                                <i class="fab fa-whatsapp text-xl"></i>
+                            <div class="relative flex-1">
+                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs pointer-events-none"></i>
+                                <input type="text" id="searchProd" oninput="renderCatalogo()" class="input-field pl-10" placeholder="Pesquisar produto...">
+                            </div>
+                            <button onclick="toggleModal('modalConfigZap')" 
+                                class="w-12 bg-slate-900 rounded-xl flex items-center justify-center text-slate-500 hover:text-[#25D366] hover:bg-slate-800 transition-all border border-white/5 flex-shrink-0" title="Configurar WhatsApp">
+                                <i class="fab fa-whatsapp text-lg"></i>
                             </button>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto custom-scroll max-h-[60vh]" id="catalogoVenda"></div>
+                        <!-- Stat rápido do PDV -->
+                        <div id="pdvStats" class="grid grid-cols-3 gap-2 hidden">
+                            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
+                                <p class="text-[8px] text-slate-600 uppercase font-bold">Produtos</p>
+                                <p class="text-sm font-black" id="pdvTotalProd">0</p>
+                            </div>
+                            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
+                                <p class="text-[8px] text-amber-500/70 uppercase font-bold">Stock Baixo</p>
+                                <p class="text-sm font-black text-amber-400" id="pdvLow">0</p>
+                            </div>
+                            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
+                                <p class="text-[8px] text-red-500/70 uppercase font-bold">Esgotados</p>
+                                <p class="text-sm font-black text-red-400" id="pdvOut">0</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto custom-scroll" style="max-height:62vh" id="catalogoVenda"></div>
                     </div>
                     
+                    <!-- Carrinho -->
                     <div class="lg:col-span-4">
-                        <div class="glass p-6 rounded-[2.5rem] flex flex-col h-full sticky top-24 border border-white/5">
-                            <h3 class="label-blue">Carrinho Atual</h3>
-                            <div id="carrinhoLista" class="flex-1 overflow-y-auto space-y-3 mb-6 custom-scroll min-h-[250px]"></div>
-                            <div class="pt-6 border-t border-white/10 text-center">
-                                <h2 id="displayCartTotal" class="text-4xl font-black text-blue-500 mb-4">R$ 0,00</h2>
-                                <button onclick="finalizarVenda()" id="btnFinalizar" disabled class="w-full py-5 rounded-2xl bg-slate-800 text-slate-500 font-black uppercase text-[11px] transition-all">Finalizar Venda</button>
-                                <p class="text-[8px] text-slate-500 mt-3 uppercase font-bold tracking-widest">Geração Automática de TXT ativada</p>
+                        <div id="carrinhoContainer" class="glass-elevated rounded-[2rem] flex flex-col sticky top-[72px] overflow-hidden" style="max-height: calc(100vh - 90px)">
+                            <!-- Header do carrinho -->
+                            <div class="px-5 pt-5 pb-3 border-b border-white/5">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-shopping-cart text-blue-400 text-sm"></i>
+                                        <span class="section-title !mb-0">Carrinho</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span id="cartCountBadge" class="hidden badge badge-blue">0</span>
+                                        <button onclick="limparCarrinho()" id="btnLimparCart" class="hidden w-6 h-6 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/25 flex items-center justify-center transition-all" title="Limpar carrinho">
+                                            <i class="fas fa-trash text-[9px]"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Itens -->
+                            <div id="carrinhoLista" class="flex-1 overflow-y-auto custom-scroll p-4 space-y-2 min-h-[200px]"></div>
+                            <!-- Footer -->
+                            <div class="p-5 border-t border-white/5 bg-slate-950/50">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[9px] text-slate-600 uppercase font-bold tracking-wider">Total</span>
+                                    <span id="cartItemCount" class="text-[9px] text-slate-600"></span>
+                                </div>
+                                <h2 id="displayCartTotal" class="text-3xl font-black text-white mb-4 tracking-tight">R$ 0,00</h2>
+                                <button onclick="finalizarVenda()" id="btnFinalizar" disabled
+                                    class="w-full py-4 rounded-xl bg-slate-800 text-slate-500 font-black uppercase text-[10px] tracking-widest transition-all">
+                                    <i class="fas fa-check-circle mr-2"></i>Finalizar Venda
+                                </button>
+                                <p class="text-[7px] text-slate-700 mt-2 text-center uppercase font-bold tracking-widest">TXT gerado automaticamente</p>
                             </div>
                         </div>
                     </div>
@@ -282,128 +649,196 @@
 
             <!-- Financeiro -->
             <section id="financeiro" class="tab-content">
-                <div class="grid md:grid-cols-3 gap-6 mb-8">
-                    <div class="glass p-8 rounded-[2.5rem] border-l-4 border-blue-500">
-                        <span class="label-blue !ml-0">Investimento Total</span>
-                        <input type="number" id="invTotalInput" onchange="updateInvestimento()" class="bg-transparent text-3xl font-black w-full outline-none text-white mt-2" placeholder="0.00">
+                <!-- KPIs -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                    <div class="stat-card border-l-4 border-blue-500">
+                        <p class="section-title">Investimento</p>
+                        <input type="number" id="invTotalInput" onchange="updateInvestimento()" 
+                            class="bg-transparent text-2xl font-black w-full outline-none text-white mt-1 placeholder-slate-700" placeholder="0,00">
+                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Edite aqui</p>
                     </div>
-                    <div class="glass p-8 rounded-[2.5rem] border-l-4 border-emerald-500">
-                        <span class="label-blue !ml-0">Lucro Líquido</span>
-                        <h2 id="dashLucro" class="text-3xl font-black mt-2 text-emerald-400">R$ 0,00</h2>
+                    <div class="stat-card border-l-4 border-emerald-500">
+                        <p class="section-title" style="color:#34d399">Lucro Líquido</p>
+                        <h2 id="dashLucro" class="text-2xl font-black mt-1 text-emerald-400">R$ 0,00</h2>
+                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Acumulado</p>
                     </div>
-                    <div class="glass p-8 rounded-[2.5rem] border-l-4 border-amber-500">
-                        <span class="label-blue !ml-0">ROI Global</span>
-                        <h2 id="roiDisplay" class="text-3xl font-black mt-2 text-amber-400">0%</h2>
+                    <div class="stat-card border-l-4 border-amber-500">
+                        <p class="section-title" style="color:#fbbf24">ROI Global</p>
+                        <h2 id="roiDisplay" class="text-2xl font-black mt-1 text-amber-400">0%</h2>
+                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Retorno</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-purple-500">
+                        <p class="section-title" style="color:#a78bfa">Faturação Bruta</p>
+                        <h2 id="faturacaoBruta" class="text-2xl font-black mt-1 text-purple-400">R$ 0,00</h2>
+                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Total vendas</p>
                     </div>
                 </div>
 
-                <div class="grid lg:grid-cols-2 gap-6">
-                    <div class="glass p-8 rounded-[2.5rem] flex flex-col">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="label-blue !ml-0">Histórico de Vendas</h3>
-                            <span class="text-[9px] bg-blue-500/10 text-blue-500 px-2 py-1 rounded-lg font-bold" id="totalVendasCount">0 reg</span>
+                <div class="grid lg:grid-cols-2 gap-4">
+                    <!-- Histórico -->
+                    <div class="glass rounded-[1.75rem] overflow-hidden">
+                        <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-receipt text-blue-400 text-sm"></i>
+                                <span class="section-title !mb-0">Histórico de Vendas</span>
+                            </div>
+                            <span class="badge badge-blue" id="totalVendasCount">0 reg</span>
                         </div>
-                        <div class="space-y-3 overflow-y-auto custom-scroll max-h-[500px]" id="vendaLogs"></div>
+                        <!-- Filtro de data -->
+                        <div class="px-6 py-3 border-b border-white/5">
+                            <div class="flex gap-2">
+                                <input type="text" id="filtroVendaData" oninput="renderFinanceiro()" class="input-field !py-2 !text-xs" placeholder="Filtrar por data...">
+                                <button onclick="document.getElementById('filtroVendaData').value=''; renderFinanceiro();" class="px-3 rounded-xl bg-slate-900 text-slate-500 hover:text-white text-xs border border-white/5 transition-all flex-shrink-0">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-y-auto custom-scroll max-h-[420px] p-4 space-y-2" id="vendaLogs"></div>
                     </div>
-                    <div class="glass p-8 rounded-[2.5rem] h-fit sticky top-24">
-                        <h3 class="label-blue !ml-0 mb-6">Métricas & Ações</h3>
-                        <div class="space-y-4">
-                            <div class="p-4 bg-black/20 rounded-2xl flex justify-between border border-white/5">
-                                <span class="text-[10px] uppercase font-bold text-slate-400">Faturação Bruta</span>
-                                <span id="faturacaoBruta" class="font-black">R$ 0,00</span>
+
+                    <!-- Métricas & Ações -->
+                    <div class="space-y-4">
+                        <div class="glass rounded-[1.75rem] p-6">
+                            <div class="flex items-center gap-2 mb-4">
+                                <i class="fas fa-tachometer-alt text-blue-400 text-sm"></i>
+                                <span class="section-title !mb-0">Métricas</span>
                             </div>
-                            <div class="p-4 bg-black/20 rounded-2xl flex justify-between border border-white/5">
-                                <span class="text-[10px] uppercase font-bold text-slate-400">Status Break-Even</span>
-                                <span id="breakEvenStatus" class="font-black text-amber-500">R$ 0,00</span>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Break-Even</span>
+                                    <span id="breakEvenStatus" class="text-sm font-black text-amber-400"></span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Ticket Médio</span>
+                                    <span id="ticketMedio" class="text-sm font-black text-blue-400">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Margem Média</span>
+                                    <span id="margemMedia" class="text-sm font-black text-emerald-400">0%</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Vendas Hoje</span>
+                                    <span id="vendasHoje" class="text-sm font-black text-purple-400">0</span>
+                                </div>
                             </div>
-                             <button onclick="exportarRelatorioTxt()" class="w-full bg-emerald-600/10 text-emerald-500 py-3 rounded-xl font-bold text-[10px] uppercase border border-emerald-500/20 hover:bg-emerald-600/20 mt-4">
-                                <i class="fas fa-file-alt mr-2"></i> Baixar Relatório TXT
-                            </button>
                         </div>
+                        <button onclick="exportarRelatorioTxt()" class="w-full glass rounded-xl py-4 font-black text-[10px] uppercase tracking-wider text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-file-alt"></i> Exportar Relatório TXT
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Ponto -->
             <section id="ponto" class="tab-content">
-                <div class="max-w-xl mx-auto">
-                    <div class="glass p-10 rounded-[3rem] text-center border border-white/5">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <!-- Registo -->
+                    <div class="glass p-8 rounded-[3rem] text-center border border-white/5">
                         <h3 class="label-blue !ml-0 mb-6 italic">Folha de Ponto</h3>
                         <input type="text" id="workerName" class="input-field text-center mb-6" placeholder="Nome do Funcionário">
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="registarPonto('ENTRADA')" class="bg-emerald-600 p-5 rounded-2xl font-black uppercase text-[11px]">Entrada</button>
-                            <button onclick="registarPonto('SAÍDA')" class="bg-red-600 p-5 rounded-2xl font-black uppercase text-[11px]">Saída</button>
+                            <button onclick="registarPonto('ENTRADA')" class="bg-emerald-600 hover:bg-emerald-500 p-5 rounded-2xl font-black uppercase text-[11px] transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-sign-in-alt"></i> Entrada
+                            </button>
+                            <button onclick="registarPonto('SAÍDA')" class="bg-red-600 hover:bg-red-500 p-5 rounded-2xl font-black uppercase text-[11px] transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-sign-out-alt"></i> Saída
+                            </button>
                         </div>
                     </div>
-                    <div id="pontoLogs" class="mt-8 space-y-2"></div>
+
+                    <!-- Resumo por funcionário (só ADM) -->
+                    <div id="pontoResumoBlock" class="admin-only-ui glass p-6 rounded-[2rem] border border-white/5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="label-blue !mb-0 !ml-0">Resumo de Presenças</h4>
+                            <span id="pontoTotalRegs" class="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-1 rounded-lg font-bold">0 registos</span>
+                        </div>
+                        <div id="pontoResumo" class="grid grid-cols-2 gap-3"></div>
+                    </div>
+
+                    <!-- Filtro + Histórico -->
+                    <div>
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="filtroPonto" oninput="renderPontoLogs()" class="input-field" placeholder="Filtrar por nome...">
+                            <!-- Limpar tudo só ADM -->
+                            <button onclick="limparTodoPonto()" class="admin-only-flex hidden w-14 bg-red-500/10 rounded-2xl items-center justify-center text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all flex-shrink-0" title="Apagar todos os registos">
+                                <i class="fas fa-trash-alt text-sm"></i>
+                            </button>
+                        </div>
+                        <div id="pontoLogs" class="space-y-2"></div>
+                    </div>
                 </div>
             </section>
 
              <!-- DADOS / BACKUP -->
             <section id="dados" class="tab-content">
-                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-                    <!-- Exportar -->
-                    <div class="glass p-8 rounded-[2.5rem] border border-white/5 flex flex-col items-center text-center">
-                        <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mb-6 text-blue-500">
-                            <i class="fas fa-cloud-download-alt text-2xl"></i>
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <!-- Stats -->
+                    <div class="glass rounded-[1.75rem] p-5">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i class="fas fa-chart-bar text-blue-400 text-sm"></i>
+                            <span class="section-title !mb-0">Estatísticas do Sistema</span>
                         </div>
-                        <h3 class="text-xl font-black uppercase mb-2">Exportar Dados</h3>
-                        <p class="text-xs text-slate-400 mb-8 max-w-[200px]">Crie um arquivo de segurança com todo o estoque, vendas e configurações.</p>
-                        <button onclick="exportarBackup()" class="w-full bg-blue-600 py-4 rounded-xl font-black uppercase text-xs hover:bg-blue-500 transition-all">
-                            Baixar Backup (.json)
-                        </button>
-                        <p class="text-[9px] text-slate-500 mt-4 font-bold">ÚLTIMO BACKUP: <span id="lastBackupInfo">Nunca</span></p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-slate-950/70 p-4 rounded-xl border border-white/5 text-center">
+                                <i class="fas fa-boxes text-blue-400 text-lg mb-2 block"></i>
+                                <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Produtos</span>
+                                <span class="text-2xl font-black" id="statProds">0</span>
+                            </div>
+                            <div class="bg-slate-950/70 p-4 rounded-xl border border-white/5 text-center">
+                                <i class="fas fa-receipt text-emerald-400 text-lg mb-2 block"></i>
+                                <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Vendas</span>
+                                <span class="text-2xl font-black" id="statVendas">0</span>
+                            </div>
+                            <div class="bg-slate-950/70 p-4 rounded-xl border border-white/5 text-center">
+                                <i class="fas fa-user-clock text-purple-400 text-lg mb-2 block"></i>
+                                <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Ponto</span>
+                                <span class="text-2xl font-black" id="statPonto">0</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Importar -->
-                    <div class="glass p-8 rounded-[2.5rem] border border-white/5 flex flex-col items-center text-center drop-zone relative">
-                        <div class="w-16 h-16 bg-emerald-600/20 rounded-full flex items-center justify-center mb-6 text-emerald-500">
-                            <i class="fas fa-cloud-upload-alt text-2xl"></i>
+                    <!-- Backup -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="glass p-6 rounded-[1.75rem] border border-white/5 flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-blue-600/15 rounded-2xl flex items-center justify-center mb-4 text-blue-400 border border-blue-500/15">
+                                <i class="fas fa-cloud-download-alt text-xl"></i>
+                            </div>
+                            <h3 class="text-base font-black uppercase mb-1">Exportar Backup</h3>
+                            <p class="text-[10px] text-slate-500 mb-5 max-w-[180px]">Descarregar ficheiro JSON com todos os dados do sistema.</p>
+                            <button onclick="exportarBackup()" class="w-full btn-primary">
+                                <i class="fas fa-download mr-2"></i>Baixar Backup
+                            </button>
+                            <p class="text-[9px] text-slate-600 mt-3 font-bold">ÚLTIMO: <span id="lastBackupInfo">Nunca</span></p>
                         </div>
-                        <h3 class="text-xl font-black uppercase mb-2">Importar Dados</h3>
-                        <p class="text-xs text-slate-400 mb-8 max-w-[200px]">Carregue um arquivo .json para restaurar seus dados neste aparelho.</p>
-                        
-                        <!-- Input corrigido -->
-                        <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importarDados(this)">
-                        
-                        <button onclick="document.getElementById('fileInput').click()" class="w-full bg-emerald-600 py-4 rounded-xl font-black uppercase text-xs hover:bg-emerald-500 transition-all mb-3">
-                            Selecionar Arquivo
-                        </button>
-                        <p class="text-[8px] text-red-400/60 font-bold uppercase tracking-widest"><i class="fas fa-exclamation-triangle mr-1"></i> Substitui dados atuais</p>
-                    </div>
-                    
-                    <div class="md:col-span-2 glass p-6 rounded-[2rem] border border-white/5 text-center">
-                         <h3 class="label-blue mb-4">Estatísticas do Sistema</h3>
-                         <div class="grid grid-cols-3 gap-4">
-                             <div class="bg-black/20 p-4 rounded-xl">
-                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Total Produtos</span>
-                                 <span class="text-xl font-black" id="statProds">0</span>
-                             </div>
-                             <div class="bg-black/20 p-4 rounded-xl">
-                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Total Vendas</span>
-                                 <span class="text-xl font-black" id="statVendas">0</span>
-                             </div>
-                             <div class="bg-black/20 p-4 rounded-xl">
-                                 <span class="block text-[8px] text-slate-500 uppercase font-bold">Registos Ponto</span>
-                                 <span class="text-xl font-black" id="statPonto">0</span>
-                             </div>
-                         </div>
+
+                        <div class="glass p-6 rounded-[1.75rem] border border-white/5 flex flex-col items-center text-center drop-zone relative">
+                            <div class="w-14 h-14 bg-emerald-600/15 rounded-2xl flex items-center justify-center mb-4 text-emerald-400 border border-emerald-500/15">
+                                <i class="fas fa-cloud-upload-alt text-xl"></i>
+                            </div>
+                            <h3 class="text-base font-black uppercase mb-1">Restaurar Dados</h3>
+                            <p class="text-[10px] text-slate-500 mb-5 max-w-[180px]">Carregar ficheiro .json para restaurar dados neste dispositivo.</p>
+                            <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importarDados(this)">
+                            <button onclick="document.getElementById('fileInput').click()" class="w-full btn-primary" style="background:#059669">
+                                <i class="fas fa-folder-open mr-2"></i>Selecionar Ficheiro
+                            </button>
+                            <p class="text-[8px] text-red-400/50 font-bold uppercase mt-3"><i class="fas fa-exclamation-triangle mr-1"></i>Substitui dados atuais</p>
+                        </div>
                     </div>
 
-                    <!-- ZONA DE PERIGO / RESET -->
-                    <div class="md:col-span-2 glass p-8 rounded-[2rem] border border-red-500/20 relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-red-500/5 group-hover:bg-red-500/10 transition-all"></div>
-                        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                    <!-- Zona de Perigo -->
+                    <div class="glass rounded-[1.75rem] border border-red-500/15 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-red-500/3 to-transparent pointer-events-none"></div>
+                        <div class="relative p-6 flex flex-col md:flex-row items-center justify-between gap-4">
                             <div>
-                                <h3 class="text-lg font-black uppercase text-red-500 mb-1 flex items-center justify-center md:justify-start">
-                                    <i class="fas fa-radiation mr-2"></i> Reset Geral
+                                <h3 class="text-sm font-black uppercase text-red-400 flex items-center gap-2 mb-1">
+                                    <i class="fas fa-radiation text-xs"></i> Zona de Perigo
                                 </h3>
-                                <p class="text-[10px] text-slate-400 font-bold max-w-md">
-                                    Esta ação é irreversível. Apaga permanentemente todo o estoque, histórico de vendas, ponto e configurações. Use com cautela.
+                                <p class="text-[10px] text-slate-500 font-bold max-w-md">
+                                    Apaga permanentemente estoque, vendas, ponto e configurações. Irreversível.
                                 </p>
                             </div>
-                            <button onclick="resetSistema()" class="bg-red-500/10 text-red-500 border border-red-500/50 py-4 px-8 rounded-xl font-black uppercase text-xs hover:bg-red-600 hover:text-white hover:border-red-600 transition-all whitespace-nowrap shadow-lg shadow-red-500/10">
-                                <i class="fas fa-trash-alt mr-2"></i> Limpar Todos os Dados
+                            <button onclick="resetSistema()" class="btn-danger whitespace-nowrap flex-shrink-0">
+                                <i class="fas fa-trash-alt mr-2"></i>Reset Total
                             </button>
                         </div>
                     </div>
@@ -414,10 +849,28 @@
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass px-8 py-5 rounded-2xl flex items-center gap-4 z-[100] transition-all opacity-0 translate-y-20 pointer-events-none">
-        <div id="toastIcon"></div>
-        <div class="flex flex-col"><span class="text-[11px] font-black uppercase" id="toastMsg"></span><span class="text-[9px] text-slate-500 font-bold uppercase" id="toastSubMsg"></span></div>
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-elevated px-6 py-4 rounded-2xl flex items-center gap-3 z-[200] transition-all duration-300 opacity-0 translate-y-16 pointer-events-none shadow-2xl">
+        <div id="toastIcon" class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"></div>
+        <div class="flex flex-col">
+            <span class="text-[11px] font-black uppercase tracking-wide" id="toastMsg"></span>
+            <span class="text-[9px] text-slate-500 font-bold" id="toastSubMsg"></span>
+        </div>
     </div>
+
+    <!-- Botão flutuante do carrinho (mobile) -->
+    <button id="floatingCartBtn" onclick="scrollToCarrinho()" 
+        class="lg:hidden fixed bottom-6 right-4 z-50 bg-blue-600 text-white rounded-2xl px-4 py-3 font-black text-xs uppercase shadow-2xl shadow-blue-500/40 border border-blue-400/20 flex items-center gap-3"
+        style="opacity:0; pointer-events:none; transition: opacity 0.3s, transform 0.3s;">
+        <div class="relative">
+            <i class="fas fa-shopping-cart text-base"></i>
+            <span id="floatingCartBadge" class="absolute -top-2 -right-2 w-4 h-4 bg-white text-blue-600 rounded-full text-[8px] font-black flex items-center justify-center">0</span>
+        </div>
+        <div class="flex flex-col items-start leading-none">
+            <span id="floatingCartCount" class="text-[8px] text-blue-200 font-bold uppercase">0 itens</span>
+            <span id="floatingCartTotal" class="text-sm font-black">R$ 0,00</span>
+        </div>
+        <i class="fas fa-chevron-up text-xs text-blue-300"></i>
+    </button>
 
     <script>
         const STORAGE_KEY = 'CH_GELADAS_DB_ENTERPRISE';
@@ -458,16 +911,25 @@
             if(pin === "001") {
                 isAdmin = true;
                 document.body.classList.add('is-admin');
-                document.getElementById('userRoleTitle').textContent = "ADMINISTRADOR";
+                document.getElementById('userRoleTitle').textContent = "Administrador";
+                document.getElementById('roleTag').textContent = 'ADM';
+                document.getElementById('roleTag').classList.remove('hidden');
             } else if(pin === "12345") {
                 isAdmin = false;
                 document.body.classList.remove('is-admin');
-                document.getElementById('userRoleTitle').textContent = "COLABORADOR";
-            } else { return; }
-
+                document.getElementById('userRoleTitle').textContent = "Colaborador";
+                document.getElementById('roleTag').textContent = 'PDV';
+                document.getElementById('roleTag').classList.remove('hidden');
+                document.getElementById('roleTag').className = 'badge badge-purple';
+            } else { 
+                showToast("PIN Inválido", "Tente novamente", "error");
+                document.getElementById('masterPass').value = '';
+                return; 
+            }
             document.getElementById('lock-screen').style.display = 'none';
             document.getElementById('app-content').classList.remove('hidden');
-            showToast("Acesso OK", "Sessão iniciada");
+            showToast("Sessão Iniciada", isAdmin ? "Acesso Total" : "Modo Colaborador");
+            verificarAlertasStock();
         }
 
         function switchTab(id) {
@@ -635,26 +1097,43 @@
             const search = document.getElementById('searchProd').value.toLowerCase();
             const cont = document.getElementById('catalogoVenda');
             const filtered = db.estoque.filter(p => p.nome.toLowerCase().includes(search));
-            cont.innerHTML = filtered.map(p => `
-                <div class="glass p-5 rounded-2xl border-l-4 border-blue-500">
-                    <p class="text-[10px] font-black uppercase text-slate-300 mb-4">${p.nome} (${p.qtdUn} un)</p>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="addAoCarrinho(${p.id}, 0)" class="bg-blue-600/10 p-3 rounded-xl flex-1 border border-blue-500/10 hover:bg-blue-600/20 active:scale-95 transition-all">
-                            <span class="block text-[8px] font-black text-blue-400">UNID.</span>
-                            <span class="text-xs font-black">R$ ${p.precoUn.toFixed(2)}</span>
-                        </button>
-                        ${p.packs.map((pack, idx) => `
-                            <button onclick="addAoCarrinho(${p.id}, ${idx + 1})" class="bg-amber-600/10 p-3 rounded-xl flex-1 border border-amber-500/10 hover:bg-amber-600/20 active:scale-95 transition-all">
-                                <span class="block text-[8px] font-black text-amber-500">PACK ${pack.un}</span>
-                                <span class="text-xs font-black">R$ ${pack.preco.toFixed(2)}</span>
-                            </button>
-                        `).join('')}
+            cont.innerHTML = filtered.map(p => {
+                const stockLow = p.qtdUn <= 3;
+                const stockZero = p.qtdUn <= 0;
+                return `
+                <div class="produto-card p-4" id="card-prod-${p.id}">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <p class="prod-nome">${p.nome}</p>
+                            <p class="prod-stock ${stockLow ? 'low' : ''}">
+                                <i class="fas fa-box-open mr-1"></i>
+                                ${stockZero ? 'SEM STOCK' : `${p.qtdUn} un. disponíveis`}
+                                ${stockLow && !stockZero ? '⚠️' : ''}
+                            </p>
+                        </div>
+                        <span class="text-[9px] font-black px-2 py-1 rounded-lg ${stockZero ? 'bg-red-500/20 text-red-400' : stockLow ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'}">
+                            ${stockZero ? 'ESGOT.' : stockLow ? 'BAIXO' : 'OK'}
+                        </span>
                     </div>
-                </div>
-            `).join('');
+                    <div class="flex flex-wrap gap-2">
+                        <button id="btn-un-${p.id}" onclick="addAoCarrinho(${p.id}, 0, this)" class="btn-unid ${stockZero ? 'opacity-40 cursor-not-allowed' : ''}">
+                            <span class="block text-[8px] font-black text-blue-400 mb-0.5">UNID.</span>
+                            <span class="text-sm font-black text-white">R$ ${p.precoUn.toFixed(2)}</span>
+                        </button>
+                        ${p.packs.map((pack, idx) => {
+                            const semStock = p.qtdUn < pack.un;
+                            return `
+                            <button id="btn-pack-${p.id}-${idx}" onclick="addAoCarrinho(${p.id}, ${idx + 1}, this)" class="btn-pack ${semStock ? 'opacity-40 cursor-not-allowed' : ''}">
+                                <span class="block text-[8px] font-black text-amber-500 mb-0.5">PACK ${pack.un}x</span>
+                                <span class="text-sm font-black text-white">R$ ${pack.preco.toFixed(2)}</span>
+                            </button>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        function addAoCarrinho(prodId, packIdx) {
+        function addAoCarrinho(prodId, packIdx, btnEl) {
             const p = db.estoque.find(x => x.id === prodId);
             let item = { prodId: p.id, nome: p.nome };
             if(packIdx === 0) {
@@ -667,20 +1146,108 @@
             }
             carrinho.push(item);
             renderCarrinho();
+
+            // Animação no botão
+            if(btnEl) {
+                const cls = packIdx === 0 ? 'btn-flash-un' : 'btn-flash-pack';
+                btnEl.classList.remove(cls);
+                void btnEl.offsetWidth; // reflow para reiniciar
+                btnEl.classList.add(cls);
+                setTimeout(() => btnEl.classList.remove(cls), 500);
+            }
+
+            // Scroll para o carrinho em desktop; mostra botão flutuante em mobile
+            atualizarBotaoFlutuante();
+            
+            // Em ecrãs pequenos, se o carrinho não está visível, pisca o botão flutuante
+            const isMobile = window.innerWidth < 1024;
+            if(isMobile) {
+                const floatBtn = document.getElementById('floatingCartBtn');
+                floatBtn.style.transform = 'scale(1.1)';
+                setTimeout(() => floatBtn.style.transform = 'scale(1)', 200);
+            }
         }
 
         function renderCarrinho() {
             const cont = document.getElementById('carrinhoLista');
-            cont.innerHTML = carrinho.map((c, idx) => `
-                <div class="flex justify-between items-center bg-slate-950/80 p-4 rounded-2xl border border-white/5">
-                    <div class="flex flex-col"><span class="text-[9px] font-black text-slate-400 uppercase">${c.nome}</span><span class="text-xs font-black text-blue-500">${c.label} • R$ ${c.preco.toFixed(2)}</span></div>
-                    <button onclick="carrinho.splice(${idx},1); renderCarrinho();" class="text-red-500/50 p-2"><i class="fas fa-trash"></i></button>
-                </div>`).join('');
+            if(carrinho.length === 0) {
+                cont.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-center py-10 opacity-20">
+                    <i class="fas fa-shopping-cart text-4xl mb-3 text-slate-500"></i>
+                    <p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">Carrinho vazio</p>
+                    <p class="text-[9px] text-slate-700 font-bold mt-1">Selecione um produto</p>
+                </div>`;
+                document.getElementById('btnLimparCart').classList.add('hidden');
+            } else {
+                cont.innerHTML = carrinho.map((c, idx) => `
+                    <div class="flex justify-between items-center bg-slate-950/60 px-4 py-3 rounded-xl border border-white/5 hover:border-white/10 transition-all ${idx === carrinho.length - 1 ? 'carrinho-item-new' : ''}">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${c.label === 'UNID' ? 'bg-blue-500/15' : 'bg-amber-500/15'}">
+                                <i class="fas ${c.label === 'UNID' ? 'fa-cube text-blue-400' : 'fa-box text-amber-400'} text-[9px]"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] font-black text-slate-300 truncate">${c.nome}</p>
+                                <p class="text-[9px] text-slate-600 font-bold">${c.label} · <span class="text-blue-400 font-black">R$ ${c.preco.toFixed(2)}</span></p>
+                            </div>
+                        </div>
+                        <button onclick="removerDoCarrinho(${idx})" class="w-6 h-6 rounded-lg bg-red-500/8 text-red-500/40 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all flex-shrink-0 ml-2">
+                            <i class="fas fa-times text-[9px]"></i>
+                        </button>
+                    </div>`).join('');
+                document.getElementById('btnLimparCart').classList.remove('hidden');
+            }
+
             const total = carrinho.reduce((a, b) => a + b.preco, 0);
-            document.getElementById('displayCartTotal').textContent = `R$ ${total.toFixed(2)}`;
+            document.getElementById('displayCartTotal').textContent = `R$ ${total.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
+            const countEl = document.getElementById('cartItemCount');
+            if(countEl) countEl.textContent = carrinho.length > 0 ? `${carrinho.length} ${carrinho.length === 1 ? 'item' : 'itens'}` : '';
+            
+            const badge = document.getElementById('cartCountBadge');
+            if(carrinho.length > 0) { badge.textContent = carrinho.length; badge.classList.remove('hidden'); }
+            else badge.classList.add('hidden');
+
             const btn = document.getElementById('btnFinalizar');
             btn.disabled = carrinho.length === 0;
-            btn.className = `w-full py-5 rounded-2xl font-black uppercase text-[11px] ${carrinho.length > 0 ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20 hover:bg-blue-500' : 'bg-slate-800 text-slate-500'}`;
+            btn.className = `w-full py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${carrinho.length > 0 ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 hover:bg-blue-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`;
+
+            atualizarBotaoFlutuante();
+        }
+
+        function limparCarrinho() {
+            if(carrinho.length === 0) return;
+            if(confirm(`Limpar ${carrinho.length} ${carrinho.length === 1 ? 'item' : 'itens'} do carrinho?`)) {
+                carrinho = [];
+                renderCarrinho();
+                showToast("Carrinho", "Limpo", "warning");
+            }
+        }
+
+        function removerDoCarrinho(idx) {
+            carrinho.splice(idx, 1);
+            renderCarrinho();
+            atualizarBotaoFlutuante();
+        }
+
+        function atualizarBotaoFlutuante() {
+            const total = carrinho.reduce((a, b) => a + b.preco, 0);
+            const floatBtn = document.getElementById('floatingCartBtn');
+            const floatCount = document.getElementById('floatingCartCount');
+            const floatTotal = document.getElementById('floatingCartTotal');
+            const floatBadge = document.getElementById('floatingCartBadge');
+            if(carrinho.length > 0) {
+                if(floatCount) floatCount.textContent = `${carrinho.length} ${carrinho.length === 1 ? 'item' : 'itens'}`;
+                if(floatTotal) floatTotal.textContent = `R$ ${total.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
+                if(floatBadge) floatBadge.textContent = carrinho.length;
+                floatBtn.style.opacity = '1';
+                floatBtn.style.pointerEvents = 'auto';
+            } else {
+                floatBtn.style.opacity = '0';
+                floatBtn.style.pointerEvents = 'none';
+            }
+        }
+
+        function scrollToCarrinho() {
+            const el = document.getElementById('carrinhoContainer');
+            if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function finalizarVenda() {
@@ -757,36 +1324,56 @@
         // --- FINANCEIRO AVANÇADO ---
         function renderFinanceiro() {
             const container = document.getElementById('vendaLogs');
-            document.getElementById('totalVendasCount').textContent = `${db.vendas.length} reg`;
+            const filtro = (document.getElementById('filtroVendaData')?.value || '').toLowerCase();
+            const vendas = filtro ? db.vendas.filter(v => v.data.toLowerCase().includes(filtro)) : db.vendas;
             
-            container.innerHTML = db.vendas.map(v => `
-                <div class="bg-black/20 p-4 rounded-2xl flex justify-between items-center group transition-all hover:bg-slate-900/80 border border-white/5">
-                    <div class="flex flex-col gap-1">
-                        <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">${v.data}</span>
+            document.getElementById('totalVendasCount').textContent = `${vendas.length} reg`;
+            
+            container.innerHTML = vendas.length === 0
+                ? `<div class="text-center py-8 text-slate-700 text-[10px] font-bold uppercase">Sem registos${filtro ? ' para este filtro' : ''}</div>`
+                : vendas.map(v => `
+                <div class="venda-row flex justify-between items-center p-3 rounded-xl border border-white/5 hover:bg-slate-900/60 transition-all">
+                    <div class="flex flex-col gap-0.5 min-w-0">
                         <div class="flex items-center gap-2">
-                             <span class="text-sm font-black text-white">R$ ${v.total.toFixed(2)}</span>
-                             <span class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">${v.itens.length} itens</span>
+                            <span class="text-sm font-black text-white">R$ ${v.total.toFixed(2)}</span>
+                            <span class="badge badge-blue">${v.itens.length} it.</span>
+                            ${v.lucro > 0 ? `<span class="text-[8px] text-emerald-400 font-bold">+R$ ${v.lucro.toFixed(2)}</span>` : ''}
                         </div>
+                        <span class="text-[9px] text-slate-600 font-bold">${v.data}</span>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="abrirEditorVenda(${v.id})" class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all">
-                            <i class="fas fa-edit text-xs"></i>
+                    <div class="flex gap-1.5 flex-shrink-0">
+                        <button onclick="abrirEditorVenda(${v.id})" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all">
+                            <i class="fas fa-edit text-[9px]"></i>
                         </button>
-                        <button onclick="excluirVenda(${v.id})" class="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
-                            <i class="fas fa-trash text-xs"></i>
+                        <button onclick="excluirVenda(${v.id})" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                            <i class="fas fa-trash text-[9px]"></i>
                         </button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
-            // Atualiza métricas
             const bruto = db.vendas.reduce((a, b) => a + b.total, 0);
             const lucro = db.vendas.reduce((a, b) => a + b.lucro, 0);
             const inv = db.investimento || 0;
-            document.getElementById('dashLucro').textContent = `R$ ${lucro.toFixed(2)}`;
-            document.getElementById('faturacaoBruta').textContent = `R$ ${bruto.toFixed(2)}`;
-            document.getElementById('roiDisplay').textContent = inv > 0 ? `${((lucro / inv) * 100).toFixed(1)}%` : '0%';
-            document.getElementById('breakEvenStatus').textContent = lucro >= inv ? "Pago" : `Falta R$ ${(inv - lucro).toFixed(2)}`;
+            const nVendas = db.vendas.length;
+
+            document.getElementById('dashLucro').textContent = `R$ ${lucro.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
+            document.getElementById('faturacaoBruta').textContent = `R$ ${bruto.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
+            document.getElementById('roiDisplay').textContent = inv > 0 ? `${((lucro / inv) * 100).toFixed(1)}%` : '—';
+            document.getElementById('breakEvenStatus').textContent = lucro >= inv ? '✅ Break-Even Atingido' : `Falta R$ ${(inv - lucro).toFixed(2)}`;
+            
+            // Novos KPIs
+            const ticketMedioEl = document.getElementById('ticketMedio');
+            if(ticketMedioEl) ticketMedioEl.textContent = nVendas > 0 ? `R$ ${(bruto / nVendas).toFixed(2)}` : 'R$ 0,00';
+            
+            const margemEl = document.getElementById('margemMedia');
+            if(margemEl) margemEl.textContent = bruto > 0 ? `${((lucro / bruto) * 100).toFixed(1)}%` : '0%';
+
+            const hoje = new Date().toLocaleDateString('pt-PT');
+            const vendasHojeEl = document.getElementById('vendasHoje');
+            if(vendasHojeEl) {
+                const hj = db.vendas.filter(v => v.data.startsWith(hoje));
+                vendasHojeEl.textContent = hj.length;
+            }
         }
 
         function abrirEditorVenda(id) {
@@ -844,22 +1431,140 @@
 
         // --- PONTO ---
         function registarPonto(tipo) {
-            const nome = document.getElementById('workerName').value;
+            const nome = document.getElementById('workerName').value.trim();
             if(!nome) return showToast("Erro", "Insira o nome", "error");
-            db.ponto.unshift({ nome, tipo, data: new Date().toLocaleString('pt-PT') });
+            db.ponto.unshift({ id: Date.now(), nome, tipo, data: new Date().toLocaleString('pt-PT') });
             save();
-            showToast("Ponto", `${nome} -> ${tipo}`);
+            showToast("Ponto", `${nome} → ${tipo}`);
         }
 
         function renderPontoLogs() {
-            document.getElementById('pontoLogs').innerHTML = db.ponto.map(p => `
-                <div class="bg-slate-900/50 p-4 rounded-2xl flex justify-between items-center border border-white/5">
-                    <span class="text-[11px] font-bold">${p.nome}</span>
-                    <div class="text-right">
-                        <span class="block text-[8px] font-black ${p.tipo === 'ENTRADA' ? 'text-emerald-500' : 'text-red-500'}">${p.tipo}</span>
-                        <span class="text-[9px] text-slate-500">${p.data}</span>
+            const filtro = (document.getElementById('filtroPonto')?.value || '').toLowerCase();
+            const lista = filtro ? db.ponto.filter(p => p.nome.toLowerCase().includes(filtro)) : db.ponto;
+
+            document.getElementById('pontoLogs').innerHTML = lista.length === 0
+                ? `<div class="text-center py-8 text-slate-600 text-[10px] font-bold uppercase">Sem registos${filtro ? ' para este filtro' : ''}</div>`
+                : lista.map((p, i) => {
+                    // índice real no array original (para edição/apagar)
+                    const realIdx = db.ponto.findIndex(x => x === p);
+                    return `
+                    <div class="bg-slate-900/50 p-4 rounded-2xl flex justify-between items-center border border-white/5 transition-all hover:bg-slate-900">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center ${p.tipo === 'ENTRADA' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}">
+                                <i class="fas ${p.tipo === 'ENTRADA' ? 'fa-sign-in-alt' : 'fa-sign-out-alt'} text-xs"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] font-black text-slate-200">${p.nome}</span>
+                                <span class="text-[9px] text-slate-500">${p.data}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[8px] font-black px-2 py-1 rounded-lg ${p.tipo === 'ENTRADA' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}">${p.tipo}</span>
+                            ${isAdmin ? `
+                            <button onclick="abrirEditarPonto(${realIdx})" class="admin-only-flex w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white items-center justify-center transition-all" style="display:flex">
+                                <i class="fas fa-edit text-[9px]"></i>
+                            </button>
+                            <button onclick="apagarPonto(${realIdx})" class="admin-only-flex w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white items-center justify-center transition-all" style="display:flex">
+                                <i class="fas fa-trash text-[9px]"></i>
+                            </button>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+
+            // Resumo por funcionário
+            renderPontoResumo();
+            
+            // Contador
+            const totalEl = document.getElementById('pontoTotalRegs');
+            if(totalEl) totalEl.textContent = `${db.ponto.length} registos`;
+        }
+
+        function renderPontoResumo() {
+            const resumoEl = document.getElementById('pontoResumo');
+            if(!resumoEl) return;
+            const map = {};
+            db.ponto.forEach(p => {
+                if(!map[p.nome]) map[p.nome] = { entradas: 0, saidas: 0 };
+                if(p.tipo === 'ENTRADA') map[p.nome].entradas++;
+                else map[p.nome].saidas++;
+            });
+            const nomes = Object.keys(map);
+            if(nomes.length === 0) {
+                resumoEl.innerHTML = `<p class="col-span-2 text-[9px] text-slate-600 text-center font-bold uppercase py-2">Sem registos ainda</p>`;
+                return;
+            }
+            resumoEl.innerHTML = nomes.map(nome => `
+                <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+                    <p class="text-[10px] font-black text-slate-300 mb-2 truncate">${nome}</p>
+                    <div class="flex gap-2">
+                        <span class="text-[8px] font-black bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded">
+                            <i class="fas fa-sign-in-alt mr-1"></i>${map[nome].entradas}
+                        </span>
+                        <span class="text-[8px] font-black bg-red-500/15 text-red-400 px-2 py-0.5 rounded">
+                            <i class="fas fa-sign-out-alt mr-1"></i>${map[nome].saidas}
+                        </span>
                     </div>
-                </div>`).join('');
+                </div>
+            `).join('');
+        }
+
+        function abrirEditarPonto(idx) {
+            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
+            const reg = db.ponto[idx];
+            if(!reg) return;
+            document.getElementById('editPontoIdx').value = idx;
+            document.getElementById('editPontoNome').value = reg.nome;
+            document.getElementById('editPontoData').value = reg.data;
+            setPontoTipo(reg.tipo);
+            toggleModal('modalEditPonto');
+        }
+
+        function setPontoTipo(tipo) {
+            document.getElementById('editPontoTipo').value = tipo;
+            const btnE = document.getElementById('btnPontoEntrada');
+            const btnS = document.getElementById('btnPontoSaida');
+            if(tipo === 'ENTRADA') {
+                btnE.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-emerald-600/30 text-emerald-300 border-emerald-500/50';
+                btnS.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5';
+            } else {
+                btnE.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5';
+                btnS.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-red-600/30 text-red-300 border-red-500/50';
+            }
+        }
+
+        function salvarEdicaoPonto() {
+            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
+            const idx = parseInt(document.getElementById('editPontoIdx').value);
+            const nome = document.getElementById('editPontoNome').value.trim();
+            const tipo = document.getElementById('editPontoTipo').value;
+            const data = document.getElementById('editPontoData').value.trim();
+            if(!nome) return showToast("Erro", "Nome obrigatório", "error");
+            if(idx >= 0 && idx < db.ponto.length) {
+                db.ponto[idx] = { ...db.ponto[idx], nome, tipo, data };
+                save();
+                toggleModal('modalEditPonto');
+                showToast("Ponto", "Registo atualizado");
+            }
+        }
+
+        function apagarPonto(idx) {
+            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
+            const reg = db.ponto[idx];
+            if(!reg) return;
+            if(confirm(`Apagar registo de ${reg.nome} (${reg.tipo} - ${reg.data})?`)) {
+                db.ponto.splice(idx, 1);
+                save();
+                showToast("Ponto", "Registo apagado", "warning");
+            }
+        }
+
+        function limparTodoPonto() {
+            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
+            if(confirm('Apagar TODOS os registos de ponto?\n\nEsta ação não pode ser desfeita.')) {
+                db.ponto = [];
+                save();
+                showToast("Ponto", "Todos os registos apagados", "warning");
+            }
         }
 
         // --- CORE ---
@@ -874,27 +1579,37 @@
             renderCatalogo();
             // renderCarrinho(); // Não re-renderiza carrinho para não perder estado visual se não mudou
             renderPontoLogs();
-            document.getElementById('gridEstoque').innerHTML = db.estoque.map(p => `
-                <div class="bg-slate-900/50 p-5 rounded-2xl border border-white/5 relative group transition-all hover:bg-slate-900">
-                    <div class="absolute top-4 right-4 flex gap-2">
-                        <button onclick="editProduto(${p.id})" title="Editar" class="text-blue-500/40 hover:text-blue-400"><i class="fas fa-edit"></i></button>
-                        <button onclick="if(confirm('Apagar ${p.nome}?')) { db.estoque = db.estoque.filter(x => x.id !== ${p.id}); save(); }" title="Apagar" class="text-slate-700 hover:text-red-500"><i class="fas fa-times-circle"></i></button>
+            document.getElementById('gridEstoque').innerHTML = db.estoque.length === 0
+                ? `<div class="md:col-span-2 text-center py-12 text-slate-700 text-[10px] font-bold uppercase tracking-wider">
+                    <i class="fas fa-boxes text-2xl block mb-3"></i>Sem produtos registados
+                  </div>`
+                : db.estoque.map(p => `
+                <div class="estoque-card p-5 relative">
+                    <div class="absolute top-4 right-4 flex gap-1.5">
+                        <button onclick="abrirEditarProduto(${p.id})" title="Editar" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all">
+                            <i class="fas fa-edit text-[9px]"></i>
+                        </button>
+                        <button onclick="if(confirm('Apagar ${p.nome}?')) { db.estoque = db.estoque.filter(x => x.id !== ${p.id}); save(); }" title="Apagar" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                            <i class="fas fa-times text-[9px]"></i>
+                        </button>
                     </div>
-                    <p class="label-blue !mb-2 !ml-0">${p.nome}</p>
+                    <p class="text-[10px] font-black text-slate-300 pr-20 mb-3 leading-tight">${p.nome}</p>
                     <div class="flex justify-between items-end">
                         <div>
-                            <span class="block text-[8px] text-slate-500 font-black mb-1">STOCK</span>
-                            <div class="flex items-center gap-1">
-                                <button onclick="quickStockAction(${p.id}, 'remove')" class="w-6 h-6 rounded bg-slate-800 text-red-500 hover:bg-red-500/20 font-bold border border-white/5">-</button>
-                                <span class="text-xl font-black min-w-[30px] text-center">${p.qtdUn}</span>
-                                <button onclick="quickStockAction(${p.id}, 'add')" class="w-6 h-6 rounded bg-slate-800 text-emerald-500 hover:bg-emerald-500/20 font-bold border border-white/5">+</button>
+                            <span class="block text-[7px] text-slate-600 font-black mb-1.5 uppercase tracking-wider">Stock</span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="quickStockAction(${p.id}, 'remove')" class="stock-btn stock-btn-minus">−</button>
+                                <span class="text-xl font-black min-w-[32px] text-center ${p.qtdUn <= 0 ? 'text-red-400' : p.qtdUn <= 3 ? 'text-amber-400' : 'text-white'}">${p.qtdUn}</span>
+                                <button onclick="quickStockAction(${p.id}, 'add')" class="stock-btn stock-btn-plus">+</button>
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="block text-[8px] text-slate-500 font-black">VENDA UN</span>
-                            <span class="text-sm font-bold text-slate-400">R$ ${p.precoUn.toFixed(2)}</span>
+                            <span class="block text-[7px] text-slate-600 font-black mb-1 uppercase tracking-wider">Venda Un.</span>
+                            <span class="text-sm font-black text-slate-300">R$ ${p.precoUn.toFixed(2)}</span>
+                            ${p.packs && p.packs.length > 0 ? `<span class="block text-[8px] text-amber-400/50 font-bold mt-0.5">${p.packs.length} pack(s)</span>` : ''}
                         </div>
                     </div>
+                    ${p.qtdUn <= 0 ? '<div class="mt-2"><span class="badge badge-out">Esgotado</span></div>' : p.qtdUn <= 3 ? '<div class="mt-2"><span class="badge badge-low">Stock Baixo</span></div>' : ''}
                 </div>`).join('');
         }
 
@@ -910,16 +1625,134 @@
             document.getElementById('toastMsg').textContent = msg;
             document.getElementById('toastSubMsg').textContent = sub;
             const icon = document.getElementById('toastIcon');
-            icon.className = `w-8 h-8 rounded-full flex items-center justify-center ${type === 'success' ? 'bg-blue-500/20 text-blue-500' : type === 'warning' ? 'bg-amber-500/20 text-amber-500' : 'bg-red-500/20 text-red-500'}`;
-            icon.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'warning' ? 'exclamation' : 'times'} text-[10px]"></i>`;
-            t.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
-            setTimeout(() => t.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none'), 3000);
+            const colors = { success: 'bg-blue-500/20 text-blue-400', warning: 'bg-amber-500/20 text-amber-400', error: 'bg-red-500/20 text-red-400' };
+            const icons  = { success: 'check', warning: 'exclamation', error: 'times' };
+            icon.className = `w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${colors[type] || colors.success}`;
+            icon.innerHTML = `<i class="fas fa-${icons[type] || 'check'} text-[10px]"></i>`;
+            t.classList.remove('opacity-0', 'translate-y-16', 'pointer-events-none');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.add('opacity-0', 'translate-y-16', 'pointer-events-none'), 2800);
         }
 
         function updateStats() {
             document.getElementById('statProds').textContent = db.estoque ? db.estoque.length : 0;
             document.getElementById('statVendas').textContent = db.vendas ? db.vendas.length : 0;
             document.getElementById('statPonto').textContent = db.ponto ? db.ponto.length : 0;
+            verificarAlertasStock();
+            atualizarPdvStats();
+        }
+
+        function verificarAlertasStock() {
+            if(!isAdmin) return;
+            const baixo = db.estoque.filter(p => p.qtdUn > 0 && p.qtdUn <= 3).length;
+            const alertaBtn = document.getElementById('alertaStock');
+            const alertaCount = document.getElementById('alertaStockCount');
+            if(!alertaBtn) return;
+            if(baixo > 0) { alertaCount.textContent = baixo; alertaBtn.style.display = 'flex'; }
+            else alertaBtn.style.display = 'none';
+        }
+
+        function atualizarPdvStats() {
+            const total = db.estoque.length;
+            const low = db.estoque.filter(p => p.qtdUn > 0 && p.qtdUn <= 3).length;
+            const out = db.estoque.filter(p => p.qtdUn <= 0).length;
+            const statsEl = document.getElementById('pdvStats');
+            if(statsEl && total > 0) {
+                statsEl.classList.remove('hidden');
+                const pdvTotalEl = document.getElementById('pdvTotalProd');
+                const pdvLowEl = document.getElementById('pdvLow');
+                const pdvOutEl = document.getElementById('pdvOut');
+                if(pdvTotalEl) pdvTotalEl.textContent = total;
+                if(pdvLowEl) pdvLowEl.textContent = low;
+                if(pdvOutEl) pdvOutEl.textContent = out;
+            }
+        }
+
+        // --- EDIÇÃO DE PRODUTO VIA MODAL ---
+        let modalEditPacks = [];
+
+        function abrirEditarProduto(id) {
+            const p = db.estoque.find(x => x.id == id);
+            if(!p) return;
+            modalEditPacks = JSON.parse(JSON.stringify(p.packs || []));
+            document.getElementById('modalEditProdId').value = p.id;
+            document.getElementById('modalEditNome').value = p.nome;
+            document.getElementById('modalEditCusto').value = p.custoUn;
+            document.getElementById('modalEditPreco').value = p.precoUn;
+            document.getElementById('modalEditQtd').value = p.qtdUn;
+            document.getElementById('modalEntradaQtd').value = '';
+            document.getElementById('modalNewPackUn').value = '';
+            document.getElementById('modalNewPackPreco').value = '';
+            renderModalPacks();
+            toggleModal('modalEditProduto');
+        }
+
+        function renderModalPacks() {
+            const cont = document.getElementById('modalPacksList');
+            if(modalEditPacks.length === 0) {
+                cont.innerHTML = `<p class="text-[9px] text-slate-500 text-center font-bold uppercase py-2">Sem packs configurados</p>`;
+                return;
+            }
+            cont.innerHTML = modalEditPacks.map((pk, i) => `
+                <div class="flex justify-between items-center bg-black/30 px-4 py-3 rounded-xl border border-white/5">
+                    <div>
+                        <span class="text-[10px] font-black text-amber-400">PACK ${pk.un}x</span>
+                        <span class="text-[10px] text-slate-400 ml-2">R$ ${pk.preco.toFixed(2)}</span>
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" value="${pk.preco}" onchange="modalEditPacks[${i}].preco = parseFloat(this.value)||0; renderModalPacks();" 
+                            class="w-20 bg-slate-900 border border-white/10 rounded-lg px-2 py-1 text-[10px] text-center font-bold text-white outline-none focus:border-blue-500" step="0.01">
+                        <button onclick="modalEditPacks.splice(${i},1); renderModalPacks();" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                            <i class="fas fa-times text-[9px]"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function adicionarPackModal() {
+            const un = parseInt(document.getElementById('modalNewPackUn').value);
+            const preco = parseFloat(document.getElementById('modalNewPackPreco').value);
+            if(!un || isNaN(preco) || preco <= 0) return showToast("Erro", "Preencha qtd e preço do pack", "error");
+            if(modalEditPacks.find(p => p.un === un)) return showToast("Aviso", "Pack com essa qtd já existe", "warning");
+            modalEditPacks.push({ un, preco });
+            document.getElementById('modalNewPackUn').value = '';
+            document.getElementById('modalNewPackPreco').value = '';
+            renderModalPacks();
+            showToast("Pack", `Pack ${un}x adicionado`);
+        }
+
+        function ajustarModalStock(delta) {
+            const input = document.getElementById('modalEditQtd');
+            const val = parseInt(input.value) || 0;
+            input.value = Math.max(0, val + delta);
+        }
+
+        function entradaRapidaModal() {
+            const qtd = parseInt(document.getElementById('modalEntradaQtd').value);
+            if(!qtd || qtd <= 0) return showToast("Erro", "Insira uma quantidade válida", "error");
+            const currentQtd = document.getElementById('modalEditQtd');
+            currentQtd.value = (parseInt(currentQtd.value) || 0) + qtd;
+            document.getElementById('modalEntradaQtd').value = '';
+            showToast("Entrada", `+${qtd} adicionado`);
+        }
+
+        function salvarEdicaoProduto() {
+            const id = parseInt(document.getElementById('modalEditProdId').value);
+            const nome = document.getElementById('modalEditNome').value.trim();
+            const custoUn = parseFloat(document.getElementById('modalEditCusto').value) || 0;
+            const precoUn = parseFloat(document.getElementById('modalEditPreco').value) || 0;
+            const qtdUn = parseInt(document.getElementById('modalEditQtd').value) || 0;
+            
+            if(!nome) return showToast("Erro", "Nome obrigatório", "error");
+            
+            const idx = db.estoque.findIndex(p => p.id == id);
+            if(idx !== -1) {
+                db.estoque[idx] = { ...db.estoque[idx], nome, custoUn, precoUn, qtdUn, packs: [...modalEditPacks] };
+                save();
+                toggleModal('modalEditProduto');
+                showToast("Produto Atualizado", nome);
+            }
         }
 
         function resetSistema() {
@@ -981,5 +1814,8 @@
 
         window.onload = init;
     </script>
+    <script type="module" src="firebase.js"></script>
+
+<script type="module" src="sync.js"></script>
 </body>
 </html>
