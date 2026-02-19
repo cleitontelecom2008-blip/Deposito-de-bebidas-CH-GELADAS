@@ -1,1829 +1,1333 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CH Geladas | PDV Enterprise v3.0</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
-        
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --bg-dark: #060810;
-            --bg-surface: #0d1117;
-            --bg-card: #111827;
-            --input-bg: #0d1117;
-            --border: rgba(255,255,255,0.06);
-            --border-hover: rgba(59,130,246,0.4);
-            --text-muted: #4b5563;
-            --emerald: #10b981;
-            --amber: #f59e0b;
-            --red: #ef4444;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>CH Geladas | PDV v4.0</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
-        * { box-sizing: border-box; }
+:root {
+  --primary:#3b82f6; --primary-dark:#1d4ed8;
+  --bg:#060810; --surface:#0d1117; --card:#111827;
+  --border:rgba(255,255,255,0.06); --border-h:rgba(59,130,246,0.4);
+  --muted:#4b5563; --emerald:#10b981; --amber:#f59e0b; --red:#ef4444;
+}
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.04) 0%, transparent 60%),
-                              radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.03) 0%, transparent 50%);
-            color: #f1f5f9;
-            user-select: none;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            min-height: 100vh;
-        }
+*{box-sizing:border-box;}
 
-        /* ── GLASSMORPHISM ── */
-        .glass { 
-            background: rgba(13,17,23,0.85); 
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid var(--border); 
-        }
-        .glass-elevated {
-            background: rgba(17,24,39,0.97);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
-        }
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);
+  background-image:radial-gradient(ellipse at 20% 50%,rgba(59,130,246,0.04) 0%,transparent 60%),
+                   radial-gradient(ellipse at 80% 20%,rgba(16,185,129,0.03) 0%,transparent 50%);
+  color:#f1f5f9; user-select:none;
+  touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+  min-height:100vh;
+}
 
-        /* ── MODALS ── */
-        .modal-overlay {
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            position: fixed; inset: 0; z-index: 50;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; pointer-events: none;
-            transition: opacity 0.22s ease, visibility 0.22s ease;
-            padding: 1rem;
-        }
-        .modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
-        .modal-overlay.open > div { animation: modalIn 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards; }
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.92) translateY(10px); }
-            to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
+/* GLASS */
+.glass{background:rgba(13,17,23,0.95);border:1px solid var(--border);}
+.glass-card{background:rgba(17,24,39,0.98);border:1px solid rgba(255,255,255,0.07);box-shadow:0 24px 48px rgba(0,0,0,0.4);}
 
-        /* ── INPUTS ── */
-        .input-field {
-            background: var(--input-bg);
-            border: 1.5px solid rgba(255,255,255,0.07);
-            border-radius: 0.875rem;
-            padding: 0.875rem 1rem;
-            width: 100%; outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            color: #f1f5f9; font-size: 0.875rem;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .input-field:focus { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-        }
-        .input-field::placeholder { color: #374151; }
+/* MODALS — visibility ao invés de display:none para não quebrar cliques */
+.modal{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  background:rgba(0,0,0,0.8);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .2s,visibility .2s;
+}
+.modal.open{opacity:1;visibility:visible;pointer-events:auto;}
+.modal.open > .modal-box{animation:mIn .22s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes mIn{from{opacity:0;transform:scale(.93) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal-box{background:rgba(13,17,23,0.98);border:1px solid rgba(255,255,255,0.09);border-radius:2rem;width:100%;box-shadow:0 32px 64px rgba(0,0,0,0.6);}
 
-        /* ── LABELS ── */
-        .label-blue {
-            color: #60a5fa; font-size: 0.65rem; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 0.08em;
-            margin-bottom: 0.4rem; display: block; margin-left: 0.25rem;
-        }
+/* TABS */
+.tab-pane{display:none;}
+.tab-pane.active{display:block;animation:fadeUp .22s ease-out;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
-        /* ── TABS ── */
-        .tab-content { display: none !important; }
-        .tab-content.active { display: block !important; animation: fadeIn 0.25s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .btn-active { 
-            background: rgba(59,130,246,0.12);
-            color: #60a5fa;
-            border-bottom: 2px solid #3b82f6;
-        }
-        .tab-btn { color: #4b5563; transition: all 0.2s; }
-        .tab-btn:hover:not(.btn-active) { color: #94a3b8; background: rgba(255,255,255,0.03); }
+/* INPUTS */
+.inp{
+  background:var(--surface);border:1.5px solid rgba(255,255,255,0.07);
+  border-radius:.875rem;padding:.875rem 1rem;width:100%;outline:none;
+  transition:border-color .2s,box-shadow .2s;color:#f1f5f9;font-size:.875rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.inp:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(59,130,246,.15);}
+.inp::placeholder{color:#374151;}
+.label{color:#60a5fa;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;display:block;margin-left:.2rem;}
 
-        /* ── LOCK SCREEN ── */
-        #lock-screen { 
-            position: fixed; inset: 0; z-index: 9999; 
-            background: radial-gradient(ellipse at 50% 40%, #0f1a2e 0%, #060810 70%);
-            display: flex; align-items: center; justify-content: center; 
-        }
-        .lock-card {
-            background: rgba(13,17,23,0.9);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 2.5rem;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(59,130,246,0.1) inset;
-        }
+/* NAV TABS */
+.nav-btn{color:#4b5563;transition:all .18s;flex:1;padding:.9rem .5rem;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:2px solid transparent;}
+.nav-btn:hover:not(.active){color:#94a3b8;background:rgba(255,255,255,0.02);}
+.nav-btn.active{color:#60a5fa;border-bottom-color:#3b82f6;background:rgba(59,130,246,.06);}
 
-        /* ── SCROLLBAR ── */
-        .custom-scroll::-webkit-scrollbar { width: 3px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.3); }
+/* LOCK */
+#lock{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at 50% 40%,#0f1a2e 0%,#060810 70%);display:flex;align-items:center;justify-content:center;}
 
-        /* ── ADMIN VISIBILITY ── */
-        .admin-only-ui { display: none !important; }
-        body.is-admin .admin-only-ui { display: block !important; }
-        body.is-admin .admin-only-flex { display: flex !important; }
+/* CARDS PDV */
+.prod-card{
+  background:linear-gradient(145deg,rgba(13,17,23,.98) 0%,rgba(9,12,18,1) 100%);
+  border:1.5px solid rgba(255,255,255,0.06);border-left:3px solid var(--primary);
+  border-radius:1.25rem;transition:all .18s;position:relative;overflow:hidden;
+}
+.prod-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-1px);}
+.prod-card.esgotado{border-left-color:#374151;opacity:.5;}
 
-        /* ── DROPZONE ── */
-        .drop-zone { border: 2px dashed rgba(59,130,246,0.3); transition: all 0.3s; }
-        .drop-zone:hover { border-color: rgba(59,130,246,0.6); background: rgba(59,130,246,0.05); }
+/* BOTÕES DE VENDA */
+.btn-un,.btn-pk{border-radius:.75rem;padding:.6rem .5rem;flex:1;transition:all .15s;cursor:pointer;min-width:0;position:relative;}
+.btn-un{background:rgba(59,130,246,.1);border:1.5px solid rgba(59,130,246,.18);}
+.btn-un:hover{background:rgba(59,130,246,.22);}
+.btn-pk{background:rgba(245,158,11,.1);border:1.5px solid rgba(245,158,11,.18);}
+.btn-pk:hover{background:rgba(245,158,11,.22);}
+.btn-un:active,.btn-pk:active{transform:scale(.94);}
+.btn-un:disabled,.btn-pk:disabled{opacity:.3;cursor:not-allowed;transform:none!important;}
 
-        /* ── CART ANIMATIONS ── */
-        @keyframes cartFlash {
-            0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0.8); }
-            30%  { transform: scale(0.93); box-shadow: 0 0 0 10px rgba(59,130,246,0.25); }
-            60%  { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(59,130,246,0); }
-            100% { transform: scale(1); }
-        }
-        @keyframes cartFlashPack {
-            0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,0.8); }
-            30%  { transform: scale(0.93); box-shadow: 0 0 0 10px rgba(245,158,11,0.25); }
-            60%  { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(245,158,11,0); }
-            100% { transform: scale(1); }
-        }
-        .btn-flash-un   { animation: cartFlash 0.4s ease-out forwards; }
-        .btn-flash-pack { animation: cartFlashPack 0.4s ease-out forwards; }
+@keyframes flashBlue{0%{box-shadow:0 0 0 0 rgba(59,130,246,.8);}60%{box-shadow:0 0 0 14px rgba(59,130,246,0);}100%{box-shadow:0 0 0 0 rgba(59,130,246,0);}}
+@keyframes flashAmber{0%{box-shadow:0 0 0 0 rgba(245,158,11,.8);}60%{box-shadow:0 0 0 14px rgba(245,158,11,0);}100%{box-shadow:0 0 0 0 rgba(245,158,11,0);}}
+.flash-blue{animation:flashBlue .35s ease-out;}
+.flash-amber{animation:flashAmber .35s ease-out;}
 
-        /* ── PRODUCT CARDS ── */
-        .produto-card {
-            background: linear-gradient(145deg, rgba(13,17,23,0.98) 0%, rgba(9,12,18,1) 100%);
-            border: 1.5px solid rgba(255,255,255,0.06);
-            border-left: 3px solid var(--primary);
-            border-radius: 1.25rem;
-            transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
-            position: relative; overflow: hidden;
-        }
-        .produto-card::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(59,130,246,0.03) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .produto-card:hover { 
-            border-color: rgba(59,130,246,0.35); 
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-        .produto-card.esgotado { border-left-color: #374151; opacity: 0.5; }
-        .produto-card .prod-nome { font-size: 0.82rem; font-weight: 800; color: #e2e8f0; letter-spacing: 0.01em; line-height: 1.3; }
-        .produto-card .prod-stock { font-size: 0.65rem; color: #4b5563; font-weight: 700; margin-top: 2px; }
-        .produto-card .prod-stock.low { color: #f59e0b; }
-        .produto-card .prod-stock.out { color: #ef4444; }
+/* SCROLLBAR */
+.scroll::-webkit-scrollbar{width:3px;}
+.scroll::-webkit-scrollbar-track{background:transparent;}
+.scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:10px;}
+.no-scroll::-webkit-scrollbar{display:none;}
+.no-scroll{-ms-overflow-style:none;scrollbar-width:none;}
 
-        .btn-unid, .btn-pack {
-            border-radius: 0.75rem; padding: 0.65rem 0.5rem;
-            flex: 1; transition: all 0.15s; cursor: pointer; min-width: 0;
-            position: relative; overflow: hidden;
-        }
-        .btn-unid { background: rgba(59,130,246,0.1); border: 1.5px solid rgba(59,130,246,0.18); }
-        .btn-unid:hover { background: rgba(59,130,246,0.22); border-color: rgba(59,130,246,0.45); }
-        .btn-pack { background: rgba(245,158,11,0.1); border: 1.5px solid rgba(245,158,11,0.18); }
-        .btn-pack:hover { background: rgba(245,158,11,0.22); border-color: rgba(245,158,11,0.45); }
-        .btn-unid:active, .btn-pack:active { transform: scale(0.94); }
-        .btn-unid:disabled, .btn-pack:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
+/* BADGES */
+.badge{display:inline-flex;align-items:center;border-radius:9999px;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:.2rem .55rem;}
+.b-blue{background:rgba(59,130,246,.15);color:#60a5fa;}
+.b-green{background:rgba(16,185,129,.15);color:#34d399;}
+.b-amber{background:rgba(245,158,11,.15);color:#fbbf24;}
+.b-red{background:rgba(239,68,68,.15);color:#f87171;}
+.b-purple{background:rgba(139,92,246,.15);color:#a78bfa;}
 
-        /* ── CART ITEMS ── */
-        .carrinho-item-new { animation: newItemSlide 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-        @keyframes newItemSlide {
-            from { opacity:0; transform: translateX(16px) scale(0.96); }
-            to   { opacity:1; transform: translateX(0) scale(1); }
-        }
+/* BOTÕES BASE */
+.btn-p{background:#2563eb;color:#fff;border-radius:.875rem;font-weight:800;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:.875rem 1.5rem;transition:all .2s;border:none;cursor:pointer;}
+.btn-p:hover{background:#3b82f6;}
+.btn-s{background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.08);border-radius:.875rem;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:.875rem 1.5rem;transition:all .2s;cursor:pointer;}
+.btn-s:hover{background:rgba(255,255,255,.09);color:#f1f5f9;}
+.btn-d{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2);border-radius:.875rem;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:.875rem 1.5rem;transition:all .2s;cursor:pointer;}
+.btn-d:hover{background:#dc2626;color:#fff;border-color:#dc2626;}
 
-        /* ── MODAL BODY SCROLL ── */
-        .modal-body { max-height: 72vh; overflow-y: auto; }
+/* CART ITEM ENTER */
+.item-new{animation:itemIn .25s cubic-bezier(.34,1.56,.64,1);}
+@keyframes itemIn{from{opacity:0;transform:translateX(12px) scale(.96);}to{opacity:1;transform:translateX(0) scale(1);}}
 
-        /* ── STAT CARDS ── */
-        .stat-card {
-            background: rgba(13,17,23,0.85);
-            border: 1px solid var(--border);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            transition: all 0.2s;
-        }
-        .stat-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-1px); }
+/* ADMIN */
+.adm{display:none!important;}
+body.is-admin .adm{display:block!important;}
+body.is-admin .adm-flex{display:flex!important;}
 
-        /* ── HEADER ── */
-        .app-header {
-            background: rgba(6,8,16,0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
+/* ESTOQUE CARD */
+.est-card{background:rgba(13,17,23,.85);border:1px solid var(--border);border-radius:1.25rem;transition:all .2s;}
+.est-card:hover{border-color:rgba(255,255,255,.1);}
 
-        /* ── NAV ── */
-        .app-nav {
-            background: rgba(6,8,16,0.95);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
+/* TOAST */
+#toast{min-width:220px;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(4rem);opacity:0;pointer-events:none;z-index:200;transition:opacity .25s,transform .25s;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-        /* ── FINANCEIRO ── */
-        .venda-row { transition: background 0.15s; }
-        .venda-row:hover { background: rgba(255,255,255,0.03); }
+/* STAT CARD */
+.stat{background:rgba(13,17,23,.85);border:1px solid var(--border);border-radius:1.5rem;padding:1.5rem;transition:all .2s;}
+.stat:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.1);}
 
-        /* ── ESTOQUE GRID CARDS ── */
-        .estoque-card {
-            background: rgba(13,17,23,0.8);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
-            transition: all 0.2s;
-        }
-        .estoque-card:hover { border-color: rgba(255,255,255,0.1); background: rgba(13,17,23,0.95); }
+/* STOCK BTNS */
+.sk-btn{width:1.75rem;height:1.75rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;border:1px solid rgba(255,255,255,.06);transition:all .15s;cursor:pointer;}
+.sk-m{background:rgba(239,68,68,.08);color:#f87171;}
+.sk-m:hover{background:rgba(239,68,68,.25);}
+.sk-p{background:rgba(16,185,129,.08);color:#34d399;}
+.sk-p:hover{background:rgba(16,185,129,.25);}
 
-        /* ── BADGE PILL ── */
-        .badge { display: inline-flex; align-items: center; border-radius: 9999px; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.55rem; }
-        .badge-ok     { background: rgba(16,185,129,0.15); color: #34d399; }
-        .badge-low    { background: rgba(245,158,11,0.15); color: #fbbf24; }
-        .badge-out    { background: rgba(239,68,68,0.15);  color: #f87171; }
-        .badge-blue   { background: rgba(59,130,246,0.15); color: #60a5fa; }
-        .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+/* LOADER */
+#app-loader{position:fixed;inset:0;z-index:9998;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;transition:opacity .4s;}
+#app-loader.hide{opacity:0;pointer-events:none;}
+.spin{width:36px;height:36px;border:3px solid rgba(59,130,246,.2);border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-        /* ── BUTTON BASE ── */
-        .btn-primary { background: #2563eb; color: white; border-radius: 0.875rem; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.875rem 1.5rem; transition: all 0.2s; border: none; cursor: pointer; }
-        .btn-primary:hover { background: #3b82f6; box-shadow: 0 0 24px rgba(59,130,246,0.3); }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.875rem; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.875rem 1.5rem; transition: all 0.2s; cursor: pointer; }
-        .btn-secondary:hover { background: rgba(255,255,255,0.08); color: #f1f5f9; }
-        .btn-danger { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); border-radius: 0.875rem; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.875rem 1.5rem; transition: all 0.2s; cursor: pointer; }
-        .btn-danger:hover { background: #dc2626; color: white; border-color: #dc2626; }
-
-        /* ── SECTION HEADER ── */
-        .section-title { font-size: 0.62rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #60a5fa; margin-bottom: 0.3rem; }
-
-        /* ── TOAST ── */
-        #toast { min-width: 220px; }
-
-        /* ── LOADER dot ── */
-        .dot-pulse::after {
-            content: ''; display: inline-block;
-            width: 6px; height: 6px; border-radius: 50%;
-            background: #3b82f6; margin-left: 6px;
-            animation: pulse 1.2s ease-in-out infinite;
-        }
-        @keyframes pulse { 0%,100% { opacity:0.3; transform: scale(0.8); } 50% { opacity:1; transform: scale(1.2); } }
-
-        /* ── FLOATING CART ── */
-        #floatingCartBtn { transition: opacity 0.3s, transform 0.3s, box-shadow 0.2s; }
-        #floatingCartBtn:hover { box-shadow: 0 0 32px rgba(59,130,246,0.5); }
-
-        /* ── PONTO CARD ── */
-        .ponto-card { transition: all 0.15s; }
-        .ponto-card:hover { background: rgba(255,255,255,0.03) !important; }
-
-        /* ── DIVIDER ── */
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); margin: 1rem 0; }
-
-        /* ── QUICK STOCK BTN ── */
-        .stock-btn { width: 1.75rem; height: 1.75rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; border: 1px solid rgba(255,255,255,0.06); transition: all 0.15s; cursor: pointer; }
-        .stock-btn-minus { background: rgba(239,68,68,0.08); color: #f87171; }
-        .stock-btn-minus:hover { background: rgba(239,68,68,0.25); }
-        .stock-btn-plus  { background: rgba(16,185,129,0.08); color: #34d399; }
-        .stock-btn-plus:hover  { background: rgba(16,185,129,0.25); }
-
-        /* ── NO-SCROLLBAR ── */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+/* FLOATING CART */
+#float-cart{position:fixed;bottom:1.5rem;right:1rem;z-index:50;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;}
+#float-cart.show{opacity:1;pointer-events:auto;}
+</style>
 </head>
 <body class="min-h-screen">
 
-    <audio id="audioVenda" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="auto"></audio>
+<audio id="audioVenda" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="auto"></audio>
 
-    <!-- Tela de Bloqueio -->
-    <div id="lock-screen">
-        <div class="lock-card text-center p-10 w-full max-w-sm mx-4 shadow-2xl">
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-blue-500/30">
-                <span class="text-3xl">🍺</span>
-            </div>
-            <h1 class="text-2xl font-black mb-1 uppercase tracking-tight">CH <span class="text-blue-400">GELADAS</span></h1>
-            <p class="text-[9px] text-slate-600 font-bold uppercase tracking-widest mb-8">PDV Enterprise v3.0</p>
-            <div class="relative mb-4">
-                <input type="password" id="masterPass" maxlength="6" inputmode="numeric"
-                    class="w-full bg-slate-950 border-2 border-slate-800 focus:border-blue-500 p-5 rounded-2xl text-center text-3xl outline-none text-white tracking-[0.6em] transition-all font-mono"
-                    placeholder="· · ·" onkeyup="checkPin(this.value)" autocomplete="off">
-            </div>
-            <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-xs tracking-widest transition-all shadow-lg shadow-blue-500/20 mb-3">
-                <i class="fas fa-unlock-alt mr-2"></i>Aceder ao Sistema
-            </button>
-            
-                <div class="bg-slate-950/50 rounded-xl p-2 text-center border border-white/5">
-                    <p class="text-[8px] text-slate-600 uppercase font-bold">Colaborador</p>
-                    <p class="text-[8px] text-slate-500 font-mono">12345</p>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- LOADER (visível enquanto sync.js restaura) -->
+<div id="app-loader">
+  <div class="text-center">
+    <span class="text-3xl block mb-4">🍺</span>
+    <div class="spin mx-auto mb-3"></div>
+    <p class="text-[10px] text-slate-600 uppercase font-black tracking-widest">Sincronizando dados...</p>
+  </div>
+</div>
 
-    <!-- Modal Pós Venda -->
-    <div id="modalPosVenda" class="modal-overlay">
-        <div class="glass p-8 rounded-[2.5rem] w-full max-w-md mx-4 text-center border border-white/10 shadow-2xl transform transition-all scale-100">
-            <div class="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check text-2xl"></i>
-            </div>
-            <h2 class="text-2xl font-black text-white mb-2">Venda Realizada!</h2>
-            <p class="text-slate-400 text-sm mb-8">O que deseja fazer agora?</p>
-            
-            <button onclick="enviarWhatsappUltimaVenda()" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-xl font-black uppercase text-xs mb-3 flex items-center justify-center gap-2 transition-all">
-                <i class="fab fa-whatsapp text-lg"></i> Enviar Comprovante
-            </button>
-            <button onclick="if(lastSale) salvarVendaTxt(lastSale);" class="w-full bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/20 py-3 rounded-xl font-black uppercase text-xs mb-3 flex items-center justify-center gap-2 transition-all">
-                <i class="fas fa-download text-sm"></i> Baixar TXT
-            </button>
-            <button onclick="fecharModalPosVenda()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-4 rounded-xl font-black uppercase text-xs transition-all">
-                Nova Venda
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal Config WhatsApp -->
-    <div id="modalConfigZap" class="modal-overlay">
-        <div class="glass p-8 rounded-[2.5rem] w-full max-w-sm mx-4 border border-white/10 shadow-2xl">
-            <h3 class="label-blue mb-6 !text-sm">Configuração WhatsApp</h3>
-            <p class="text-xs text-slate-400 mb-4">Insira o número com o código do país e DDD (apenas números). Ex: 5511999999999</p>
-            <input type="tel" id="zapNumberInput" class="input-field mb-6" placeholder="55..." inputmode="numeric">
-            <div class="flex gap-3">
-                <button onclick="salvarConfigZap()" class="flex-1 bg-blue-600 py-3 rounded-xl font-black uppercase text-xs">Salvar</button>
-                <button onclick="toggleModal('modalConfigZap')" class="flex-1 bg-slate-800 py-3 rounded-xl font-black uppercase text-xs text-slate-400">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Editar Venda -->
-    <div id="modalEditVenda" class="modal-overlay">
-        <div class="glass p-8 rounded-[2.5rem] w-full max-w-sm mx-4 border border-white/10 shadow-2xl">
-            <h3 class="label-blue mb-6 !text-sm text-amber-500">Editar Venda</h3>
-            <input type="hidden" id="editVendaId">
-            
-            <div class="space-y-4 mb-6">
-                <div>
-                    <label class="label-blue">Data/Hora (Texto)</label>
-                    <input type="text" id="editVendaData" class="input-field">
-                </div>
-                <div>
-                    <label class="label-blue">Total (R$)</label>
-                    <input type="number" id="editVendaTotal" class="input-field" step="0.01">
-                </div>
-                 <div>
-                    <label class="label-blue">Lucro Estimado (R$)</label>
-                    <input type="number" id="editVendaLucro" class="input-field" step="0.01">
-                </div>
-            </div>
-
-            <div class="flex gap-3">
-                <button onclick="salvarEdicaoVenda()" class="flex-1 bg-amber-600 hover:bg-amber-500 py-3 rounded-xl font-black uppercase text-xs text-white">Atualizar</button>
-                <button onclick="toggleModal('modalEditVenda')" class="flex-1 bg-slate-800 py-3 rounded-xl font-black uppercase text-xs text-slate-400">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Editar Produto (Estoque) -->
-    <div id="modalEditProduto" class="modal-overlay">
-        <div class="glass rounded-[2.5rem] w-full max-w-md mx-4 border border-white/10 shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                <h3 class="text-sm font-black uppercase tracking-wider text-blue-400"><i class="fas fa-edit mr-2"></i>Editar Produto</h3>
-                <button onclick="toggleModal('modalEditProduto')" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fas fa-times text-xs"></i></button>
-            </div>
-            <div class="modal-body p-6 space-y-4">
-                <input type="hidden" id="modalEditProdId">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="label-blue">Nome do Produto</label>
-                        <input type="text" id="modalEditNome" class="input-field" placeholder="Nome">
-                    </div>
-                    <div>
-                        <label class="label-blue">Custo Compra (Un.)</label>
-                        <input type="number" id="modalEditCusto" class="input-field" placeholder="0.00" step="0.01">
-                    </div>
-                    <div>
-                        <label class="label-blue">Preço Venda (Un.)</label>
-                        <input type="number" id="modalEditPreco" class="input-field" placeholder="0.00" step="0.01">
-                    </div>
-                    <div>
-                        <label class="label-blue">Stock Atual (Un.)</label>
-                        <div class="flex items-center gap-2">
-                            <button onclick="ajustarModalStock(-1)" class="w-10 h-10 rounded-xl bg-slate-800 text-red-400 font-black text-lg border border-white/5 hover:bg-red-500/20 flex-shrink-0">−</button>
-                            <input type="number" id="modalEditQtd" class="input-field text-center font-black text-lg" placeholder="0">
-                            <button onclick="ajustarModalStock(1)" class="w-10 h-10 rounded-xl bg-slate-800 text-emerald-400 font-black text-lg border border-white/5 hover:bg-emerald-500/20 flex-shrink-0">+</button>
-                        </div>
-                    </div>
-                    <div class="flex items-end">
-                        <div class="w-full">
-                            <label class="label-blue">Entrada Rápida</label>
-                            <div class="flex gap-2">
-                                <input type="number" id="modalEntradaQtd" class="input-field text-center" placeholder="Qtd">
-                                <button onclick="entradaRapidaModal()" class="bg-emerald-600/20 text-emerald-400 px-3 rounded-xl text-xs font-black border border-emerald-500/20 hover:bg-emerald-600/40 whitespace-nowrap">+ Stock</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Packs -->
-                <div class="bg-black/20 p-5 rounded-2xl border border-white/5">
-                    <h4 class="label-blue text-amber-400 mb-3"><i class="fas fa-box mr-1"></i>Packs de Venda</h4>
-                    <div id="modalPacksList" class="space-y-2 mb-4"></div>
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                            <label class="label-blue">Qtd Pack</label>
-                            <input type="number" id="modalNewPackUn" class="input-field" placeholder="Ex: 6">
-                        </div>
-                        <div>
-                            <label class="label-blue">Preço Pack</label>
-                            <input type="number" id="modalNewPackPreco" class="input-field" placeholder="Ex: 15.00" step="0.01">
-                        </div>
-                    </div>
-                    <button onclick="adicionarPackModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-xl font-bold text-[10px] uppercase border border-white/5 transition-all">
-                        <i class="fas fa-plus mr-2 text-amber-400"></i>Adicionar Pack
-                    </button>
-                </div>
-            </div>
-            <div class="p-6 border-t border-white/5 flex gap-3">
-                <button onclick="salvarEdicaoProduto()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-xs transition-all">
-                    <i class="fas fa-check mr-2"></i>Guardar Alterações
-                </button>
-                <button onclick="toggleModal('modalEditProduto')" class="bg-slate-800 hover:bg-slate-700 px-6 rounded-xl font-black uppercase text-xs text-slate-400 transition-all">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Editar Registo de Ponto (só ADM) -->
-    <div id="modalEditPonto" class="modal-overlay">
-        <div class="glass rounded-[2.5rem] w-full max-w-sm mx-4 border border-white/10 shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                <h3 class="text-sm font-black uppercase tracking-wider text-amber-400"><i class="fas fa-clock mr-2"></i>Editar Registo</h3>
-                <button onclick="toggleModal('modalEditPonto')" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fas fa-times text-xs"></i></button>
-            </div>
-            <div class="p-6 space-y-4">
-                <input type="hidden" id="editPontoIdx">
-                <div>
-                    <label class="label-blue">Nome do Funcionário</label>
-                    <input type="text" id="editPontoNome" class="input-field" placeholder="Nome">
-                </div>
-                <div>
-                    <label class="label-blue">Tipo</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button id="btnPontoEntrada" onclick="setPontoTipo('ENTRADA')" class="py-3 rounded-xl font-black uppercase text-xs border transition-all bg-emerald-600/20 text-emerald-400 border-emerald-500/30">
-                            <i class="fas fa-sign-in-alt mr-1"></i> Entrada
-                        </button>
-                        <button id="btnPontoSaida" onclick="setPontoTipo('SAÍDA')" class="py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5">
-                            <i class="fas fa-sign-out-alt mr-1"></i> Saída
-                        </button>
-                    </div>
-                    <input type="hidden" id="editPontoTipo" value="ENTRADA">
-                </div>
-                <div>
-                    <label class="label-blue">Data / Hora</label>
-                    <input type="text" id="editPontoData" class="input-field" placeholder="Ex: 17/02/2026, 09:00:00">
-                </div>
-            </div>
-            <div class="p-6 border-t border-white/5 flex gap-3">
-                <button onclick="salvarEdicaoPonto()" class="flex-1 bg-amber-600 hover:bg-amber-500 py-4 rounded-xl font-black uppercase text-xs transition-all">
-                    <i class="fas fa-check mr-2"></i>Guardar
-                </button>
-                <button onclick="toggleModal('modalEditPonto')" class="bg-slate-800 hover:bg-slate-700 px-6 rounded-xl font-black uppercase text-xs text-slate-400 transition-all">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="app-content" class="hidden flex flex-col min-h-screen">
-        <header class="app-header px-5 py-3 flex justify-between items-center sticky top-0 z-40">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center font-black text-xs shadow-lg shadow-blue-500/20 flex-shrink-0">🍺</div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h2 class="text-[10px] font-black uppercase tracking-widest leading-none" id="userRoleTitle" style="color:#60a5fa">Sistema</h2>
-                        <span id="roleTag" class="badge badge-blue hidden">ADM</span>
-                    </div>
-                    <p id="liveClock" class="text-[9px] font-mono text-slate-600 mt-0.5">00:00:00</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <!-- Indicador de stock baixo -->
-                <button id="alertaStock" onclick="switchTab('estoque')" class="hidden items-center gap-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wide transition-all hover:bg-amber-500/20 admin-only-flex">
-                    <i class="fas fa-exclamation-triangle text-[8px]"></i>
-                    <span id="alertaStockCount">0</span> Stock Baixo
-                </button>
-                <button onclick="location.reload()" title="Terminar Sessão" class="w-8 h-8 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-center text-slate-500 hover:text-red-400 hover:border-red-500/20 transition-all">
-                    <i class="fas fa-power-off text-xs"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Navegação -->
-        <nav class="app-nav flex overflow-x-auto no-scrollbar">
-            <button onclick="switchTab('vendas')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider btn-active" data-tab="vendas">
-                <i class="fas fa-cash-register block text-base mb-1 mx-auto"></i>PDV
-            </button>
-            <button onclick="switchTab('estoque')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider admin-only-ui" data-tab="estoque">
-                <i class="fas fa-boxes block text-base mb-1 mx-auto"></i>Estoque
-            </button>
-            <button onclick="switchTab('financeiro')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider admin-only-ui" data-tab="financeiro">
-                <i class="fas fa-chart-line block text-base mb-1 mx-auto"></i>Caixa
-            </button>
-            <button onclick="switchTab('ponto')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider" data-tab="ponto">
-                <i class="fas fa-user-clock block text-base mb-1 mx-auto"></i>Ponto
-            </button>
-            <button onclick="switchTab('dados')" class="tab-btn flex-1 px-3 py-4 text-[9px] font-black uppercase tracking-wider admin-only-ui" data-tab="dados">
-                <i class="fas fa-database block text-base mb-1 mx-auto"></i>Dados
-            </button>
-        </nav>
-
-        <main class="flex-1 p-3 lg:p-5 max-w-7xl mx-auto w-full pb-24 lg:pb-6">
-            
-            <!-- PDV / Vendas -->
-            <section id="vendas" class="tab-content active">
-                <div class="grid lg:grid-cols-12 gap-4 lg:gap-6">
-                    <!-- Catálogo -->
-                    <div class="lg:col-span-8 flex flex-col gap-3">
-                        <div class="flex gap-2">
-                            <div class="relative flex-1">
-                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs pointer-events-none"></i>
-                                <input type="text" id="searchProd" oninput="clearTimeout(this._t); this._t=setTimeout(renderCatalogo,180)" class="input-field pl-10" placeholder="Pesquisar produto...">
-                            </div>
-                            <button onclick="toggleModal('modalConfigZap')" 
-                                class="w-12 bg-slate-900 rounded-xl flex items-center justify-center text-slate-500 hover:text-[#25D366] hover:bg-slate-800 transition-all border border-white/5 flex-shrink-0" title="Configurar WhatsApp">
-                                <i class="fab fa-whatsapp text-lg"></i>
-                            </button>
-                        </div>
-                        <!-- Stat rápido do PDV -->
-                        <div id="pdvStats" class="grid grid-cols-3 gap-2 hidden">
-                            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
-                                <p class="text-[8px] text-slate-600 uppercase font-bold">Produtos</p>
-                                <p class="text-sm font-black" id="pdvTotalProd">0</p>
-                            </div>
-                            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
-                                <p class="text-[8px] text-amber-500/70 uppercase font-bold">Stock Baixo</p>
-                                <p class="text-sm font-black text-amber-400" id="pdvLow">0</p>
-                            </div>
-                            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
-                                <p class="text-[8px] text-red-500/70 uppercase font-bold">Esgotados</p>
-                                <p class="text-sm font-black text-red-400" id="pdvOut">0</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto custom-scroll" style="max-height:62vh" id="catalogoVenda"></div>
-                    </div>
-                    
-                    <!-- Carrinho -->
-                    <div class="lg:col-span-4">
-                        <div id="carrinhoContainer" class="glass-elevated rounded-[2rem] flex flex-col sticky top-[72px] overflow-hidden" style="max-height: calc(100vh - 90px)">
-                            <!-- Header do carrinho -->
-                            <div class="px-5 pt-5 pb-3 border-b border-white/5">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-shopping-cart text-blue-400 text-sm"></i>
-                                        <span class="section-title !mb-0">Carrinho</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span id="cartCountBadge" class="hidden badge badge-blue">0</span>
-                                        <button onclick="limparCarrinho()" id="btnLimparCart" class="hidden w-6 h-6 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/25 flex items-center justify-center transition-all" title="Limpar carrinho">
-                                            <i class="fas fa-trash text-[9px]"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Itens -->
-                            <div id="carrinhoLista" class="flex-1 overflow-y-auto custom-scroll p-4 space-y-2 min-h-[200px]"></div>
-                            <!-- Footer -->
-                            <div class="p-5 border-t border-white/5 bg-slate-950/50">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-[9px] text-slate-600 uppercase font-bold tracking-wider">Total</span>
-                                    <span id="cartItemCount" class="text-[9px] text-slate-600"></span>
-                                </div>
-                                <h2 id="displayCartTotal" class="text-3xl font-black text-white mb-4 tracking-tight">R$ 0,00</h2>
-                                <button onclick="finalizarVenda()" id="btnFinalizar" disabled
-                                    class="w-full py-4 rounded-xl bg-slate-800 text-slate-500 font-black uppercase text-[10px] tracking-widest transition-all">
-                                    <i class="fas fa-check-circle mr-2"></i>Finalizar Venda
-                                </button>
-                                <p class="text-[7px] text-slate-700 mt-2 text-center uppercase font-bold tracking-widest">TXT gerado automaticamente</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Estoque -->
-            <section id="estoque" class="tab-content">
-                <div class="max-w-3xl mx-auto">
-                    <div class="bg-slate-900/40 p-8 rounded-[2.5rem] border border-white/5 mb-8">
-                        <h3 class="label-blue mb-8" id="formEstoqueTitle">Novo Produto</h3>
-                        <input type="hidden" id="editingProdId">
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label class="label-blue">Designação</label>
-                                <input type="text" id="pNome" class="input-field" placeholder="Ex: Cerveja Especial">
-                            </div>
-                            <div>
-                                <label class="label-blue">Custo Compra (Un.)</label>
-                                <input type="number" id="pCustoUn" class="input-field" placeholder="0.00">
-                            </div>
-                            <div>
-                                <label class="label-blue">Stock Inicial</label>
-                                <input type="number" id="pQtdUn" class="input-field" placeholder="0">
-                            </div>
-                            <div>
-                                <label class="label-blue">Preço Venda (Un.)</label>
-                                <input type="number" id="pPrecoUn" class="input-field" placeholder="0.00">
-                            </div>
-                        </div>
-
-                        <div class="bg-black/20 p-6 rounded-3xl border border-white/5">
-                            <h4 class="label-blue mb-4 text-blue-400">Packs de Venda</h4>
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <input type="number" id="tempPackUn" class="input-field" placeholder="Qtd (ex: 6)">
-                                <input type="number" id="tempPackPreco" class="input-field" placeholder="Preço Pack">
-                            </div>
-                            <button onclick="addPackToList()" class="w-full bg-slate-800 text-slate-300 py-3 rounded-xl font-bold text-[10px] uppercase">Adicionar Pack</button>
-                            <div id="tempPackList" class="mt-4 space-y-2"></div>
-                        </div>
-
-                        <div class="flex gap-4 mt-8">
-                            <button id="btnSaveProd" onclick="saveProduto()" class="flex-1 bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs">Registar Produto</button>
-                            <button id="btnCancelEdit" onclick="resetFormEstoque()" class="hidden bg-slate-800 px-8 rounded-2xl font-black uppercase text-xs text-slate-400">Cancelar</button>
-                        </div>
-                    </div>
-                    
-                    <div id="gridEstoque" class="grid md:grid-cols-2 gap-4"></div>
-                </div>
-            </section>
-
-            <!-- Financeiro -->
-            <section id="financeiro" class="tab-content">
-                <!-- KPIs -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                    <div class="stat-card border-l-4 border-blue-500">
-                        <p class="section-title">Investimento</p>
-                        <input type="number" id="invTotalInput" onchange="updateInvestimento()" 
-                            class="bg-transparent text-2xl font-black w-full outline-none text-white mt-1 placeholder-slate-700" placeholder="0,00">
-                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Edite aqui</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-emerald-500">
-                        <p class="section-title" style="color:#34d399">Lucro Líquido</p>
-                        <h2 id="dashLucro" class="text-2xl font-black mt-1 text-emerald-400">R$ 0,00</h2>
-                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Acumulado</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-amber-500">
-                        <p class="section-title" style="color:#fbbf24">ROI Global</p>
-                        <h2 id="roiDisplay" class="text-2xl font-black mt-1 text-amber-400">0%</h2>
-                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Retorno</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-purple-500">
-                        <p class="section-title" style="color:#a78bfa">Faturação Bruta</p>
-                        <h2 id="faturacaoBruta" class="text-2xl font-black mt-1 text-purple-400">R$ 0,00</h2>
-                        <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Total vendas</p>
-                    </div>
-                </div>
-
-                <div class="grid lg:grid-cols-2 gap-4">
-                    <!-- Histórico -->
-                    <div class="glass rounded-[1.75rem] overflow-hidden">
-                        <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-receipt text-blue-400 text-sm"></i>
-                                <span class="section-title !mb-0">Histórico de Vendas</span>
-                            </div>
-                            <span class="badge badge-blue" id="totalVendasCount">0 reg</span>
-                        </div>
-                        <!-- Filtro de data -->
-                        <div class="px-6 py-3 border-b border-white/5">
-                            <div class="flex gap-2">
-                                <input type="text" id="filtroVendaData" oninput="renderFinanceiro()" class="input-field !py-2 !text-xs" placeholder="Filtrar por data...">
-                                <button onclick="document.getElementById('filtroVendaData').value=''; renderFinanceiro();" class="px-3 rounded-xl bg-slate-900 text-slate-500 hover:text-white text-xs border border-white/5 transition-all flex-shrink-0">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="overflow-y-auto custom-scroll max-h-[420px] p-4 space-y-2" id="vendaLogs"></div>
-                    </div>
-
-                    <!-- Métricas & Ações -->
-                    <div class="space-y-4">
-                        <div class="glass rounded-[1.75rem] p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <i class="fas fa-tachometer-alt text-blue-400 text-sm"></i>
-                                <span class="section-title !mb-0">Métricas</span>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
-                                    <span class="text-[10px] uppercase font-bold text-slate-500">Break-Even</span>
-                                    <span id="breakEvenStatus" class="text-sm font-black text-amber-400"></span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
-                                    <span class="text-[10px] uppercase font-bold text-slate-500">Ticket Médio</span>
-                                    <span id="ticketMedio" class="text-sm font-black text-blue-400">R$ 0,00</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
-                                    <span class="text-[10px] uppercase font-bold text-slate-500">Margem Média</span>
-                                    <span id="margemMedia" class="text-sm font-black text-emerald-400">0%</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-black/20 rounded-xl border border-white/5">
-                                    <span class="text-[10px] uppercase font-bold text-slate-500">Vendas Hoje</span>
-                                    <span id="vendasHoje" class="text-sm font-black text-purple-400">0</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button onclick="exportarRelatorioTxt()" class="w-full glass rounded-xl py-4 font-black text-[10px] uppercase tracking-wider text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all flex items-center justify-center gap-2">
-                            <i class="fas fa-file-alt"></i> Exportar Relatório TXT
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Ponto -->
-            <section id="ponto" class="tab-content">
-                <div class="max-w-2xl mx-auto space-y-6">
-                    <!-- Registo -->
-                    <div class="glass p-8 rounded-[3rem] text-center border border-white/5">
-                        <h3 class="label-blue !ml-0 mb-6 italic">Folha de Ponto</h3>
-                        <input type="text" id="workerName" class="input-field text-center mb-6" placeholder="Nome do Funcionário">
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="registarPonto('ENTRADA')" class="bg-emerald-600 hover:bg-emerald-500 p-5 rounded-2xl font-black uppercase text-[11px] transition-all flex items-center justify-center gap-2">
-                                <i class="fas fa-sign-in-alt"></i> Entrada
-                            </button>
-                            <button onclick="registarPonto('SAÍDA')" class="bg-red-600 hover:bg-red-500 p-5 rounded-2xl font-black uppercase text-[11px] transition-all flex items-center justify-center gap-2">
-                                <i class="fas fa-sign-out-alt"></i> Saída
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Resumo por funcionário (só ADM) -->
-                    <div id="pontoResumoBlock" class="admin-only-ui glass p-6 rounded-[2rem] border border-white/5">
-                        <div class="flex items-center justify-between mb-4">
-                            <h4 class="label-blue !mb-0 !ml-0">Resumo de Presenças</h4>
-                            <span id="pontoTotalRegs" class="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-1 rounded-lg font-bold">0 registos</span>
-                        </div>
-                        <div id="pontoResumo" class="grid grid-cols-2 gap-3"></div>
-                    </div>
-
-                    <!-- Filtro + Histórico -->
-                    <div>
-                        <div class="flex gap-2 mb-4">
-                            <input type="text" id="filtroPonto" oninput="renderPontoLogs()" class="input-field" placeholder="Filtrar por nome...">
-                            <!-- Limpar tudo só ADM -->
-                            <button onclick="limparTodoPonto()" class="admin-only-flex hidden w-14 bg-red-500/10 rounded-2xl items-center justify-center text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all flex-shrink-0" title="Apagar todos os registos">
-                                <i class="fas fa-trash-alt text-sm"></i>
-                            </button>
-                        </div>
-                        <div id="pontoLogs" class="space-y-2"></div>
-                    </div>
-                </div>
-            </section>
-
-             <!-- DADOS / BACKUP -->
-            <section id="dados" class="tab-content">
-                <div class="max-w-4xl mx-auto space-y-4">
-                    <!-- Stats -->
-                    <div class="glass rounded-[1.75rem] p-5">
-                        <div class="flex items-center gap-2 mb-4">
-                            <i class="fas fa-chart-bar text-blue-400 text-sm"></i>
-                            <span class="section-title !mb-0">Estatísticas do Sistema</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div class="bg-slate-950/70 p-4 rounded-xl border border-white/5 text-center">
-                                <i class="fas fa-boxes text-blue-400 text-lg mb-2 block"></i>
-                                <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Produtos</span>
-                                <span class="text-2xl font-black" id="statProds">0</span>
-                            </div>
-                            <div class="bg-slate-950/70 p-4 rounded-xl border border-white/5 text-center">
-                                <i class="fas fa-receipt text-emerald-400 text-lg mb-2 block"></i>
-                                <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Vendas</span>
-                                <span class="text-2xl font-black" id="statVendas">0</span>
-                            </div>
-                            <div class="bg-slate-950/70 p-4 rounded-xl border border-white/5 text-center">
-                                <i class="fas fa-user-clock text-purple-400 text-lg mb-2 block"></i>
-                                <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Ponto</span>
-                                <span class="text-2xl font-black" id="statPonto">0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Backup -->
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div class="glass p-6 rounded-[1.75rem] border border-white/5 flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-blue-600/15 rounded-2xl flex items-center justify-center mb-4 text-blue-400 border border-blue-500/15">
-                                <i class="fas fa-cloud-download-alt text-xl"></i>
-                            </div>
-                            <h3 class="text-base font-black uppercase mb-1">Exportar Backup</h3>
-                            <p class="text-[10px] text-slate-500 mb-5 max-w-[180px]">Descarregar ficheiro JSON com todos os dados do sistema.</p>
-                            <button onclick="exportarBackup()" class="w-full btn-primary">
-                                <i class="fas fa-download mr-2"></i>Baixar Backup
-                            </button>
-                            <p class="text-[9px] text-slate-600 mt-3 font-bold">ÚLTIMO: <span id="lastBackupInfo">Nunca</span></p>
-                        </div>
-
-                        <div class="glass p-6 rounded-[1.75rem] border border-white/5 flex flex-col items-center text-center drop-zone relative">
-                            <div class="w-14 h-14 bg-emerald-600/15 rounded-2xl flex items-center justify-center mb-4 text-emerald-400 border border-emerald-500/15">
-                                <i class="fas fa-cloud-upload-alt text-xl"></i>
-                            </div>
-                            <h3 class="text-base font-black uppercase mb-1">Restaurar Dados</h3>
-                            <p class="text-[10px] text-slate-500 mb-5 max-w-[180px]">Carregar ficheiro .json para restaurar dados neste dispositivo.</p>
-                            <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importarDados(this)">
-                            <button onclick="document.getElementById('fileInput').click()" class="w-full btn-primary" style="background:#059669">
-                                <i class="fas fa-folder-open mr-2"></i>Selecionar Ficheiro
-                            </button>
-                            <p class="text-[8px] text-red-400/50 font-bold uppercase mt-3"><i class="fas fa-exclamation-triangle mr-1"></i>Substitui dados atuais</p>
-                        </div>
-                    </div>
-
-                    <!-- Zona de Perigo -->
-                    <div class="glass rounded-[1.75rem] border border-red-500/15 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-red-500/3 to-transparent pointer-events-none"></div>
-                        <div class="relative p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                            <div>
-                                <h3 class="text-sm font-black uppercase text-red-400 flex items-center gap-2 mb-1">
-                                    <i class="fas fa-radiation text-xs"></i> Zona de Perigo
-                                </h3>
-                                <p class="text-[10px] text-slate-500 font-bold max-w-md">
-                                    Apaga permanentemente estoque, vendas, ponto e configurações. Irreversível.
-                                </p>
-                            </div>
-                            <button onclick="resetSistema()" class="btn-danger whitespace-nowrap flex-shrink-0">
-                                <i class="fas fa-trash-alt mr-2"></i>Reset Total
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- Toast -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-elevated px-6 py-4 rounded-2xl flex items-center gap-3 z-[200] transition-all duration-300 opacity-0 translate-y-16 pointer-events-none shadow-2xl">
-        <div id="toastIcon" class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"></div>
-        <div class="flex flex-col">
-            <span class="text-[11px] font-black uppercase tracking-wide" id="toastMsg"></span>
-            <span class="text-[9px] text-slate-500 font-bold" id="toastSubMsg"></span>
-        </div>
-    </div>
-
-    <!-- Botão flutuante do carrinho (mobile) -->
-    <button id="floatingCartBtn" onclick="scrollToCarrinho()" 
-        class="lg:hidden fixed bottom-6 right-4 z-50 bg-blue-600 text-white rounded-2xl px-4 py-3 font-black text-xs uppercase shadow-2xl shadow-blue-500/40 border border-blue-400/20 flex items-center gap-3"
-        style="opacity:0; pointer-events:none; transition: opacity 0.3s, transform 0.3s;">
-        <div class="relative">
-            <i class="fas fa-shopping-cart text-base"></i>
-            <span id="floatingCartBadge" class="absolute -top-2 -right-2 w-4 h-4 bg-white text-blue-600 rounded-full text-[8px] font-black flex items-center justify-center">0</span>
-        </div>
-        <div class="flex flex-col items-start leading-none">
-            <span id="floatingCartCount" class="text-[8px] text-blue-200 font-bold uppercase">0 itens</span>
-            <span id="floatingCartTotal" class="text-sm font-black">R$ 0,00</span>
-        </div>
-        <i class="fas fa-chevron-up text-xs text-blue-300"></i>
+<!-- LOCK -->
+<div id="lock" style="display:none;">
+  <div style="background:rgba(13,17,23,.92);border:1px solid rgba(255,255,255,.08);border-radius:2.5rem;box-shadow:0 40px 80px rgba(0,0,0,.8);padding:2.5rem;width:100%;max-width:360px;margin:0 1rem;text-align:center;">
+    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-blue-500/30 text-3xl">🍺</div>
+    <h1 class="text-2xl font-black mb-1 uppercase tracking-tight">CH <span class="text-blue-400">GELADAS</span></h1>
+    <p class="text-[9px] text-slate-600 font-bold uppercase tracking-widest mb-8">PDV Enterprise v4.0</p>
+    <input type="password" id="pinInput" maxlength="6" inputmode="numeric" autocomplete="off"
+      class="w-full bg-slate-950 border-2 border-slate-800 focus:border-blue-500 p-5 rounded-2xl text-center text-3xl outline-none text-white tracking-[.6em] transition-all font-mono mb-4"
+      placeholder="· · ·" oninput="checkPin(this.value)">
+    <button onclick="doLogin()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-xs tracking-widest transition-all mb-3">
+      <i class="fas fa-unlock-alt mr-2"></i>Aceder
     </button>
+    <div class="bg-slate-950/50 rounded-xl p-2 border border-white/5">
+      <p class="text-[8px] text-slate-600 uppercase font-bold">Colaborador: <span class="font-mono text-slate-500">12345</span></p>
+    </div>
+  </div>
+</div>
 
-    <script>
-        const STORAGE_KEY = 'CH_GELADAS_DB_ENTERPRISE';
-        let db = { estoque: [], vendas: [], ponto: [], investimento: 0, config: { whatsapp: '' } };
-        let carrinho = [];
-        let tempPacks = [];
-        let isAdmin = false;
-        let lastSale = null;
+<!-- MODAIS -->
+<!-- Pós Venda -->
+<div id="modalVenda" class="modal">
+  <div class="modal-box max-w-md p-8 text-center">
+    <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">✓</div>
+    <h2 class="text-2xl font-black mb-1">Venda Realizada!</h2>
+    <p class="text-slate-400 text-sm mb-7">O que deseja fazer?</p>
+    <button onclick="enviarWhatsapp()" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-xl font-black uppercase text-xs mb-3 flex items-center justify-center gap-2 transition-all">
+      <i class="fab fa-whatsapp text-lg"></i>Enviar Comprovante
+    </button>
+    <button onclick="baixarTxt()" class="w-full bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/20 py-3 rounded-xl font-black uppercase text-xs mb-3 flex items-center justify-center gap-2 transition-all">
+      <i class="fas fa-download"></i>Baixar TXT
+    </button>
+    <button onclick="fecharModalVenda()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-4 rounded-xl font-black uppercase text-xs transition-all">
+      Nova Venda
+    </button>
+  </div>
+</div>
 
-        function init() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if(saved) {
-                const parsed = JSON.parse(saved);
-                db = { ...db, ...parsed };
-                // Garantir estrutura da config
-                if(!db.config) db.config = { whatsapp: '' };
-            }
-            
-            // Garantir arrays
-            if(!db.estoque) db.estoque = [];
-            if(!db.vendas) db.vendas = [];
-            if(!db.ponto) db.ponto = [];
-            
-            document.getElementById('invTotalInput').value = db.investimento || 0;
-            document.getElementById('zapNumberInput').value = db.config.whatsapp || '';
+<!-- Config WhatsApp -->
+<div id="modalZap" class="modal">
+  <div class="modal-box max-w-sm p-8">
+    <h3 class="label mb-6 !text-sm">Configuração WhatsApp</h3>
+    <p class="text-xs text-slate-400 mb-4">Número com código do país e DDD (só números). Ex: 5511999999999</p>
+    <input type="tel" id="zapNum" class="inp mb-6" placeholder="55..." inputmode="numeric">
+    <div class="flex gap-3">
+      <button onclick="salvarZap()" class="flex-1 bg-blue-600 py-3 rounded-xl font-black uppercase text-xs">Salvar</button>
+      <button onclick="closeModal('modalZap')" class="flex-1 bg-slate-800 py-3 rounded-xl font-black uppercase text-xs text-slate-400">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-            updateClock(); setInterval(updateClock, 1000);
-            updateStats();
-            refreshUI();
-        }
+<!-- Editar Venda -->
+<div id="modalEditVenda" class="modal">
+  <div class="modal-box max-w-sm p-8">
+    <h3 class="label mb-6 !text-sm text-amber-400">Editar Venda</h3>
+    <input type="hidden" id="evId">
+    <div class="space-y-4 mb-6">
+      <div><label class="label">Data/Hora</label><input type="text" id="evData" class="inp"></div>
+      <div><label class="label">Total (R$)</label><input type="number" id="evTotal" class="inp" step="0.01"></div>
+      <div><label class="label">Lucro (R$)</label><input type="number" id="evLucro" class="inp" step="0.01"></div>
+    </div>
+    <div class="flex gap-3">
+      <button onclick="salvarEdicaoVenda()" class="flex-1 bg-amber-600 hover:bg-amber-500 py-3 rounded-xl font-black uppercase text-xs text-white">Atualizar</button>
+      <button onclick="closeModal('modalEditVenda')" class="flex-1 bg-slate-800 py-3 rounded-xl font-black uppercase text-xs text-slate-400">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-        function checkPin(val) {
-            if(val === "001" || val === "12345") login();
-        }
+<!-- Editar Produto (modal rápido) -->
+<div id="modalEditProd" class="modal">
+  <div class="modal-box max-w-md overflow-hidden">
+    <div class="p-5 border-b border-white/5 flex items-center justify-between">
+      <h3 class="text-sm font-black uppercase text-blue-400"><i class="fas fa-edit mr-2"></i>Editar Produto</h3>
+      <button onclick="closeModal('modalEditProd')" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fas fa-times text-xs"></i></button>
+    </div>
+    <div class="p-6 space-y-4 overflow-y-auto scroll" style="max-height:70vh">
+      <input type="hidden" id="epId">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2"><label class="label">Nome</label><input type="text" id="epNome" class="inp"></div>
+        <div><label class="label">Custo Un.</label><input type="number" id="epCusto" class="inp" step="0.01"></div>
+        <div><label class="label">Preço Venda Un.</label><input type="number" id="epPreco" class="inp" step="0.01"></div>
+        <div class="col-span-2">
+          <label class="label">Stock Atual</label>
+          <div class="flex items-center gap-2">
+            <button onclick="ajusteStock(-1)" class="w-10 h-10 rounded-xl bg-slate-800 text-red-400 font-black text-lg border border-white/5 hover:bg-red-500/20 flex-shrink-0">−</button>
+            <input type="number" id="epQtd" class="inp text-center font-black text-lg">
+            <button onclick="ajusteStock(1)" class="w-10 h-10 rounded-xl bg-slate-800 text-emerald-400 font-black text-lg border border-white/5 hover:bg-emerald-500/20 flex-shrink-0">+</button>
+          </div>
+        </div>
+      </div>
+      <!-- Entrada rápida -->
+      <div class="bg-emerald-500/5 border border-emerald-500/15 rounded-xl p-4">
+        <label class="label !text-emerald-400">Entrada de Stock</label>
+        <div class="flex gap-2">
+          <input type="number" id="epEntrada" class="inp" placeholder="Qtd a adicionar">
+          <button onclick="entradaRapida()" class="bg-emerald-600 hover:bg-emerald-500 px-4 rounded-xl font-black text-xs text-white transition-all flex-shrink-0">+ ADD</button>
+        </div>
+      </div>
+      <!-- Packs -->
+      <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+        <label class="label mb-3">Packs de Venda</label>
+        <div class="flex gap-2 mb-3">
+          <input type="number" id="epPackUn" class="inp" placeholder="Qtd (ex: 6)">
+          <input type="number" id="epPackPr" class="inp" placeholder="Preço">
+          <button onclick="addPackModal()" class="bg-amber-600/20 hover:bg-amber-600/40 border border-amber-500/20 px-3 rounded-xl text-amber-300 font-black text-xs flex-shrink-0 transition-all">+</button>
+        </div>
+        <div id="epPackList" class="space-y-2"></div>
+      </div>
+    </div>
+    <div class="p-5 border-t border-white/5 flex gap-3">
+      <button onclick="salvarProdModal()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-xs transition-all">Salvar Produto</button>
+      <button onclick="closeModal('modalEditProd')" class="bg-slate-800 px-6 rounded-xl font-black uppercase text-xs text-slate-400">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-        function login() {
-            const pin = document.getElementById('masterPass').value;
-            if(pin === "001") {
-                isAdmin = true;
-                document.body.classList.add('is-admin');
-                document.getElementById('userRoleTitle').textContent = "Administrador";
-                document.getElementById('roleTag').textContent = 'ADM';
-                document.getElementById('roleTag').classList.remove('hidden');
-            } else if(pin === "12345") {
-                isAdmin = false;
-                document.body.classList.remove('is-admin');
-                document.getElementById('userRoleTitle').textContent = "Colaborador";
-                document.getElementById('roleTag').textContent = 'PDV';
-                document.getElementById('roleTag').classList.remove('hidden');
-                document.getElementById('roleTag').className = 'badge badge-purple';
-            } else { 
-                showToast("PIN Inválido", "Tente novamente", "error");
-                document.getElementById('masterPass').value = '';
-                return; 
-            }
-            document.getElementById('lock-screen').style.display = 'none';
-            document.getElementById('app-content').classList.remove('hidden');
-            showToast("Sessão Iniciada", isAdmin ? "Acesso Total" : "Modo Colaborador");
-            verificarAlertasStock();
-        }
+<!-- Editar Ponto -->
+<div id="modalEditPonto" class="modal">
+  <div class="modal-box max-w-sm p-8">
+    <h3 class="label mb-6 !text-sm text-amber-400">Editar Registo</h3>
+    <input type="hidden" id="pontIdx">
+    <div class="space-y-4 mb-6">
+      <div><label class="label">Nome</label><input type="text" id="pontNome" class="inp"></div>
+      <div>
+        <label class="label">Tipo</label>
+        <div class="grid grid-cols-2 gap-3">
+          <button id="pontBtnE" onclick="setPontoTipo('ENTRADA')" class="py-3 rounded-xl font-black uppercase text-xs border transition-all bg-emerald-600/20 text-emerald-400 border-emerald-500/30">Entrada</button>
+          <button id="pontBtnS" onclick="setPontoTipo('SAÍDA')" class="py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5">Saída</button>
+        </div>
+        <input type="hidden" id="pontTipo" value="ENTRADA">
+      </div>
+      <div><label class="label">Data / Hora</label><input type="text" id="pontData" class="inp"></div>
+    </div>
+    <div class="flex gap-3">
+      <button onclick="salvarEdicaoPonto()" class="flex-1 bg-amber-600 hover:bg-amber-500 py-4 rounded-xl font-black uppercase text-xs transition-all">Guardar</button>
+      <button onclick="closeModal('modalEditPonto')" class="bg-slate-800 px-6 rounded-xl font-black uppercase text-xs text-slate-400">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-        function switchTab(id) {
-            const btn = document.querySelector(`[data-tab="${id}"]`);
-            if(btn.classList.contains('admin-only-ui') && !isAdmin) {
-                showToast("Negado", "Apenas Administrador", "error");
-                return;
-            }
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('btn-active'));
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('btn-active');
-            
-            if(id === 'estoque') resetFormEstoque();
-            if(id === 'dados') updateStats();
-            if(id === 'financeiro') renderFinanceiro();
-        }
+<!-- APP -->
+<div id="app" style="display:none;" class="flex flex-col min-h-screen">
 
-        // --- WHATSAPP CONFIG ---
-        function toggleModal(id, forceClose = false) {
-            const el = document.getElementById(id);
-            if(forceClose) {
-                el.classList.remove('open');
-            } else {
-                el.classList.toggle('open');
-            }
-        }
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 px-5 py-3 flex justify-between items-center" style="background:rgba(6,8,16,.95);border-bottom:1px solid rgba(255,255,255,.04);">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center text-sm shadow-lg shadow-blue-500/20 flex-shrink-0">🍺</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="text-[10px] font-black uppercase tracking-widest text-blue-400" id="roleTitle">Sistema</h2>
+          <span id="roleTag" class="badge b-blue hidden">ADM</span>
+        </div>
+        <p id="clock" class="text-[9px] font-mono text-slate-600 mt-0.5">00:00:00</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="alertaBtn" onclick="switchTab('estoque')" class="hidden items-center gap-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wide transition-all hover:bg-amber-500/20 adm-flex">
+        <i class="fas fa-exclamation-triangle text-[8px]"></i>
+        <span id="alertaCount">0</span> Baixo
+      </button>
+      <div id="syncDot" title="Sincronizado com Firestore" class="w-2 h-2 rounded-full bg-emerald-400" style="display:none;"></div>
+      <button onclick="location.reload()" title="Encerrar Sessão" class="w-8 h-8 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-center text-slate-500 hover:text-red-400 transition-all">
+        <i class="fas fa-power-off text-xs"></i>
+      </button>
+    </div>
+  </header>
 
-        function salvarConfigZap() {
-            const num = document.getElementById('zapNumberInput').value.replace(/\D/g,'');
-            db.config.whatsapp = num;
-            save();
-            toggleModal('modalConfigZap');
-            showToast("Configuração", "Número WhatsApp Salvo");
-        }
+  <!-- NAV -->
+  <nav class="flex overflow-x-auto no-scroll" style="background:rgba(6,8,16,.98);border-bottom:1px solid rgba(255,255,255,.04);">
+    <button class="nav-btn active" data-tab="vendas" onclick="switchTab('vendas')">
+      <i class="fas fa-cash-register block text-base mb-1 mx-auto"></i>PDV
+    </button>
+    <button class="nav-btn adm" data-tab="estoque" onclick="switchTab('estoque')">
+      <i class="fas fa-boxes block text-base mb-1 mx-auto"></i>Estoque
+    </button>
+    <button class="nav-btn adm" data-tab="financeiro" onclick="switchTab('financeiro')">
+      <i class="fas fa-chart-line block text-base mb-1 mx-auto"></i>Caixa
+    </button>
+    <button class="nav-btn" data-tab="ponto" onclick="switchTab('ponto')">
+      <i class="fas fa-user-clock block text-base mb-1 mx-auto"></i>Ponto
+    </button>
+    <button class="nav-btn adm" data-tab="dados" onclick="switchTab('dados')">
+      <i class="fas fa-database block text-base mb-1 mx-auto"></i>Dados
+    </button>
+  </nav>
 
-        function enviarWhatsappUltimaVenda() {
-            if(!lastSale || !db.config.whatsapp) {
-                if(!db.config.whatsapp) showToast("Erro", "Configure o WhatsApp na aba Vendas", "error");
-                return;
-            }
-            
-            let msg = `*CH GELADAS | COMPROVANTE*\n`;
-            msg += `📅 ${lastSale.data}\n`;
-            msg += `--------------------------\n`;
-            lastSale.itens.forEach(item => {
-                msg += `${item.label === 'UNID' ? '1x' : item.label} ${item.nome} ... R$ ${item.preco.toFixed(2)}\n`;
-            });
-            msg += `--------------------------\n`;
-            msg += `*TOTAL: R$ ${lastSale.total.toFixed(2)}*\n`;
-            msg += `Obrigado pela preferência!`;
+  <main class="flex-1 p-3 lg:p-5 max-w-7xl mx-auto w-full pb-24 lg:pb-6">
 
-            const url = `https://wa.me/${db.config.whatsapp}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
-            fecharModalPosVenda();
-        }
+    <!-- PDV -->
+    <section id="tab-vendas" class="tab-pane active">
+      <div class="grid lg:grid-cols-12 gap-4">
+        <!-- Catálogo -->
+        <div class="lg:col-span-8 flex flex-col gap-3">
+          <div class="flex gap-2">
+            <div class="relative flex-1">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs pointer-events-none"></i>
+              <input type="text" id="searchProd" oninput="clearTimeout(this._t);this._t=setTimeout(renderCatalogo,160)" class="inp pl-10" placeholder="Pesquisar produto...">
+            </div>
+            <button onclick="openModal('modalZap')" class="w-12 bg-slate-900 rounded-xl flex items-center justify-center text-slate-500 hover:text-[#25D366] hover:bg-slate-800 transition-all border border-white/5 flex-shrink-0" title="WhatsApp">
+              <i class="fab fa-whatsapp text-lg"></i>
+            </button>
+          </div>
+          <!-- Stats rápidos -->
+          <div id="pdvStats" class="grid grid-cols-3 gap-2 hidden">
+            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
+              <p class="text-[8px] text-slate-600 uppercase font-bold">Produtos</p>
+              <p class="text-sm font-black" id="pdvTotal">0</p>
+            </div>
+            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
+              <p class="text-[8px] text-amber-500/70 uppercase font-bold">Baixo</p>
+              <p class="text-sm font-black text-amber-400" id="pdvLow">0</p>
+            </div>
+            <div class="bg-slate-900/50 rounded-xl p-3 border border-white/5 text-center">
+              <p class="text-[8px] text-red-500/70 uppercase font-bold">Esgotado</p>
+              <p class="text-sm font-black text-red-400" id="pdvOut">0</p>
+            </div>
+          </div>
+          <div id="catalogo" class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto scroll" style="max-height:62vh"></div>
+        </div>
 
-        function fecharModalPosVenda() {
-            toggleModal('modalPosVenda', true);
-            // Reativa o botão Finalizar para a próxima venda
-            const btn = document.getElementById('btnFinalizar');
-            if(btn) btn.disabled = false;
-        }
-
-        // --- ESTOQUE ---
-        function addPackToList() {
-            const un = parseInt(document.getElementById('tempPackUn').value);
-            const preco = parseFloat(document.getElementById('tempPackPreco').value);
-            if(!un || !preco) return;
-            tempPacks.push({ un, preco });
-            document.getElementById('tempPackUn').value = "";
-            document.getElementById('tempPackPreco').value = "";
-            renderTempPacks();
-        }
-
-        function renderTempPacks() {
-            const cont = document.getElementById('tempPackList');
-            cont.innerHTML = tempPacks.map((p, i) => `
-                <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span class="text-[10px] font-bold">Pack ${p.un} UN -> R$ ${p.preco.toFixed(2)}</span>
-                    <button onclick="tempPacks.splice(${i},1); renderTempPacks();" class="text-red-500 text-xs px-2"><i class="fas fa-times"></i></button>
+        <!-- Carrinho -->
+        <div class="lg:col-span-4">
+          <div class="glass-card rounded-[2rem] flex flex-col sticky overflow-hidden" style="top:72px;max-height:calc(100vh - 90px)">
+            <div class="px-5 pt-5 pb-3 border-b border-white/5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-shopping-cart text-blue-400 text-sm"></i>
+                  <span class="text-[9px] font-black uppercase tracking-wider text-blue-400">Carrinho</span>
                 </div>
-            `).join('');
-        }
-
-        function saveProduto() {
-            const nome = document.getElementById('pNome').value;
-            const custoUn = parseFloat(document.getElementById('pCustoUn').value) || 0;
-            const qtdUn = parseInt(document.getElementById('pQtdUn').value) || 0;
-            const precoUn = parseFloat(document.getElementById('pPrecoUn').value) || 0;
-            const editId = document.getElementById('editingProdId').value;
-
-            if(!nome) return showToast("Erro", "Nome obrigatório", "error");
-
-            if(editId) {
-                // Modo Edição
-                const idx = db.estoque.findIndex(p => p.id == editId);
-                if(idx !== -1) {
-                    db.estoque[idx] = { ...db.estoque[idx], nome, custoUn, qtdUn, precoUn, packs: [...tempPacks] };
-                    showToast("Sucesso", "Produto Atualizado");
-                }
-            } else {
-                // Novo Produto
-                db.estoque.unshift({ id: Date.now(), nome, custoUn, qtdUn, precoUn, packs: [...tempPacks] });
-                showToast("Estoque", "Produto Registado");
-            }
-
-            resetFormEstoque();
-            save();
-        }
-
-        function editProduto(id) {
-            const p = db.estoque.find(x => x.id == id);
-            if(!p) return;
-
-            document.getElementById('formEstoqueTitle').textContent = "Editar Produto";
-            document.getElementById('editingProdId').value = p.id;
-            document.getElementById('pNome').value = p.nome;
-            document.getElementById('pCustoUn').value = p.custoUn;
-            document.getElementById('pQtdUn').value = p.qtdUn;
-            document.getElementById('pPrecoUn').value = p.precoUn;
-            tempPacks = [...p.packs];
-            renderTempPacks();
-
-            document.getElementById('btnSaveProd').textContent = "Atualizar Produto";
-            document.getElementById('btnCancelEdit').classList.remove('hidden');
-            switchTab('estoque');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function resetFormEstoque() {
-            document.getElementById('formEstoqueTitle').textContent = "Novo Produto";
-            document.getElementById('editingProdId').value = "";
-            ['pNome', 'pCustoUn', 'pQtdUn', 'pPrecoUn'].forEach(id => document.getElementById(id).value = "");
-            tempPacks = [];
-            document.getElementById('tempPackList').innerHTML = "";
-            document.getElementById('btnSaveProd').textContent = "Registar Produto";
-            document.getElementById('btnCancelEdit').classList.add('hidden');
-        }
-
-        // Função rápida de ajuste de estoque (Adicionar/Remover Mercearia)
-        function quickStockAction(id, type) {
-            const prod = db.estoque.find(x => x.id === id);
-            if(!prod) return;
-
-            const actionText = type === 'add' ? 'ADICIONAR' : 'REMOVER';
-            const input = prompt(`${actionText} quantidade para: ${prod.nome}\n(Estoque Atual: ${prod.qtdUn})`);
-            
-            if(input !== null) {
-                const qtd = parseInt(input);
-                if(!isNaN(qtd) && qtd > 0) {
-                    if(type === 'add') {
-                        prod.qtdUn += qtd;
-                        showToast("Entrada", `+${qtd} em ${prod.nome}`);
-                    } else {
-                        prod.qtdUn -= qtd;
-                        showToast("Saída", `-${qtd} em ${prod.nome}`, "warning");
-                    }
-                    save();
-                } else {
-                    showToast("Cancelado", "Valor inválido", "error");
-                }
-            }
-        }
-
-        // --- VENDAS ---
-        function renderCatalogo() {
-            const search = document.getElementById('searchProd').value.toLowerCase();
-            const cont = document.getElementById('catalogoVenda');
-            const filtered = db.estoque.filter(p => p.nome.toLowerCase().includes(search));
-            cont.innerHTML = filtered.map(p => {
-                const stockLow = p.qtdUn <= 3;
-                const stockZero = p.qtdUn <= 0;
-                return `
-                <div class="produto-card p-4" id="card-prod-${p.id}">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <p class="prod-nome">${p.nome}</p>
-                            <p class="prod-stock ${stockLow ? 'low' : ''}">
-                                <i class="fas fa-box-open mr-1"></i>
-                                ${stockZero ? 'SEM STOCK' : `${p.qtdUn} un. disponíveis`}
-                                ${stockLow && !stockZero ? '⚠️' : ''}
-                            </p>
-                        </div>
-                        <span class="text-[9px] font-black px-2 py-1 rounded-lg ${stockZero ? 'bg-red-500/20 text-red-400' : stockLow ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'}">
-                            ${stockZero ? 'ESGOT.' : stockLow ? 'BAIXO' : 'OK'}
-                        </span>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button id="btn-un-${p.id}" onclick="addAoCarrinho(${p.id}, 0, this)" class="btn-unid ${stockZero ? 'opacity-40 cursor-not-allowed' : ''}">
-                            <span class="block text-[8px] font-black text-blue-400 mb-0.5">UNID.</span>
-                            <span class="text-sm font-black text-white">R$ ${p.precoUn.toFixed(2)}</span>
-                        </button>
-                        ${p.packs.map((pack, idx) => {
-                            const semStock = p.qtdUn < pack.un;
-                            return `
-                            <button id="btn-pack-${p.id}-${idx}" onclick="addAoCarrinho(${p.id}, ${idx + 1}, this)" class="btn-pack ${semStock ? 'opacity-40 cursor-not-allowed' : ''}">
-                                <span class="block text-[8px] font-black text-amber-500 mb-0.5">PACK ${pack.un}x</span>
-                                <span class="text-sm font-black text-white">R$ ${pack.preco.toFixed(2)}</span>
-                            </button>`;
-                        }).join('')}
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        function addAoCarrinho(prodId, packIdx, btnEl) {
-            const p = db.estoque.find(x => x.id === prodId);
-            let item = { prodId: p.id, nome: p.nome };
-            if(packIdx === 0) {
-                if(p.qtdUn < 1) return showToast("Sem Stock", p.nome, "error");
-                item.label = "UNID"; item.preco = p.precoUn; item.custo = p.custoUn; item.desconto = 1;
-            } else {
-                const pack = p.packs[packIdx - 1];
-                if(p.qtdUn < pack.un) return showToast("Stock Insuficiente", "Pack cancelado", "error");
-                item.label = `PACK ${pack.un}`; item.preco = pack.preco; item.custo = p.custoUn * pack.un; item.desconto = pack.un;
-            }
-            carrinho.push(item);
-            renderCarrinho();
-
-            // Animação no botão
-            if(btnEl) {
-                const cls = packIdx === 0 ? 'btn-flash-un' : 'btn-flash-pack';
-                btnEl.classList.remove(cls);
-                void btnEl.offsetWidth; // reflow para reiniciar
-                btnEl.classList.add(cls);
-                setTimeout(() => btnEl.classList.remove(cls), 500);
-            }
-
-            // Scroll para o carrinho em desktop; mostra botão flutuante em mobile
-            atualizarBotaoFlutuante();
-            
-            // Em ecrãs pequenos, se o carrinho não está visível, pisca o botão flutuante
-            const isMobile = window.innerWidth < 1024;
-            if(isMobile) {
-                const floatBtn = document.getElementById('floatingCartBtn');
-                floatBtn.style.transform = 'scale(1.1)';
-                setTimeout(() => floatBtn.style.transform = 'scale(1)', 200);
-            }
-        }
-
-        function renderCarrinho() {
-            const cont = document.getElementById('carrinhoLista');
-            if(carrinho.length === 0) {
-                cont.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-center py-10 opacity-20">
-                    <i class="fas fa-shopping-cart text-4xl mb-3 text-slate-500"></i>
-                    <p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">Carrinho vazio</p>
-                    <p class="text-[9px] text-slate-700 font-bold mt-1">Selecione um produto</p>
-                </div>`;
-                document.getElementById('btnLimparCart').classList.add('hidden');
-            } else {
-                cont.innerHTML = carrinho.map((c, idx) => `
-                    <div class="flex justify-between items-center bg-slate-950/60 px-4 py-3 rounded-xl border border-white/5 hover:border-white/10 transition-all ${idx === carrinho.length - 1 ? 'carrinho-item-new' : ''}">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${c.label === 'UNID' ? 'bg-blue-500/15' : 'bg-amber-500/15'}">
-                                <i class="fas ${c.label === 'UNID' ? 'fa-cube text-blue-400' : 'fa-box text-amber-400'} text-[9px]"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] font-black text-slate-300 truncate">${c.nome}</p>
-                                <p class="text-[9px] text-slate-600 font-bold">${c.label} · <span class="text-blue-400 font-black">R$ ${c.preco.toFixed(2)}</span></p>
-                            </div>
-                        </div>
-                        <button onclick="removerDoCarrinho(${idx})" class="w-6 h-6 rounded-lg bg-red-500/8 text-red-500/40 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all flex-shrink-0 ml-2">
-                            <i class="fas fa-times text-[9px]"></i>
-                        </button>
-                    </div>`).join('');
-                document.getElementById('btnLimparCart').classList.remove('hidden');
-            }
-
-            const total = carrinho.reduce((a, b) => a + b.preco, 0);
-            document.getElementById('displayCartTotal').textContent = `R$ ${total.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
-            const countEl = document.getElementById('cartItemCount');
-            if(countEl) countEl.textContent = carrinho.length > 0 ? `${carrinho.length} ${carrinho.length === 1 ? 'item' : 'itens'}` : '';
-            
-            const badge = document.getElementById('cartCountBadge');
-            if(carrinho.length > 0) { badge.textContent = carrinho.length; badge.classList.remove('hidden'); }
-            else badge.classList.add('hidden');
-
-            const btn = document.getElementById('btnFinalizar');
-            btn.disabled = carrinho.length === 0;
-            btn.className = `w-full py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${carrinho.length > 0 ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 hover:bg-blue-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`;
-
-            atualizarBotaoFlutuante();
-        }
-
-        function limparCarrinho() {
-            if(carrinho.length === 0) return;
-            if(confirm(`Limpar ${carrinho.length} ${carrinho.length === 1 ? 'item' : 'itens'} do carrinho?`)) {
-                carrinho = [];
-                renderCarrinho();
-                showToast("Carrinho", "Limpo", "warning");
-            }
-        }
-
-        function removerDoCarrinho(idx) {
-            carrinho.splice(idx, 1);
-            renderCarrinho();
-            atualizarBotaoFlutuante();
-        }
-
-        function atualizarBotaoFlutuante() {
-            const total = carrinho.reduce((a, b) => a + b.preco, 0);
-            const floatBtn = document.getElementById('floatingCartBtn');
-            const floatCount = document.getElementById('floatingCartCount');
-            const floatTotal = document.getElementById('floatingCartTotal');
-            const floatBadge = document.getElementById('floatingCartBadge');
-            if(carrinho.length > 0) {
-                if(floatCount) floatCount.textContent = `${carrinho.length} ${carrinho.length === 1 ? 'item' : 'itens'}`;
-                if(floatTotal) floatTotal.textContent = `R$ ${total.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
-                if(floatBadge) floatBadge.textContent = carrinho.length;
-                floatBtn.style.opacity = '1';
-                floatBtn.style.pointerEvents = 'auto';
-            } else {
-                floatBtn.style.opacity = '0';
-                floatBtn.style.pointerEvents = 'none';
-            }
-        }
-
-        function scrollToCarrinho() {
-            const el = document.getElementById('carrinhoContainer');
-            if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function finalizarVenda() {
-            const btn = document.getElementById('btnFinalizar');
-            if(btn.disabled || carrinho.length === 0) return;
-            btn.disabled = true; // previne duplo-clique
-
-            try { document.getElementById('audioVenda').play(); } catch(e){}
-            const total = carrinho.reduce((a, b) => a + b.preco, 0);
-            const lucro = carrinho.reduce((a, b) => a + (b.preco - b.custo), 0);
-            
-            carrinho.forEach(item => {
-                const p = db.estoque.find(x => x.id === item.prodId);
-                if(p) p.qtdUn -= item.desconto;
-            });
-
-            const vendaObj = { 
-                id: Date.now(),
-                total, 
-                lucro, 
-                data: new Date().toLocaleString('pt-PT'), 
-                itens: [...carrinho] 
-            };
-
-            db.vendas.unshift(vendaObj);
-            lastSale = vendaObj;
-            
-            carrinho = [];
-            save();
-            renderCarrinho(); 
-            
-            // Abre modal (download TXT agora é opcional via botão no modal)
-            toggleModal('modalPosVenda');
-        }
-
-        function salvarVendaTxt(v) {
-            let txt = `CH GELADAS - CUPOM NÃO FISCAL\n`;
-            txt += `ID: ${v.id} | Data: ${v.data}\n`;
-            txt += `--------------------------------\n`;
-            v.itens.forEach(i => {
-                txt += `${i.label === 'UNID' ? '1x' : i.label} ${i.nome} ... R$ ${i.preco.toFixed(2)}\n`;
-            });
-            txt += `--------------------------------\n`;
-            txt += `TOTAL: R$ ${v.total.toFixed(2)}\n`;
-            
-            const blob = new Blob([txt], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Venda_${v.id}.txt`; 
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function exportarRelatorioTxt() {
-            if (!db.vendas || db.vendas.length === 0) return showToast("Aviso", "Sem vendas para exportar");
-            let conteudo = "--- RELATÓRIO DE VENDAS CH GELADAS ---\n";
-            conteudo += `Gerado em: ${new Date().toLocaleString('pt-PT')}\n\n`;
-            db.vendas.forEach((v, i) => {
-                conteudo += `VENDA #${v.id} | DATA: ${v.data}\n`;
-                v.itens.forEach(item => { conteudo += `- ${item.nome} (${item.label}): R$ ${item.preco.toFixed(2)}\n`; });
-                conteudo += `TOTAL: R$ ${v.total.toFixed(2)}\n--------------------------------------\n`;
-            });
-            const blob = new Blob([conteudo], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `vendas_ch_geladas_${new Date().toISOString().split('T')[0]}.txt`;
-            link.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // --- FINANCEIRO AVANÇADO ---
-        function renderFinanceiro() {
-            const container = document.getElementById('vendaLogs');
-            const filtro = (document.getElementById('filtroVendaData')?.value || '').toLowerCase();
-            const vendas = filtro ? db.vendas.filter(v => v.data.toLowerCase().includes(filtro)) : db.vendas;
-            
-            document.getElementById('totalVendasCount').textContent = `${vendas.length} reg`;
-            
-            container.innerHTML = vendas.length === 0
-                ? `<div class="text-center py-8 text-slate-700 text-[10px] font-bold uppercase">Sem registos${filtro ? ' para este filtro' : ''}</div>`
-                : vendas.map(v => `
-                <div class="venda-row flex justify-between items-center p-3 rounded-xl border border-white/5 hover:bg-slate-900/60 transition-all">
-                    <div class="flex flex-col gap-0.5 min-w-0">
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm font-black text-white">R$ ${v.total.toFixed(2)}</span>
-                            <span class="badge badge-blue">${v.itens.length} it.</span>
-                            ${v.lucro > 0 ? `<span class="text-[8px] text-emerald-400 font-bold">+R$ ${v.lucro.toFixed(2)}</span>` : ''}
-                        </div>
-                        <span class="text-[9px] text-slate-600 font-bold">${v.data}</span>
-                    </div>
-                    <div class="flex gap-1.5 flex-shrink-0">
-                        <button onclick="abrirEditorVenda(${v.id})" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all">
-                            <i class="fas fa-edit text-[9px]"></i>
-                        </button>
-                        <button onclick="excluirVenda(${v.id})" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
-                            <i class="fas fa-trash text-[9px]"></i>
-                        </button>
-                    </div>
-                </div>`).join('');
-
-            const bruto = db.vendas.reduce((a, b) => a + b.total, 0);
-            const lucro = db.vendas.reduce((a, b) => a + b.lucro, 0);
-            const inv = db.investimento || 0;
-            const nVendas = db.vendas.length;
-
-            document.getElementById('dashLucro').textContent = `R$ ${lucro.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
-            document.getElementById('faturacaoBruta').textContent = `R$ ${bruto.toLocaleString('pt-PT', {minimumFractionDigits:2})}`;
-            document.getElementById('roiDisplay').textContent = inv > 0 ? `${((lucro / inv) * 100).toFixed(1)}%` : '—';
-            document.getElementById('breakEvenStatus').textContent = lucro >= inv ? '✅ Break-Even Atingido' : `Falta R$ ${(inv - lucro).toFixed(2)}`;
-            
-            // Novos KPIs
-            const ticketMedioEl = document.getElementById('ticketMedio');
-            if(ticketMedioEl) ticketMedioEl.textContent = nVendas > 0 ? `R$ ${(bruto / nVendas).toFixed(2)}` : 'R$ 0,00';
-            
-            const margemEl = document.getElementById('margemMedia');
-            if(margemEl) margemEl.textContent = bruto > 0 ? `${((lucro / bruto) * 100).toFixed(1)}%` : '0%';
-
-            const hoje = new Date().toLocaleDateString('pt-PT');
-            const vendasHojeEl = document.getElementById('vendasHoje');
-            if(vendasHojeEl) {
-                const hj = db.vendas.filter(v => v.data.startsWith(hoje));
-                vendasHojeEl.textContent = hj.length;
-            }
-        }
-
-        function abrirEditorVenda(id) {
-            const venda = db.vendas.find(v => v.id === id);
-            if(!venda) return;
-            
-            document.getElementById('editVendaId').value = venda.id;
-            document.getElementById('editVendaData').value = venda.data;
-            document.getElementById('editVendaTotal').value = venda.total;
-            document.getElementById('editVendaLucro').value = venda.lucro;
-            
-            toggleModal('modalEditVenda');
-        }
-
-        function salvarEdicaoVenda() {
-            const id = parseInt(document.getElementById('editVendaId').value);
-            const novaData = document.getElementById('editVendaData').value;
-            const novoTotal = parseFloat(document.getElementById('editVendaTotal').value);
-            const novoLucro = parseFloat(document.getElementById('editVendaLucro').value);
-
-            const idx = db.vendas.findIndex(v => v.id === id);
-            if(idx !== -1) {
-                db.vendas[idx].data = novaData;
-                db.vendas[idx].total = novoTotal;
-                db.vendas[idx].lucro = novoLucro;
-                save();
-                toggleModal('modalEditVenda');
-                renderFinanceiro();
-                showToast("Sucesso", "Venda atualizada");
-            }
-        }
-
-        function excluirVenda(id) {
-            const venda = db.vendas.find(v => v.id === id);
-            if(!venda) return;
-
-            if(confirm('Tem certeza que deseja EXCLUIR esta venda?\n\nO valor será removido do caixa.')) {
-                // Pergunta sobre o estoque
-                if(confirm('Deseja DEVOLVER os itens ao estoque?\n\nClique em OK para repor os produtos.\nClique em Cancelar para apenas apagar o registro financeiro.')) {
-                    venda.itens.forEach(item => {
-                        const prod = db.estoque.find(p => p.id === item.prodId);
-                        if(prod) {
-                            prod.qtdUn += item.desconto; // item.desconto contém a quantidade real retirada (1 ou pack size)
-                        }
-                    });
-                    showToast("Estoque", "Itens devolvidos");
-                }
-                
-                db.vendas = db.vendas.filter(v => v.id !== id);
-                save();
-                renderFinanceiro();
-                showToast("Venda Excluída", "Registro removido");
-            }
-        }
-
-        // --- PONTO ---
-        function registarPonto(tipo) {
-            const nome = document.getElementById('workerName').value.trim();
-            if(!nome) return showToast("Erro", "Insira o nome", "error");
-            db.ponto.unshift({ id: Date.now(), nome, tipo, data: new Date().toLocaleString('pt-PT') });
-            save();
-            showToast("Ponto", `${nome} → ${tipo}`);
-        }
-
-        function renderPontoLogs() {
-            const filtro = (document.getElementById('filtroPonto')?.value || '').toLowerCase();
-            const lista = filtro ? db.ponto.filter(p => p.nome.toLowerCase().includes(filtro)) : db.ponto;
-
-            document.getElementById('pontoLogs').innerHTML = lista.length === 0
-                ? `<div class="text-center py-8 text-slate-600 text-[10px] font-bold uppercase">Sem registos${filtro ? ' para este filtro' : ''}</div>`
-                : lista.map((p, i) => {
-                    // índice real no array original (para edição/apagar)
-                    const realIdx = db.ponto.findIndex(x => x === p);
-                    return `
-                    <div class="bg-slate-900/50 p-4 rounded-2xl flex justify-between items-center border border-white/5 transition-all hover:bg-slate-900">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-xl flex items-center justify-center ${p.tipo === 'ENTRADA' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}">
-                                <i class="fas ${p.tipo === 'ENTRADA' ? 'fa-sign-in-alt' : 'fa-sign-out-alt'} text-xs"></i>
-                            </div>
-                            <div>
-                                <span class="block text-[11px] font-black text-slate-200">${p.nome}</span>
-                                <span class="text-[9px] text-slate-500">${p.data}</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[8px] font-black px-2 py-1 rounded-lg ${p.tipo === 'ENTRADA' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}">${p.tipo}</span>
-                            ${isAdmin ? `
-                            <button onclick="abrirEditarPonto(${realIdx})" class="admin-only-flex w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white items-center justify-center transition-all" style="display:flex">
-                                <i class="fas fa-edit text-[9px]"></i>
-                            </button>
-                            <button onclick="apagarPonto(${realIdx})" class="admin-only-flex w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white items-center justify-center transition-all" style="display:flex">
-                                <i class="fas fa-trash text-[9px]"></i>
-                            </button>` : ''}
-                        </div>
-                    </div>`;
-                }).join('');
-
-            // Resumo por funcionário
-            renderPontoResumo();
-            
-            // Contador
-            const totalEl = document.getElementById('pontoTotalRegs');
-            if(totalEl) totalEl.textContent = `${db.ponto.length} registos`;
-        }
-
-        function renderPontoResumo() {
-            const resumoEl = document.getElementById('pontoResumo');
-            if(!resumoEl) return;
-            const map = {};
-            db.ponto.forEach(p => {
-                if(!map[p.nome]) map[p.nome] = { entradas: 0, saidas: 0 };
-                if(p.tipo === 'ENTRADA') map[p.nome].entradas++;
-                else map[p.nome].saidas++;
-            });
-            const nomes = Object.keys(map);
-            if(nomes.length === 0) {
-                resumoEl.innerHTML = `<p class="col-span-2 text-[9px] text-slate-600 text-center font-bold uppercase py-2">Sem registos ainda</p>`;
-                return;
-            }
-            resumoEl.innerHTML = nomes.map(nome => `
-                <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                    <p class="text-[10px] font-black text-slate-300 mb-2 truncate">${nome}</p>
-                    <div class="flex gap-2">
-                        <span class="text-[8px] font-black bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded">
-                            <i class="fas fa-sign-in-alt mr-1"></i>${map[nome].entradas}
-                        </span>
-                        <span class="text-[8px] font-black bg-red-500/15 text-red-400 px-2 py-0.5 rounded">
-                            <i class="fas fa-sign-out-alt mr-1"></i>${map[nome].saidas}
-                        </span>
-                    </div>
+                <div class="flex items-center gap-2">
+                  <span id="cartBadge" class="hidden badge b-blue">0</span>
+                  <button onclick="limparCarrinho()" id="btnLimpar" class="hidden w-6 h-6 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/25 flex items-center justify-center transition-all">
+                    <i class="fas fa-trash text-[9px]"></i>
+                  </button>
                 </div>
-            `).join('');
+              </div>
+            </div>
+            <div id="carrinhoLista" class="flex-1 overflow-y-auto scroll p-4 space-y-2 min-h-[200px]"></div>
+            <div class="p-5 border-t border-white/5 bg-slate-950/50">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[9px] text-slate-600 uppercase font-bold tracking-wider">Total</span>
+                <span id="cartCount" class="text-[9px] text-slate-600"></span>
+              </div>
+              <h2 id="cartTotal" class="text-3xl font-black text-white mb-4 tracking-tight">R$ 0,00</h2>
+              <button onclick="finalizarVenda()" id="btnFinalizar" disabled
+                class="w-full py-4 rounded-xl bg-slate-800 text-slate-500 font-black uppercase text-[10px] tracking-widest transition-all cursor-not-allowed">
+                <i class="fas fa-check-circle mr-2"></i>Finalizar Venda
+              </button>
+              <p class="text-[7px] text-slate-700 mt-2 text-center uppercase font-bold tracking-widest">TXT gerado sob pedido</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTOQUE -->
+    <section id="tab-estoque" class="tab-pane">
+      <div class="max-w-3xl mx-auto">
+        <div class="bg-slate-900/40 p-8 rounded-[2.5rem] border border-white/5 mb-8">
+          <h3 id="formTitle" class="label mb-8">Novo Produto</h3>
+          <input type="hidden" id="editId">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div><label class="label">Designação</label><input type="text" id="pNome" class="inp" placeholder="Ex: Cerveja Especial"></div>
+            <div><label class="label">Custo Compra (Un.)</label><input type="number" id="pCusto" class="inp" placeholder="0.00"></div>
+            <div><label class="label">Stock Inicial</label><input type="number" id="pQtd" class="inp" placeholder="0"></div>
+            <div><label class="label">Preço Venda (Un.)</label><input type="number" id="pPreco" class="inp" placeholder="0.00"></div>
+          </div>
+          <div class="bg-black/20 p-6 rounded-3xl border border-white/5">
+            <h4 class="label mb-4 !text-amber-400">Packs de Venda</h4>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <input type="number" id="tPackUn" class="inp" placeholder="Qtd (ex: 6)">
+              <input type="number" id="tPackPr" class="inp" placeholder="Preço Pack">
+            </div>
+            <button onclick="addPackForm()" class="w-full bg-slate-800 text-slate-300 py-3 rounded-xl font-bold text-[10px] uppercase">Adicionar Pack</button>
+            <div id="tPackList" class="mt-4 space-y-2"></div>
+          </div>
+          <div class="flex gap-4 mt-8">
+            <button id="btnSalvar" onclick="salvarProduto()" class="flex-1 bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs">Registar Produto</button>
+            <button id="btnCancelar" onclick="resetFormEstoque()" class="hidden bg-slate-800 px-8 rounded-2xl font-black uppercase text-xs text-slate-400">Cancelar</button>
+          </div>
+        </div>
+        <div id="gridEstoque" class="grid md:grid-cols-2 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- FINANCEIRO -->
+    <section id="tab-financeiro" class="tab-pane">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div class="stat border-l-4 border-blue-500">
+          <p class="text-[9px] font-black uppercase tracking-wider text-blue-400 mb-1">Investimento</p>
+          <input type="number" id="invInput" onchange="updateInv()" class="bg-transparent text-2xl font-black w-full outline-none text-white mt-1 placeholder-slate-700" placeholder="0,00">
+          <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Edite aqui</p>
+        </div>
+        <div class="stat border-l-4 border-emerald-500">
+          <p class="text-[9px] font-black uppercase tracking-wider text-emerald-400 mb-1">Lucro Líquido</p>
+          <h2 id="dashLucro" class="text-2xl font-black mt-1 text-emerald-400">R$ 0,00</h2>
+          <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Acumulado</p>
+        </div>
+        <div class="stat border-l-4 border-amber-500">
+          <p class="text-[9px] font-black uppercase tracking-wider text-amber-400 mb-1">ROI Global</p>
+          <h2 id="dashROI" class="text-2xl font-black mt-1 text-amber-400">0%</h2>
+          <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Retorno</p>
+        </div>
+        <div class="stat border-l-4 border-purple-500">
+          <p class="text-[9px] font-black uppercase tracking-wider text-purple-400 mb-1">Faturação Bruta</p>
+          <h2 id="dashBruto" class="text-2xl font-black mt-1 text-purple-400">R$ 0,00</h2>
+          <p class="text-[8px] text-slate-600 uppercase font-bold mt-1">Total vendas</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-4">
+        <div class="glass rounded-[1.75rem] overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+            <div class="flex items-center gap-2"><i class="fas fa-receipt text-blue-400 text-sm"></i><span class="text-[9px] font-black uppercase tracking-wider text-blue-400">Histórico</span></div>
+            <span id="totalVendas" class="badge b-blue">0 reg</span>
+          </div>
+          <div class="px-6 py-3 border-b border-white/5">
+            <div class="flex gap-2">
+              <input type="text" id="filtroData" oninput="renderFinanceiro()" class="inp !py-2 !text-xs" placeholder="Filtrar por data...">
+              <button onclick="document.getElementById('filtroData').value='';renderFinanceiro();" class="px-3 rounded-xl bg-slate-900 text-slate-500 hover:text-white text-xs border border-white/5 transition-all flex-shrink-0"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div id="vendaLogs" class="overflow-y-auto scroll p-4 space-y-2" style="max-height:420px"></div>
+        </div>
+        <div class="space-y-4">
+          <div class="glass rounded-[1.75rem] p-6 grid grid-cols-3 gap-4">
+            <div class="text-center"><p class="text-[8px] text-slate-600 uppercase font-bold mb-1">Ticket Médio</p><p id="ticket" class="text-sm font-black">R$ 0,00</p></div>
+            <div class="text-center"><p class="text-[8px] text-slate-600 uppercase font-bold mb-1">Margem</p><p id="margem" class="text-sm font-black text-emerald-400">0%</p></div>
+            <div class="text-center"><p class="text-[8px] text-slate-600 uppercase font-bold mb-1">Hoje</p><p id="vendasHoje" class="text-sm font-black text-blue-400">0</p></div>
+          </div>
+          <div class="glass rounded-[1.75rem] p-6">
+            <p class="text-[9px] font-black uppercase text-slate-500 mb-3">Break-Even</p>
+            <p id="breakEven" class="text-sm font-black text-emerald-400">—</p>
+          </div>
+          <div class="glass rounded-[1.75rem] p-6">
+            <p class="text-[8px] text-slate-500 uppercase font-bold mb-3">Exportar Relatório</p>
+            <button onclick="exportarRelatorio()" class="w-full btn-p text-xs"><i class="fas fa-file-alt mr-2"></i>Baixar TXT Completo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PONTO -->
+    <section id="tab-ponto" class="tab-pane">
+      <div class="max-w-2xl mx-auto space-y-4">
+        <div class="glass rounded-[2rem] p-6">
+          <h3 class="label mb-5">Registar Ponto</h3>
+          <div class="flex gap-3 mb-4">
+            <input type="text" id="pontNomeLive" class="inp flex-1" placeholder="Nome do colaborador">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="registarPonto('ENTRADA')" class="py-4 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 font-black text-xs uppercase hover:bg-emerald-600/30 transition-all"><i class="fas fa-sign-in-alt mr-2"></i>Entrada</button>
+            <button onclick="registarPonto('SAÍDA')" class="py-4 rounded-xl bg-red-600/20 text-red-300 border border-red-500/30 font-black text-xs uppercase hover:bg-red-600/30 transition-all"><i class="fas fa-sign-out-alt mr-2"></i>Saída</button>
+          </div>
+        </div>
+        <!-- Resumo -->
+        <div class="glass rounded-[2rem] p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="label !mb-0">Registos</h3>
+            <div class="flex items-center gap-2">
+              <span id="pontoTotal" class="badge b-purple">0 reg</span>
+              <button onclick="limparPonto()" class="adm hidden w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all text-[9px]"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+          <div class="flex gap-2 mb-4">
+            <input type="text" id="filtroPonto" oninput="renderPonto()" class="inp !py-2 !text-xs" placeholder="Filtrar por nome...">
+            <button onclick="document.getElementById('filtroPonto').value='';renderPonto();" class="px-3 rounded-xl bg-slate-900 text-slate-500 hover:text-white text-xs border border-white/5 transition-all flex-shrink-0"><i class="fas fa-times"></i></button>
+          </div>
+          <div id="pontoResumo" class="grid grid-cols-2 gap-3 mb-4"></div>
+          <div id="pontoLogs" class="space-y-2 overflow-y-auto scroll" style="max-height:400px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DADOS -->
+    <section id="tab-dados" class="tab-pane">
+      <div class="max-w-2xl mx-auto space-y-4">
+        <div class="grid grid-cols-3 gap-3">
+          <div class="stat border-l-4 border-blue-500 text-center">
+            <p class="text-[8px] text-slate-600 uppercase font-bold">Produtos</p>
+            <p id="statProd" class="text-2xl font-black mt-1">0</p>
+          </div>
+          <div class="stat border-l-4 border-emerald-500 text-center">
+            <p class="text-[8px] text-slate-600 uppercase font-bold">Vendas</p>
+            <p id="statVend" class="text-2xl font-black mt-1">0</p>
+          </div>
+          <div class="stat border-l-4 border-purple-500 text-center">
+            <p class="text-[8px] text-slate-600 uppercase font-bold">Ponto</p>
+            <p id="statPont" class="text-2xl font-black mt-1">0</p>
+          </div>
+        </div>
+        <div class="glass rounded-[1.75rem] p-6">
+          <p class="text-[8px] text-slate-500 uppercase font-bold mb-3">Backup</p>
+          <button onclick="exportarBackup()" class="w-full btn-p mb-2"><i class="fas fa-download mr-2"></i>Exportar Backup JSON</button>
+          <p id="lastBackup" class="text-[8px] text-slate-600 text-center mt-2">—</p>
+        </div>
+        <div class="glass rounded-[1.75rem] p-6">
+          <p class="text-[8px] text-slate-500 uppercase font-bold mb-3">Restaurar Backup</p>
+          <div class="border-2 border-dashed border-blue-500/30 rounded-2xl p-6 text-center hover:border-blue-500/50 transition-all cursor-pointer" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-folder-open text-blue-400 text-2xl mb-2 block"></i>
+            <p class="text-[10px] text-slate-400 font-bold">Clique para selecionar ficheiro JSON</p>
+          </div>
+          <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importarDados(this)">
+          <p class="text-[8px] text-red-400/50 font-bold uppercase mt-3 text-center"><i class="fas fa-exclamation-triangle mr-1"></i>Substitui dados atuais</p>
+        </div>
+        <div class="glass rounded-[1.75rem] border border-red-500/15 overflow-hidden">
+          <div class="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 class="text-sm font-black uppercase text-red-400 flex items-center gap-2 mb-1"><i class="fas fa-radiation text-xs"></i>Zona de Perigo</h3>
+              <p class="text-[10px] text-slate-500 font-bold">Apaga permanentemente todos os dados. Irreversível.</p>
+            </div>
+            <button onclick="resetSistema()" class="btn-d whitespace-nowrap flex-shrink-0"><i class="fas fa-trash-alt mr-2"></i>Reset Total</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div id="toast" class="glass-card rounded-2xl px-6 py-4 flex items-center gap-3 shadow-2xl">
+  <div id="toastIcon" class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"></div>
+  <div><span id="toastMsg" class="text-[11px] font-black uppercase tracking-wide block"></span><span id="toastSub" class="text-[9px] text-slate-500 font-bold"></span></div>
+</div>
+
+<!-- FLOATING CART (mobile) -->
+<button id="float-cart" onclick="document.getElementById('carrinhoLista').scrollIntoView({behavior:'smooth',block:'start'})"
+  class="lg:hidden bg-blue-600 text-white rounded-2xl px-4 py-3 font-black text-xs uppercase shadow-2xl shadow-blue-500/40 border border-blue-400/20 flex items-center gap-3">
+  <div class="relative">
+    <i class="fas fa-shopping-cart text-base"></i>
+    <span id="floatBadge" class="absolute -top-2 -right-2 w-4 h-4 bg-white text-blue-600 rounded-full text-[8px] font-black flex items-center justify-center">0</span>
+  </div>
+  <div class="flex flex-col items-start leading-none">
+    <span id="floatCount" class="text-[8px] text-blue-200 font-bold uppercase">0 itens</span>
+    <span id="floatTotal" class="text-sm font-black">R$ 0,00</span>
+  </div>
+  <i class="fas fa-chevron-up text-xs text-blue-300"></i>
+</button>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'CH_GELADAS_DB_ENTERPRISE';
+let db = { estoque:[], vendas:[], ponto:[], investimento:0, config:{whatsapp:''} };
+let carrinho = [];
+let tempPacks = [];
+let epPacks = []; // packs no modal de edição rápida
+let isAdmin = false;
+let lastSale = null;
+let _clockInterval = null;
+
+/* ═══════════════════════════════════════════════════════════
+   PONTO DE ENTRADA — chamado pelo sync.js após restore
+═══════════════════════════════════════════════════════════ */
+window.CH_INIT = function() {
+  // Esconde loader, mostra lock
+  const loader = document.getElementById('app-loader');
+  loader.classList.add('hide');
+  setTimeout(() => { loader.style.display='none'; }, 400);
+  document.getElementById('lock').style.display = 'flex';
+
+  // Carrega dados do localStorage (já restaurado pelo sync.js)
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      db = { ...db, ...parsed };
+      if (!db.config) db.config = { whatsapp:'' };
+      if (!db.estoque) db.estoque = [];
+      if (!db.vendas)  db.vendas  = [];
+      if (!db.ponto)   db.ponto   = [];
+    } catch(e) { console.error('Erro ao ler localStorage:', e); }
+  }
+
+  document.getElementById('invInput').value = db.investimento || 0;
+  document.getElementById('zapNum').value   = db.config.whatsapp || '';
+};
+
+// Fallback: se sync.js não carregar em 5s, inicia mesmo assim (modo offline)
+setTimeout(() => {
+  if (typeof window.CH_INIT === 'function' && document.getElementById('lock').style.display === 'none') {
+    window.CH_INIT();
+  }
+}, 5000);
+
+/* ═══════════════════════════════════════════════════════════
+   SAVE — único ponto de escrita. Chama CH_BACKUP (sync.js)
+═══════════════════════════════════════════════════════════ */
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  // Backup no Firestore com debounce (definido no sync.js)
+  if (typeof window.CH_BACKUP === 'function') window.CH_BACKUP();
+  // Mostra dot de sync
+  const dot = document.getElementById('syncDot');
+  if (dot) { dot.style.display='block'; dot.style.background='#f59e0b'; setTimeout(()=>dot.style.background='#10b981',3500); }
+  // Re-renderiza só o necessário
+  renderCatalogo();
+  updateStats();
+  const activeTab = document.querySelector('.tab-pane.active');
+  if (activeTab) {
+    if (activeTab.id === 'tab-financeiro') renderFinanceiro();
+    if (activeTab.id === 'tab-estoque')    renderEstoque();
+    if (activeTab.id === 'tab-ponto')      renderPonto();
+    if (activeTab.id === 'tab-dados')      renderDados();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════════ */
+function checkPin(val) { if(val==='001'||val==='12345') doLogin(); }
+function doLogin() {
+  const pin = document.getElementById('pinInput').value;
+  if (pin==='001') {
+    isAdmin=true; document.body.classList.add('is-admin');
+    document.getElementById('roleTitle').textContent='Administrador';
+    const tag=document.getElementById('roleTag'); tag.textContent='ADM'; tag.className='badge b-blue'; tag.classList.remove('hidden');
+  } else if (pin==='12345') {
+    isAdmin=false; document.body.classList.remove('is-admin');
+    document.getElementById('roleTitle').textContent='Colaborador';
+    const tag=document.getElementById('roleTag'); tag.textContent='PDV'; tag.className='badge b-purple'; tag.classList.remove('hidden');
+  } else {
+    showToast('PIN Inválido','Tente novamente','error');
+    document.getElementById('pinInput').value=''; return;
+  }
+  document.getElementById('lock').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('syncDot').style.display='block';
+  showToast('Sessão Iniciada', isAdmin?'Acesso Total':'Modo Colaborador');
+  startClock(); renderCatalogo(); renderEstoque(); renderPonto(); updateStats();
+  verificarAlertas();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CLOCK
+═══════════════════════════════════════════════════════════ */
+function startClock() {
+  clearInterval(_clockInterval);
+  const el = document.getElementById('clock');
+  const tick = () => el.textContent = new Date().toLocaleTimeString('pt-PT');
+  tick(); _clockInterval = setInterval(tick, 1000);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════════ */
+function switchTab(id) {
+  const btn = document.querySelector(`[data-tab="${id}"]`);
+  if (!btn) return;
+  if (btn.classList.contains('adm') && !isAdmin) { showToast('Negado','Apenas Administrador','error'); return; }
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if (id==='estoque')    { resetFormEstoque(); renderEstoque(); }
+  if (id==='financeiro') renderFinanceiro();
+  if (id==='ponto')      renderPonto();
+  if (id==='dados')      renderDados();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODAIS
+═══════════════════════════════════════════════════════════ */
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+/* ═══════════════════════════════════════════════════════════
+   PDV / CATÁLOGO
+═══════════════════════════════════════════════════════════ */
+function renderCatalogo() {
+  const q = (document.getElementById('searchProd')?.value||'').toLowerCase();
+  const list = db.estoque.filter(p=>p.nome.toLowerCase().includes(q));
+  const cont = document.getElementById('catalogo');
+  if (!cont) return;
+  cont.innerHTML = list.map(p => {
+    const zero=p.qtdUn<=0, low=p.qtdUn>0&&p.qtdUn<=3;
+    return `<div class="prod-card p-4 ${zero?'esgotado':''}">
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <p class="text-[.82rem] font-black text-slate-200 leading-tight">${p.nome}</p>
+          <p class="text-[.65rem] font-bold mt-0.5 ${zero?'text-red-400':low?'text-amber-400':'text-slate-600'}">
+            <i class="fas fa-box-open mr-1"></i>${zero?'SEM STOCK':`${p.qtdUn} un.`}${low&&!zero?' ⚠️':''}
+          </p>
+        </div>
+        <span class="text-[9px] font-black px-2 py-1 rounded-lg ${zero?'bg-red-500/20 text-red-400':low?'bg-amber-500/20 text-amber-400':'bg-emerald-500/20 text-emerald-400'}">${zero?'ESGOT.':low?'BAIXO':'OK'}</span>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button id="bun-${p.id}" onclick="addCart(${p.id},0,this)" ${zero?'disabled':''} class="btn-un flex-1">
+          <span class="block text-[8px] font-black text-blue-400 mb-0.5">UNID.</span>
+          <span class="text-sm font-black text-white">R$ ${p.precoUn.toFixed(2)}</span>
+        </button>
+        ${(p.packs||[]).map((pk,i)=>{
+          const sem=p.qtdUn<pk.un;
+          return `<button id="bpk-${p.id}-${i}" onclick="addCart(${p.id},${i+1},this)" ${sem?'disabled':''} class="btn-pk flex-1">
+            <span class="block text-[8px] font-black text-amber-500 mb-0.5">PACK ${pk.un}x</span>
+            <span class="text-sm font-black text-white">R$ ${pk.preco.toFixed(2)}</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  // Stats PDV
+  const statsEl=document.getElementById('pdvStats');
+  if(db.estoque.length>0){
+    statsEl.classList.remove('hidden');
+    document.getElementById('pdvTotal').textContent=db.estoque.length;
+    document.getElementById('pdvLow').textContent=db.estoque.filter(p=>p.qtdUn>0&&p.qtdUn<=3).length;
+    document.getElementById('pdvOut').textContent=db.estoque.filter(p=>p.qtdUn<=0).length;
+  } else statsEl.classList.add('hidden');
+}
+
+function addCart(prodId, packIdx, btnEl) {
+  const p = db.estoque.find(x=>x.id===prodId);
+  if (!p) return;
+  let item = { prodId:p.id, nome:p.nome };
+  if (packIdx===0) {
+    if (p.qtdUn<1) return showToast('Sem Stock',p.nome,'error');
+    item.label='UNID'; item.preco=p.precoUn; item.custo=p.custoUn; item.desconto=1;
+  } else {
+    const pk=p.packs[packIdx-1];
+    if (p.qtdUn<pk.un) return showToast('Stock Insuficiente','Pack cancelado','error');
+    item.label=`PACK ${pk.un}`; item.preco=pk.preco; item.custo=p.custoUn*pk.un; item.desconto=pk.un;
+  }
+  carrinho.push(item);
+  renderCarrinho();
+  // Flash no botão
+  if (btnEl) {
+    const cls = packIdx===0?'flash-blue':'flash-amber';
+    btnEl.classList.remove(cls); void btnEl.offsetWidth; btnEl.classList.add(cls);
+    setTimeout(()=>btnEl.classList.remove(cls),400);
+  }
+  // Float btn mobile
+  const fl=document.getElementById('float-cart');
+  fl.classList.add('show');
+  fl.style.transform='scale(1.08)'; setTimeout(()=>fl.style.transform='scale(1)',200);
+}
+
+function renderCarrinho() {
+  const cont = document.getElementById('carrinhoLista');
+  if (carrinho.length===0) {
+    cont.innerHTML=`<div class="flex flex-col items-center justify-center h-full text-center py-10 opacity-20">
+      <i class="fas fa-shopping-cart text-4xl mb-3 text-slate-500"></i>
+      <p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">Carrinho vazio</p>
+    </div>`;
+    document.getElementById('btnLimpar').classList.add('hidden');
+  } else {
+    cont.innerHTML = carrinho.map((c,i)=>`
+      <div class="flex justify-between items-center bg-slate-950/60 px-4 py-3 rounded-xl border border-white/5 hover:border-white/10 transition-all ${i===carrinho.length-1?'item-new':''}">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${c.label==='UNID'?'bg-blue-500/15':'bg-amber-500/15'}">
+            <i class="fas ${c.label==='UNID'?'fa-cube text-blue-400':'fa-box text-amber-400'} text-[9px]"></i>
+          </div>
+          <div class="min-w-0">
+            <p class="text-[10px] font-black text-slate-300 truncate">${c.nome}</p>
+            <p class="text-[9px] text-slate-600 font-bold">${c.label} · <span class="text-blue-400 font-black">R$ ${c.preco.toFixed(2)}</span></p>
+          </div>
+        </div>
+        <button onclick="removerCart(${i})" class="w-6 h-6 rounded-lg bg-red-500/8 text-red-500/40 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all flex-shrink-0 ml-2">
+          <i class="fas fa-times text-[9px]"></i>
+        </button>
+      </div>`).join('');
+    document.getElementById('btnLimpar').classList.remove('hidden');
+  }
+  const total = carrinho.reduce((a,b)=>a+b.preco,0);
+  const fmt = v => `R$ ${v.toLocaleString('pt-PT',{minimumFractionDigits:2})}`;
+  document.getElementById('cartTotal').textContent = fmt(total);
+  document.getElementById('cartCount').textContent = carrinho.length>0?`${carrinho.length} ${carrinho.length===1?'item':'itens'}`:'';
+  const badge=document.getElementById('cartBadge');
+  if (carrinho.length>0){badge.textContent=carrinho.length;badge.classList.remove('hidden');}else badge.classList.add('hidden');
+  const btn=document.getElementById('btnFinalizar');
+  if (carrinho.length>0){
+    btn.disabled=false; btn.className='w-full py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all bg-blue-600 text-white shadow-lg shadow-blue-500/25 hover:bg-blue-500';
+  } else {
+    btn.disabled=true; btn.className='w-full py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all bg-slate-800 text-slate-500 cursor-not-allowed';
+  }
+  // Float
+  const fl=document.getElementById('float-cart');
+  if (carrinho.length>0){
+    document.getElementById('floatCount').textContent=`${carrinho.length} ${carrinho.length===1?'item':'itens'}`;
+    document.getElementById('floatTotal').textContent=fmt(total);
+    document.getElementById('floatBadge').textContent=carrinho.length;
+    fl.classList.add('show');
+  } else fl.classList.remove('show');
+}
+
+function removerCart(i)   { carrinho.splice(i,1); renderCarrinho(); }
+function limparCarrinho() {
+  if(!carrinho.length) return;
+  if(confirm(`Limpar ${carrinho.length} ${carrinho.length===1?'item':'itens'}?`)){
+    carrinho=[]; renderCarrinho(); showToast('Carrinho','Limpo','warning');
+  }
+}
+
+function finalizarVenda() {
+  const btn=document.getElementById('btnFinalizar');
+  if (btn.disabled||carrinho.length===0) return;
+  btn.disabled=true; // evita duplo clique
+
+  try { document.getElementById('audioVenda').play(); } catch(_){}
+
+  const total = carrinho.reduce((a,b)=>a+b.preco,0);
+  const lucro = carrinho.reduce((a,b)=>a+(b.preco-b.custo),0);
+
+  carrinho.forEach(item=>{
+    const p=db.estoque.find(x=>x.id===item.prodId);
+    if(p) p.qtdUn-=item.desconto;
+  });
+
+  const venda = { id:Date.now(), total, lucro, data:new Date().toLocaleString('pt-PT'), itens:[...carrinho] };
+  db.vendas.unshift(venda);
+  lastSale = venda;
+  carrinho = [];
+  save();
+  renderCarrinho();
+  openModal('modalVenda');
+}
+
+function fecharModalVenda() {
+  closeModal('modalVenda');
+  document.getElementById('btnFinalizar').disabled=false;
+}
+
+function baixarTxt() {
+  if (!lastSale) return;
+  let txt=`CH GELADAS - CUPOM NÃO FISCAL\n`;
+  txt+=`ID: ${lastSale.id} | Data: ${lastSale.data}\n`;
+  txt+=`--------------------------------\n`;
+  lastSale.itens.forEach(i=>txt+=`${i.label==='UNID'?'1x':i.label} ${i.nome} ... R$ ${i.preco.toFixed(2)}\n`);
+  txt+=`--------------------------------\nTOTAL: R$ ${lastSale.total.toFixed(2)}\n`;
+  dlBlob(txt,'text/plain',`Venda_${lastSale.id}.txt`);
+}
+
+function enviarWhatsapp() {
+  if (!lastSale||!db.config.whatsapp) { if(!db.config.whatsapp) showToast('Erro','Configure o WhatsApp','error'); return; }
+  let msg=`*CH GELADAS | COMPROVANTE*\n📅 ${lastSale.data}\n--------------------------\n`;
+  lastSale.itens.forEach(i=>msg+=`${i.label==='UNID'?'1x':i.label} ${i.nome} ... R$ ${i.preco.toFixed(2)}\n`);
+  msg+=`--------------------------\n*TOTAL: R$ ${lastSale.total.toFixed(2)}*\nObrigado!`;
+  window.open(`https://wa.me/${db.config.whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');
+  fecharModalVenda();
+}
+
+function salvarZap() {
+  db.config.whatsapp=document.getElementById('zapNum').value.replace(/\D/g,'');
+  save(); closeModal('modalZap'); showToast('WhatsApp','Número salvo');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ESTOQUE
+═══════════════════════════════════════════════════════════ */
+function renderEstoque() {
+  const grid=document.getElementById('gridEstoque');
+  if (!grid) return;
+  grid.innerHTML = db.estoque.length===0
+    ? `<div class="md:col-span-2 text-center py-12 text-slate-700 text-[10px] font-bold uppercase"><i class="fas fa-boxes text-2xl block mb-3"></i>Sem produtos</div>`
+    : db.estoque.map(p=>`
+      <div class="est-card p-5 relative">
+        <div class="absolute top-4 right-4 flex gap-1.5">
+          <button onclick="abrirEditarProd(${p.id})" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-edit text-[9px]"></i></button>
+          <button onclick="apagarProd(${p.id})" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-times text-[9px]"></i></button>
+        </div>
+        <p class="text-[10px] font-black text-slate-300 pr-20 mb-3 leading-tight">${p.nome}</p>
+        <div class="flex justify-between items-end">
+          <div>
+            <span class="block text-[7px] text-slate-600 font-black mb-1.5 uppercase">Stock</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="quickStock(${p.id},'rm')" class="sk-btn sk-m">−</button>
+              <span class="text-xl font-black min-w-[32px] text-center ${p.qtdUn<=0?'text-red-400':p.qtdUn<=3?'text-amber-400':'text-white'}">${p.qtdUn}</span>
+              <button onclick="quickStock(${p.id},'add')" class="sk-btn sk-p">+</button>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="block text-[7px] text-slate-600 font-black mb-1 uppercase">Venda Un.</span>
+            <span class="text-sm font-black text-slate-300">R$ ${p.precoUn.toFixed(2)}</span>
+            ${p.packs&&p.packs.length>0?`<span class="block text-[8px] text-amber-400/50 font-bold mt-0.5">${p.packs.length} pack(s)</span>`:''}
+          </div>
+        </div>
+        ${p.qtdUn<=0?'<div class="mt-2"><span class="badge b-red">Esgotado</span></div>':p.qtdUn<=3?'<div class="mt-2"><span class="badge b-amber">Stock Baixo</span></div>':''}
+      </div>`).join('');
+}
+
+function addPackForm() {
+  const un=parseInt(document.getElementById('tPackUn').value);
+  const pr=parseFloat(document.getElementById('tPackPr').value);
+  if(!un||!pr) return;
+  tempPacks.push({un,preco:pr});
+  document.getElementById('tPackUn').value='';
+  document.getElementById('tPackPr').value='';
+  renderTempPacks();
+}
+function renderTempPacks() {
+  document.getElementById('tPackList').innerHTML=tempPacks.map((p,i)=>`
+    <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5">
+      <span class="text-[10px] font-bold">Pack ${p.un} UN → R$ ${p.preco.toFixed(2)}</span>
+      <button onclick="tempPacks.splice(${i},1);renderTempPacks();" class="text-red-500 text-xs px-2"><i class="fas fa-times"></i></button>
+    </div>`).join('');
+}
+
+function salvarProduto() {
+  const nome=document.getElementById('pNome').value.trim();
+  const custo=parseFloat(document.getElementById('pCusto').value)||0;
+  const qtd=parseInt(document.getElementById('pQtd').value)||0;
+  const preco=parseFloat(document.getElementById('pPreco').value)||0;
+  const editId=document.getElementById('editId').value;
+  if (!nome) return showToast('Erro','Nome obrigatório','error');
+  if (editId) {
+    const idx=db.estoque.findIndex(p=>p.id==editId);
+    if (idx!==-1) db.estoque[idx]={...db.estoque[idx],nome,custoUn:custo,qtdUn:qtd,precoUn:preco,packs:[...tempPacks]};
+    showToast('Sucesso','Produto atualizado');
+  } else {
+    db.estoque.unshift({id:Date.now(),nome,custoUn:custo,qtdUn:qtd,precoUn:preco,packs:[...tempPacks]});
+    showToast('Estoque','Produto registado');
+  }
+  resetFormEstoque(); save();
+}
+
+function resetFormEstoque() {
+  document.getElementById('formTitle').textContent='Novo Produto';
+  document.getElementById('editId').value='';
+  ['pNome','pCusto','pQtd','pPreco'].forEach(id=>document.getElementById(id).value='');
+  tempPacks=[]; renderTempPacks();
+  document.getElementById('btnSalvar').textContent='Registar Produto';
+  document.getElementById('btnCancelar').classList.add('hidden');
+}
+
+function quickStock(id, tipo) {
+  const p=db.estoque.find(x=>x.id===id);
+  if (!p) return;
+  const input=prompt(`${tipo==='add'?'ADICIONAR':'REMOVER'} em ${p.nome}\n(Atual: ${p.qtdUn})`);
+  if (input!==null) {
+    const qtd=parseInt(input);
+    if (!isNaN(qtd)&&qtd>0) {
+      p.qtdUn += tipo==='add'?qtd:-qtd;
+      save(); showToast(tipo==='add'?'Entrada':'Saída',`${tipo==='add'?'+':'-'}${qtd} em ${p.nome}`,tipo==='add'?'success':'warning');
+    }
+  }
+}
+
+function apagarProd(id) {
+  const p=db.estoque.find(x=>x.id===id);
+  if (!p) return;
+  if (confirm(`Apagar "${p.nome}"?`)) { db.estoque=db.estoque.filter(x=>x.id!==id); save(); }
+}
+
+// Modal edição rápida de produto
+function abrirEditarProd(id) {
+  const p=db.estoque.find(x=>x.id===id);
+  if (!p) return;
+  epPacks=JSON.parse(JSON.stringify(p.packs||[]));
+  document.getElementById('epId').value=p.id;
+  document.getElementById('epNome').value=p.nome;
+  document.getElementById('epCusto').value=p.custoUn;
+  document.getElementById('epPreco').value=p.precoUn;
+  document.getElementById('epQtd').value=p.qtdUn;
+  document.getElementById('epEntrada').value='';
+  document.getElementById('epPackUn').value='';
+  document.getElementById('epPackPr').value='';
+  renderEpPacks(); openModal('modalEditProd');
+}
+function renderEpPacks() {
+  document.getElementById('epPackList').innerHTML=epPacks.length===0
+    ? `<p class="text-[9px] text-slate-500 text-center font-bold uppercase py-2">Sem packs</p>`
+    : epPacks.map((pk,i)=>`
+        <div class="flex justify-between items-center bg-black/30 px-4 py-3 rounded-xl border border-white/5">
+          <span class="text-[10px] font-black text-amber-400">PACK ${pk.un}x</span>
+          <div class="flex gap-2 items-center">
+            <input type="number" value="${pk.preco}" onchange="epPacks[${i}].preco=parseFloat(this.value)||0" class="w-20 bg-slate-900 border border-white/10 rounded-lg px-2 py-1 text-[10px] text-center font-bold text-white outline-none focus:border-blue-500" step="0.01">
+            <button onclick="epPacks.splice(${i},1);renderEpPacks();" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-times text-[9px]"></i></button>
+          </div>
+        </div>`).join('');
+}
+function addPackModal() {
+  const un=parseInt(document.getElementById('epPackUn').value);
+  const pr=parseFloat(document.getElementById('epPackPr').value);
+  if (!un||isNaN(pr)||pr<=0) return showToast('Erro','Preencha qtd e preço','error');
+  if (epPacks.find(p=>p.un===un)) return showToast('Aviso','Pack com essa qtd já existe','warning');
+  epPacks.push({un,preco:pr});
+  document.getElementById('epPackUn').value='';
+  document.getElementById('epPackPr').value='';
+  renderEpPacks();
+}
+function ajusteStock(d) {
+  const inp=document.getElementById('epQtd');
+  inp.value=Math.max(0,(parseInt(inp.value)||0)+d);
+}
+function entradaRapida() {
+  const qtd=parseInt(document.getElementById('epEntrada').value);
+  if (!qtd||qtd<=0) return showToast('Erro','Qtd inválida','error');
+  const inp=document.getElementById('epQtd');
+  inp.value=(parseInt(inp.value)||0)+qtd;
+  document.getElementById('epEntrada').value='';
+  showToast('Entrada',`+${qtd} adicionado`);
+}
+function salvarProdModal() {
+  const id=parseInt(document.getElementById('epId').value);
+  const nome=document.getElementById('epNome').value.trim();
+  const custo=parseFloat(document.getElementById('epCusto').value)||0;
+  const preco=parseFloat(document.getElementById('epPreco').value)||0;
+  const qtd=parseInt(document.getElementById('epQtd').value)||0;
+  if (!nome) return showToast('Erro','Nome obrigatório','error');
+  const idx=db.estoque.findIndex(p=>p.id==id);
+  if (idx!==-1) {
+    db.estoque[idx]={...db.estoque[idx],nome,custoUn:custo,precoUn:preco,qtdUn:qtd,packs:[...epPacks]};
+    save(); closeModal('modalEditProd'); showToast('Produto Atualizado',nome);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FINANCEIRO
+═══════════════════════════════════════════════════════════ */
+function renderFinanceiro() {
+  const filtro=(document.getElementById('filtroData')?.value||'').toLowerCase();
+  const vendas=filtro?db.vendas.filter(v=>v.data.toLowerCase().includes(filtro)):db.vendas;
+  document.getElementById('totalVendas').textContent=`${vendas.length} reg`;
+  const logs=document.getElementById('vendaLogs');
+  logs.innerHTML=vendas.length===0
+    ? `<div class="text-center py-8 text-slate-700 text-[10px] font-bold uppercase">Sem registos${filtro?' para este filtro':''}</div>`
+    : vendas.map(v=>`
+      <div class="flex justify-between items-center p-3 rounded-xl border border-white/5 hover:bg-slate-900/60 transition-all">
+        <div class="flex flex-col gap-0.5 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-black text-white">R$ ${v.total.toFixed(2)}</span>
+            <span class="badge b-blue">${v.itens.length} it.</span>
+            ${v.lucro>0?`<span class="text-[8px] text-emerald-400 font-bold">+R$ ${v.lucro.toFixed(2)}</span>`:''}
+          </div>
+          <span class="text-[9px] text-slate-600 font-bold">${v.data}</span>
+        </div>
+        <div class="flex gap-1.5 flex-shrink-0">
+          <button onclick="editarVenda(${v.id})" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-edit text-[9px]"></i></button>
+          <button onclick="excluirVenda(${v.id})" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-trash text-[9px]"></i></button>
+        </div>
+      </div>`).join('');
+  // KPIs
+  const bruto=db.vendas.reduce((a,b)=>a+b.total,0);
+  const lucro=db.vendas.reduce((a,b)=>a+b.lucro,0);
+  const inv=db.investimento||0;
+  const n=db.vendas.length;
+  document.getElementById('dashLucro').textContent=`R$ ${lucro.toLocaleString('pt-PT',{minimumFractionDigits:2})}`;
+  document.getElementById('dashBruto').textContent=`R$ ${bruto.toLocaleString('pt-PT',{minimumFractionDigits:2})}`;
+  document.getElementById('dashROI').textContent=inv>0?`${((lucro/inv)*100).toFixed(1)}%`:'—';
+  document.getElementById('ticket').textContent=n>0?`R$ ${(bruto/n).toFixed(2)}`:'R$ 0,00';
+  document.getElementById('margem').textContent=bruto>0?`${((lucro/bruto)*100).toFixed(1)}%`:'0%';
+  const hoje=new Date().toLocaleDateString('pt-PT');
+  document.getElementById('vendasHoje').textContent=db.vendas.filter(v=>v.data.startsWith(hoje)).length;
+  document.getElementById('breakEven').textContent=lucro>=inv?'✅ Break-Even Atingido':`Falta R$ ${(inv-lucro).toFixed(2)}`;
+}
+
+function updateInv() { db.investimento=parseFloat(document.getElementById('invInput').value)||0; save(); }
+
+function editarVenda(id) {
+  const v=db.vendas.find(x=>x.id===id); if (!v) return;
+  document.getElementById('evId').value=v.id;
+  document.getElementById('evData').value=v.data;
+  document.getElementById('evTotal').value=v.total;
+  document.getElementById('evLucro').value=v.lucro;
+  openModal('modalEditVenda');
+}
+function salvarEdicaoVenda() {
+  const id=parseInt(document.getElementById('evId').value);
+  const idx=db.vendas.findIndex(v=>v.id===id);
+  if (idx!==-1) {
+    db.vendas[idx].data=document.getElementById('evData').value;
+    db.vendas[idx].total=parseFloat(document.getElementById('evTotal').value)||0;
+    db.vendas[idx].lucro=parseFloat(document.getElementById('evLucro').value)||0;
+    save(); closeModal('modalEditVenda'); showToast('Venda','Atualizada');
+  }
+}
+function excluirVenda(id) {
+  const v=db.vendas.find(x=>x.id===id); if (!v) return;
+  if (confirm('Excluir esta venda?')) {
+    if (confirm('Devolver itens ao estoque?')) {
+      v.itens.forEach(item=>{ const p=db.estoque.find(x=>x.id===item.prodId); if(p) p.qtdUn+=item.desconto; });
+    }
+    db.vendas=db.vendas.filter(x=>x.id!==id);
+    save(); showToast('Venda excluída','','warning');
+  }
+}
+
+function exportarRelatorio() {
+  if (!db.vendas.length) return showToast('Aviso','Sem vendas para exportar');
+  let txt=`--- RELATÓRIO CH GELADAS ---\nGerado: ${new Date().toLocaleString('pt-PT')}\n\n`;
+  db.vendas.forEach(v=>{
+    txt+=`VENDA #${v.id} | ${v.data}\n`;
+    v.itens.forEach(i=>txt+=`- ${i.nome} (${i.label}): R$ ${i.preco.toFixed(2)}\n`);
+    txt+=`TOTAL: R$ ${v.total.toFixed(2)}\n${'-'.repeat(40)}\n`;
+  });
+  dlBlob(txt,'text/plain',`vendas_ch_geladas_${new Date().toISOString().split('T')[0]}.txt`);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PONTO
+═══════════════════════════════════════════════════════════ */
+function registarPonto(tipo) {
+  const nome=document.getElementById('pontNomeLive').value.trim();
+  if (!nome) return showToast('Erro','Insira o nome','error');
+  db.ponto.unshift({id:Date.now(),nome,tipo,data:new Date().toLocaleString('pt-PT')});
+  save(); showToast('Ponto',`${nome} → ${tipo}`);
+}
+
+function renderPonto() {
+  const filtro=(document.getElementById('filtroPonto')?.value||'').toLowerCase();
+  const lista=filtro?db.ponto.filter(p=>p.nome.toLowerCase().includes(filtro)):db.ponto;
+  document.getElementById('pontoTotal').textContent=`${db.ponto.length} reg`;
+  document.getElementById('pontoLogs').innerHTML=lista.length===0
+    ? `<div class="text-center py-8 text-slate-600 text-[10px] font-bold uppercase">Sem registos</div>`
+    : lista.map(p=>{
+        const ri=db.ponto.findIndex(x=>x===p);
+        return `<div class="bg-slate-900/50 p-4 rounded-2xl flex justify-between items-center border border-white/5 hover:bg-slate-900 transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center ${p.tipo==='ENTRADA'?'bg-emerald-500/15 text-emerald-400':'bg-red-500/15 text-red-400'}">
+              <i class="fas ${p.tipo==='ENTRADA'?'fa-sign-in-alt':'fa-sign-out-alt'} text-xs"></i>
+            </div>
+            <div>
+              <span class="block text-[11px] font-black text-slate-200">${p.nome}</span>
+              <span class="text-[9px] text-slate-500">${p.data}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge ${p.tipo==='ENTRADA'?'b-green':'b-red'}">${p.tipo}</span>
+            ${isAdmin?`
+            <button onclick="abrirEditarPonto(${ri})" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-edit text-[9px]"></i></button>
+            <button onclick="apagarPonto(${ri})" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"><i class="fas fa-trash text-[9px]"></i></button>`:''}
+          </div>
+        </div>`;
+      }).join('');
+  // Resumo
+  const map={};
+  db.ponto.forEach(p=>{ if(!map[p.nome])map[p.nome]={e:0,s:0}; if(p.tipo==='ENTRADA')map[p.nome].e++;else map[p.nome].s++; });
+  const nomes=Object.keys(map);
+  document.getElementById('pontoResumo').innerHTML=nomes.length===0
+    ? `<p class="col-span-2 text-[9px] text-slate-600 text-center font-bold uppercase py-2">Sem registos ainda</p>`
+    : nomes.map(n=>`<div class="bg-black/20 p-4 rounded-xl border border-white/5">
+        <p class="text-[10px] font-black text-slate-300 mb-2 truncate">${n}</p>
+        <div class="flex gap-2">
+          <span class="badge b-green"><i class="fas fa-sign-in-alt mr-1"></i>${map[n].e}</span>
+          <span class="badge b-red"><i class="fas fa-sign-out-alt mr-1"></i>${map[n].s}</span>
+        </div>
+      </div>`).join('');
+}
+
+function abrirEditarPonto(idx) {
+  const reg=db.ponto[idx]; if (!reg) return;
+  document.getElementById('pontIdx').value=idx;
+  document.getElementById('pontNome').value=reg.nome;
+  document.getElementById('pontData').value=reg.data;
+  setPontoTipo(reg.tipo); openModal('modalEditPonto');
+}
+function setPontoTipo(tipo) {
+  document.getElementById('pontTipo').value=tipo;
+  document.getElementById('pontBtnE').className=`py-3 rounded-xl font-black uppercase text-xs border transition-all ${tipo==='ENTRADA'?'bg-emerald-600/30 text-emerald-300 border-emerald-500/50':'bg-slate-800 text-slate-500 border-white/5'}`;
+  document.getElementById('pontBtnS').className=`py-3 rounded-xl font-black uppercase text-xs border transition-all ${tipo==='SAÍDA'?'bg-red-600/30 text-red-300 border-red-500/50':'bg-slate-800 text-slate-500 border-white/5'}`;
+}
+function salvarEdicaoPonto() {
+  const idx=parseInt(document.getElementById('pontIdx').value);
+  const nome=document.getElementById('pontNome').value.trim();
+  const tipo=document.getElementById('pontTipo').value;
+  const data=document.getElementById('pontData').value.trim();
+  if (!nome) return showToast('Erro','Nome obrigatório','error');
+  if (idx>=0&&idx<db.ponto.length) {
+    db.ponto[idx]={...db.ponto[idx],nome,tipo,data};
+    save(); closeModal('modalEditPonto'); showToast('Ponto','Registo atualizado');
+  }
+}
+function apagarPonto(idx) {
+  const reg=db.ponto[idx]; if (!reg) return;
+  if (confirm(`Apagar registo de ${reg.nome}?`)) { db.ponto.splice(idx,1); save(); showToast('Ponto','Apagado','warning'); }
+}
+function limparPonto() {
+  if (!isAdmin) return;
+  if (confirm('Apagar TODOS os registos de ponto?')) { db.ponto=[]; save(); showToast('Ponto','Todos apagados','warning'); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DADOS / BACKUP
+═══════════════════════════════════════════════════════════ */
+function renderDados() {
+  document.getElementById('statProd').textContent=db.estoque.length;
+  document.getElementById('statVend').textContent=db.vendas.length;
+  document.getElementById('statPont').textContent=db.ponto.length;
+}
+
+function exportarBackup() {
+  dlBlob(JSON.stringify(db),'application/json',`CH_Geladas_BKP_${new Date().toISOString().split('T')[0]}.json`);
+  document.getElementById('lastBackup').textContent=new Date().toLocaleString('pt-PT');
+  showToast('Backup','Arquivo baixado');
+}
+function importarDados(input) {
+  const file=input.files[0]; if (!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try {
+      const data=JSON.parse(e.target.result);
+      input.value='';
+      if (data.estoque&&Array.isArray(data.estoque)) {
+        if (confirm('Substituir TODOS os dados atuais?')) {
+          db={...db,...data}; save(); showToast('Sucesso','Dados restaurados!');
+          setTimeout(()=>location.reload(),1500);
         }
+      } else showToast('Erro','Arquivo inválido','error');
+    } catch(_) { input.value=''; showToast('Erro','Falha ao ler arquivo','error'); }
+  };
+  reader.readAsText(file);
+}
+function resetSistema() {
+  if (confirm('Apagar TODOS os dados?\n\nEssa ação não pode ser desfeita.')) {
+    const c=prompt('Digite "DELETAR" para confirmar:');
+    if (c==='DELETAR') {
+      db={estoque:[],vendas:[],ponto:[],investimento:0,config:{whatsapp:''}};
+      save(); showToast('Reset','Dados apagados','error'); setTimeout(()=>location.reload(),1500);
+    } else showToast('Cancelado','Código incorreto','error');
+  }
+}
 
-        function abrirEditarPonto(idx) {
-            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
-            const reg = db.ponto[idx];
-            if(!reg) return;
-            document.getElementById('editPontoIdx').value = idx;
-            document.getElementById('editPontoNome').value = reg.nome;
-            document.getElementById('editPontoData').value = reg.data;
-            setPontoTipo(reg.tipo);
-            toggleModal('modalEditPonto');
-        }
+/* ═══════════════════════════════════════════════════════════
+   STATS / ALERTAS
+═══════════════════════════════════════════════════════════ */
+function updateStats() {
+  const el=id=>document.getElementById(id);
+  if(el('statProd')) el('statProd').textContent=db.estoque.length;
+  if(el('statVend')) el('statVend').textContent=db.vendas.length;
+  if(el('statPont')) el('statPont').textContent=db.ponto.length;
+  verificarAlertas();
+}
+function verificarAlertas() {
+  if (!isAdmin) return;
+  const baixo=db.estoque.filter(p=>p.qtdUn>0&&p.qtdUn<=3).length;
+  const btn=document.getElementById('alertaBtn');
+  if (!btn) return;
+  if (baixo>0) { document.getElementById('alertaCount').textContent=baixo; btn.style.display='flex'; }
+  else btn.style.display='none';
+}
 
-        function setPontoTipo(tipo) {
-            document.getElementById('editPontoTipo').value = tipo;
-            const btnE = document.getElementById('btnPontoEntrada');
-            const btnS = document.getElementById('btnPontoSaida');
-            if(tipo === 'ENTRADA') {
-                btnE.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-emerald-600/30 text-emerald-300 border-emerald-500/50';
-                btnS.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5';
-            } else {
-                btnE.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-slate-800 text-slate-500 border-white/5';
-                btnS.className = 'py-3 rounded-xl font-black uppercase text-xs border transition-all bg-red-600/30 text-red-300 border-red-500/50';
-            }
-        }
+/* ═══════════════════════════════════════════════════════════
+   UTILITÁRIOS
+═══════════════════════════════════════════════════════════ */
+let _toastTimer=null;
+function showToast(msg,sub='',type='success') {
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  document.getElementById('toastSub').textContent=sub;
+  const colors={success:'bg-blue-500/20 text-blue-400',warning:'bg-amber-500/20 text-amber-400',error:'bg-red-500/20 text-red-400'};
+  const icons={success:'check',warning:'exclamation',error:'times'};
+  const ic=document.getElementById('toastIcon');
+  ic.className=`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${colors[type]||colors.success}`;
+  ic.innerHTML=`<i class="fas fa-${icons[type]||'check'} text-[10px]"></i>`;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
 
-        function salvarEdicaoPonto() {
-            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
-            const idx = parseInt(document.getElementById('editPontoIdx').value);
-            const nome = document.getElementById('editPontoNome').value.trim();
-            const tipo = document.getElementById('editPontoTipo').value;
-            const data = document.getElementById('editPontoData').value.trim();
-            if(!nome) return showToast("Erro", "Nome obrigatório", "error");
-            if(idx >= 0 && idx < db.ponto.length) {
-                db.ponto[idx] = { ...db.ponto[idx], nome, tipo, data };
-                save();
-                toggleModal('modalEditPonto');
-                showToast("Ponto", "Registo atualizado");
-            }
-        }
+function dlBlob(content,mime,filename) {
+  const blob=new Blob([content],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+</script>
 
-        function apagarPonto(idx) {
-            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
-            const reg = db.ponto[idx];
-            if(!reg) return;
-            if(confirm(`Apagar registo de ${reg.nome} (${reg.tipo} - ${reg.data})?`)) {
-                db.ponto.splice(idx, 1);
-                save();
-                showToast("Ponto", "Registo apagado", "warning");
-            }
-        }
-
-        function limparTodoPonto() {
-            if(!isAdmin) return showToast("Negado", "Apenas Administrador", "error");
-            if(confirm('Apagar TODOS os registos de ponto?\n\nEsta ação não pode ser desfeita.')) {
-                db.ponto = [];
-                save();
-                showToast("Ponto", "Todos os registos apagados", "warning");
-            }
-        }
-
-        // --- CORE ---
-        function save() { 
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); 
-            const activeTab = document.querySelector('.tab-content.active');
-            if(activeTab) {
-                if(activeTab.id === 'financeiro') renderFinanceiro();
-                if(activeTab.id === 'vendas') { renderCatalogo(); atualizarPdvStats(); }
-                if(activeTab.id === 'estoque' || activeTab.id === 'dados') refreshUI();
-                else { renderPontoLogs(); updateStats(); }
-            }
-        }
-
-        function refreshUI() {
-            renderCatalogo();
-            // renderCarrinho(); // Não re-renderiza carrinho para não perder estado visual se não mudou
-            renderPontoLogs();
-            document.getElementById('gridEstoque').innerHTML = db.estoque.length === 0
-                ? `<div class="md:col-span-2 text-center py-12 text-slate-700 text-[10px] font-bold uppercase tracking-wider">
-                    <i class="fas fa-boxes text-2xl block mb-3"></i>Sem produtos registados
-                  </div>`
-                : db.estoque.map(p => `
-                <div class="estoque-card p-5 relative">
-                    <div class="absolute top-4 right-4 flex gap-1.5">
-                        <button onclick="abrirEditarProduto(${p.id})" title="Editar" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all">
-                            <i class="fas fa-edit text-[9px]"></i>
-                        </button>
-                        <button onclick="if(confirm('Apagar ${p.nome}?')) { db.estoque = db.estoque.filter(x => x.id !== ${p.id}); save(); }" title="Apagar" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
-                            <i class="fas fa-times text-[9px]"></i>
-                        </button>
-                    </div>
-                    <p class="text-[10px] font-black text-slate-300 pr-20 mb-3 leading-tight">${p.nome}</p>
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <span class="block text-[7px] text-slate-600 font-black mb-1.5 uppercase tracking-wider">Stock</span>
-                            <div class="flex items-center gap-1.5">
-                                <button onclick="quickStockAction(${p.id}, 'remove')" class="stock-btn stock-btn-minus">−</button>
-                                <span class="text-xl font-black min-w-[32px] text-center ${p.qtdUn <= 0 ? 'text-red-400' : p.qtdUn <= 3 ? 'text-amber-400' : 'text-white'}">${p.qtdUn}</span>
-                                <button onclick="quickStockAction(${p.id}, 'add')" class="stock-btn stock-btn-plus">+</button>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="block text-[7px] text-slate-600 font-black mb-1 uppercase tracking-wider">Venda Un.</span>
-                            <span class="text-sm font-black text-slate-300">R$ ${p.precoUn.toFixed(2)}</span>
-                            ${p.packs && p.packs.length > 0 ? `<span class="block text-[8px] text-amber-400/50 font-bold mt-0.5">${p.packs.length} pack(s)</span>` : ''}
-                        </div>
-                    </div>
-                    ${p.qtdUn <= 0 ? '<div class="mt-2"><span class="badge badge-out">Esgotado</span></div>' : p.qtdUn <= 3 ? '<div class="mt-2"><span class="badge badge-low">Stock Baixo</span></div>' : ''}
-                </div>`).join('');
-        }
-
-        function updateInvestimento() {
-            db.investimento = parseFloat(document.getElementById('invTotalInput').value) || 0;
-            save();
-        }
-
-        function updateClock() { document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('pt-PT'); }
-        
-        function showToast(msg, sub, type = 'success') {
-            const t = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastSubMsg').textContent = sub;
-            const icon = document.getElementById('toastIcon');
-            const colors = { success: 'bg-blue-500/20 text-blue-400', warning: 'bg-amber-500/20 text-amber-400', error: 'bg-red-500/20 text-red-400' };
-            const icons  = { success: 'check', warning: 'exclamation', error: 'times' };
-            icon.className = `w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${colors[type] || colors.success}`;
-            icon.innerHTML = `<i class="fas fa-${icons[type] || 'check'} text-[10px]"></i>`;
-            t.classList.remove('opacity-0', 'translate-y-16', 'pointer-events-none');
-            clearTimeout(t._timer);
-            t._timer = setTimeout(() => t.classList.add('opacity-0', 'translate-y-16', 'pointer-events-none'), 2800);
-        }
-
-        function updateStats() {
-            document.getElementById('statProds').textContent = db.estoque ? db.estoque.length : 0;
-            document.getElementById('statVendas').textContent = db.vendas ? db.vendas.length : 0;
-            document.getElementById('statPonto').textContent = db.ponto ? db.ponto.length : 0;
-            verificarAlertasStock();
-            atualizarPdvStats();
-        }
-
-        function verificarAlertasStock() {
-            if(!isAdmin) return;
-            const baixo = db.estoque.filter(p => p.qtdUn > 0 && p.qtdUn <= 3).length;
-            const alertaBtn = document.getElementById('alertaStock');
-            const alertaCount = document.getElementById('alertaStockCount');
-            if(!alertaBtn) return;
-            if(baixo > 0) { alertaCount.textContent = baixo; alertaBtn.style.display = 'flex'; }
-            else alertaBtn.style.display = 'none';
-        }
-
-        function atualizarPdvStats() {
-            const total = db.estoque.length;
-            const low = db.estoque.filter(p => p.qtdUn > 0 && p.qtdUn <= 3).length;
-            const out = db.estoque.filter(p => p.qtdUn <= 0).length;
-            const statsEl = document.getElementById('pdvStats');
-            if(statsEl && total > 0) {
-                statsEl.classList.remove('hidden');
-                const pdvTotalEl = document.getElementById('pdvTotalProd');
-                const pdvLowEl = document.getElementById('pdvLow');
-                const pdvOutEl = document.getElementById('pdvOut');
-                if(pdvTotalEl) pdvTotalEl.textContent = total;
-                if(pdvLowEl) pdvLowEl.textContent = low;
-                if(pdvOutEl) pdvOutEl.textContent = out;
-            }
-        }
-
-        // --- EDIÇÃO DE PRODUTO VIA MODAL ---
-        let modalEditPacks = [];
-
-        function abrirEditarProduto(id) {
-            const p = db.estoque.find(x => x.id == id);
-            if(!p) return;
-            modalEditPacks = JSON.parse(JSON.stringify(p.packs || []));
-            document.getElementById('modalEditProdId').value = p.id;
-            document.getElementById('modalEditNome').value = p.nome;
-            document.getElementById('modalEditCusto').value = p.custoUn;
-            document.getElementById('modalEditPreco').value = p.precoUn;
-            document.getElementById('modalEditQtd').value = p.qtdUn;
-            document.getElementById('modalEntradaQtd').value = '';
-            document.getElementById('modalNewPackUn').value = '';
-            document.getElementById('modalNewPackPreco').value = '';
-            renderModalPacks();
-            toggleModal('modalEditProduto');
-        }
-
-        function renderModalPacks() {
-            const cont = document.getElementById('modalPacksList');
-            if(modalEditPacks.length === 0) {
-                cont.innerHTML = `<p class="text-[9px] text-slate-500 text-center font-bold uppercase py-2">Sem packs configurados</p>`;
-                return;
-            }
-            cont.innerHTML = modalEditPacks.map((pk, i) => `
-                <div class="flex justify-between items-center bg-black/30 px-4 py-3 rounded-xl border border-white/5">
-                    <div>
-                        <span class="text-[10px] font-black text-amber-400">PACK ${pk.un}x</span>
-                        <span class="text-[10px] text-slate-400 ml-2">R$ ${pk.preco.toFixed(2)}</span>
-                    </div>
-                    <div class="flex gap-2 items-center">
-                        <input type="number" value="${pk.preco}" onchange="modalEditPacks[${i}].preco = parseFloat(this.value)||0; renderModalPacks();" 
-                            class="w-20 bg-slate-900 border border-white/10 rounded-lg px-2 py-1 text-[10px] text-center font-bold text-white outline-none focus:border-blue-500" step="0.01">
-                        <button onclick="modalEditPacks.splice(${i},1); renderModalPacks();" class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
-                            <i class="fas fa-times text-[9px]"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function adicionarPackModal() {
-            const un = parseInt(document.getElementById('modalNewPackUn').value);
-            const preco = parseFloat(document.getElementById('modalNewPackPreco').value);
-            if(!un || isNaN(preco) || preco <= 0) return showToast("Erro", "Preencha qtd e preço do pack", "error");
-            if(modalEditPacks.find(p => p.un === un)) return showToast("Aviso", "Pack com essa qtd já existe", "warning");
-            modalEditPacks.push({ un, preco });
-            document.getElementById('modalNewPackUn').value = '';
-            document.getElementById('modalNewPackPreco').value = '';
-            renderModalPacks();
-            showToast("Pack", `Pack ${un}x adicionado`);
-        }
-
-        function ajustarModalStock(delta) {
-            const input = document.getElementById('modalEditQtd');
-            const val = parseInt(input.value) || 0;
-            input.value = Math.max(0, val + delta);
-        }
-
-        function entradaRapidaModal() {
-            const qtd = parseInt(document.getElementById('modalEntradaQtd').value);
-            if(!qtd || qtd <= 0) return showToast("Erro", "Insira uma quantidade válida", "error");
-            const currentQtd = document.getElementById('modalEditQtd');
-            currentQtd.value = (parseInt(currentQtd.value) || 0) + qtd;
-            document.getElementById('modalEntradaQtd').value = '';
-            showToast("Entrada", `+${qtd} adicionado`);
-        }
-
-        function salvarEdicaoProduto() {
-            const id = parseInt(document.getElementById('modalEditProdId').value);
-            const nome = document.getElementById('modalEditNome').value.trim();
-            const custoUn = parseFloat(document.getElementById('modalEditCusto').value) || 0;
-            const precoUn = parseFloat(document.getElementById('modalEditPreco').value) || 0;
-            const qtdUn = parseInt(document.getElementById('modalEditQtd').value) || 0;
-            
-            if(!nome) return showToast("Erro", "Nome obrigatório", "error");
-            
-            const idx = db.estoque.findIndex(p => p.id == id);
-            if(idx !== -1) {
-                db.estoque[idx] = { ...db.estoque[idx], nome, custoUn, precoUn, qtdUn, packs: [...modalEditPacks] };
-                save();
-                toggleModal('modalEditProduto');
-                showToast("Produto Atualizado", nome);
-            }
-        }
-
-        function resetSistema() {
-            if(confirm('ATENÇÃO: Você está prestes a apagar TODOS os dados do sistema (Estoque, Vendas, Ponto, Financeiro).\n\nEssa ação não pode ser desfeita.')) {
-                const check = prompt('Para confirmar a exclusão completa, digite a palavra "DELETAR" abaixo:');
-                if(check === 'DELETAR') {
-                    db = { estoque: [], vendas: [], ponto: [], investimento: 0, config: { whatsapp: '' } };
-                    save();
-                    showToast("Sistema Resetado", "Todos os dados foram apagados", "error");
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showToast("Cancelado", "Código de confirmação incorreto", "error");
-                }
-            }
-        }
-
-        function exportarBackup() {
-            const blob = new Blob([JSON.stringify(db)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `CH_Geladas_BKP_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            document.getElementById('lastBackupInfo').textContent = new Date().toLocaleString();
-            showToast("Backup Criado", "Arquivo baixado");
-        }
-
-        function importarDados(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    // Resetamos o input para permitir selecionar o mesmo arquivo novamente caso haja erro
-                    input.value = '';
-
-                    if (data.estoque && Array.isArray(data.estoque)) {
-                        if(confirm('ATENÇÃO: Isso substituirá TODOS os dados atuais pelos do arquivo.\n\nTem certeza que deseja continuar?')) {
-                             // Mesclamos com o DB atual para garantir que chaves novas (como config do zap) não quebrem com backups antigos
-                             db = { ...db, ...data };
-                             save();
-                             showToast("Sucesso", "Dados restaurados!");
-                             setTimeout(() => location.reload(), 1500);
-                        }
-                    } else {
-                        showToast("Erro", "Arquivo inválido ou corrompido", "error");
-                    }
-                } catch (err) {
-                    input.value = '';
-                    showToast("Erro", "Falha ao ler arquivo", "error");
-                    console.error(err);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        window.onload = init;
-    </script>
-    <!-- firebase.js e sync.js removidos: estes ficheiros não existem e causavam erros silenciosos -->
+<!-- Firebase e Sync: sync.js chama window.CH_INIT() após restaurar dados -->
+<script type="module" src="firebase.js"></script>
+<script type="module" src="sync.js"></script>
 </body>
 </html>
